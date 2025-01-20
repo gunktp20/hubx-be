@@ -12,7 +12,6 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 type gormPostgresDatabase struct {
@@ -29,18 +28,19 @@ func NewGormPostgresDatabase(pctx context.Context, conf *config.Config) *gormPos
 	defer cancel()
 
 	dsn := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s sslrootcert=%s sslkey=%s sslcert=%s",
 		conf.Db.DbHost,
 		conf.Db.DbPort,
 		conf.Db.DbUser,
 		conf.Db.DbSecret,
 		conf.Db.DbName,
 		conf.Db.SSLMode,
+		conf.Db.SSLRootCertPath,
+		conf.Db.SSLKeyPath,
+		conf.Db.SSLCertPath,
 	)
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info), // TODO Uncomment for monitor SQL query
-	})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalln(constant.Red+"Gorm Postgres database connection failed"+constant.Reset, err)
 	}
@@ -67,7 +67,7 @@ func (p *gormPostgresDatabase) GetDb() *gorm.DB {
 func (p *gormPostgresDatabase) Close() error {
 	postgresDB, err := p.Db.DB()
 	if err != nil {
-		return err // กรณีที่ไม่สามารถดึง instance ได้
+		return err
 	}
-	return postgresDB.Close() // ปิดการเชื่อมต่อฐานข้อมูล
+	return postgresDB.Close()
 }

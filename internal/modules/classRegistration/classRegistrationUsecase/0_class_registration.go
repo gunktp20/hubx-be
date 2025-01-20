@@ -3,6 +3,8 @@ package usecase
 import (
 	"errors"
 	"fmt"
+	"strings"
+	"time"
 
 	classRepository "github.com/gunktp20/digital-hubx-be/internal/modules/class/classRepository"
 	classRegistrationDto "github.com/gunktp20/digital-hubx-be/internal/modules/classRegistration/classRegistrationDto"
@@ -61,6 +63,16 @@ func (u *classRegistrationUsecase) CreateClassRegistration(createClassRegistrati
 		return &classRegistrationDto.CreateClassRegistrationRes{}, errors.New("actual class id of class session doesn't match with class that you provided")
 	}
 
+	// ? Verify that the class has an is_remove status of false
+	selectedClass, err := u.classRepo.GetClassById(createClassRegistrationReq.ClassID)
+	if err != nil {
+		return &classRegistrationDto.CreateClassRegistrationRes{}, err
+	}
+
+	if selectedClass.IsRemove {
+		return &classRegistrationDto.CreateClassRegistrationRes{}, errors.New("registration is not allowed for this class as it has been removed")
+	}
+
 	//  ? Check if the user is already registered for the class session.
 	isRegistered, err := u.classRegistrationRepo.HasUserRegistered(email, createClassRegistrationReq.ClassID)
 	if err != nil {
@@ -101,11 +113,6 @@ func (u *classRegistrationUsecase) CreateClassRegistration(createClassRegistrati
 		return &classRegistrationDto.CreateClassRegistrationRes{}, errors.New("you cannot register for this class because you have reached the maximum cancellation limit. Please contact the administrator if you believe this is an error")
 	}
 
-	selectedClass, err := u.classRepo.GetClassById(createClassRegistrationReq.ClassID)
-	if err != nil {
-		return &classRegistrationDto.CreateClassRegistrationRes{}, err
-	}
-
 	if selectedClass.EnableQuestion {
 		questionsCount, err := u.questionRepo.CountQuestionsByClassID(createClassRegistrationReq.ClassID)
 		if err != nil {
@@ -137,9 +144,23 @@ func (u *classRegistrationUsecase) GetUserRegistrations(email string, page int, 
 	return userClassRegistration, total, nil
 }
 
-func (u *classRegistrationUsecase) CancelClassRegistration(email, classID string) error {
+func (u *classRegistrationUsecase) CancelClassRegistration(email, classSessionID string) error {
+	// ดึงข้อมูล ClassSession ตาม classSessionID
+	classSession, err := u.classSessionRepo.GetClassSessionById(classSessionID)
+	if err != nil {
+		return errors.New("failed to fetch class session details")
+	}
 
-	err := u.classRegistrationRepo.CancelClassRegistration(email, classID)
+	// คำนวณจำนวนวันที่เหลือก่อนเริ่มคลาส
+	daysUntilClass := int(time.Until(classSession.Date).Hours() / 24)
+
+	// ตรวจสอบว่าสามารถยกเลิกได้ตามนโยบายหรือไม่
+	if daysUntilClass < u.cfg.BusinessLogic.DaysBeforeClassStartForCancellation {
+		return fmt.Errorf("cancellation is not allowed within %d days before the class start date", u.cfg.BusinessLogic.DaysBeforeClassStartForCancellation)
+	}
+
+	// ดำเนินการยกเลิกการลงทะเบียน
+	err = u.classRegistrationRepo.CancelClassRegistration(email, classSession.ClassID)
 	if err != nil {
 		return err
 	}
@@ -148,6 +169,9 @@ func (u *classRegistrationUsecase) CancelClassRegistration(email, classID string
 }
 
 func (u *classRegistrationUsecase) ResetCancelledQuota(resetCancelledQuotaReq *classRegistrationDto.ResetCancelledQuotaReq) error {
+
+	resetCancelledQuotaReq.UserEmail = strings.ToLower(resetCancelledQuotaReq.UserEmail)
+
 	err := u.classRegistrationRepo.ResetCancelledQuota(resetCancelledQuotaReq)
 	if err != nil {
 		return err

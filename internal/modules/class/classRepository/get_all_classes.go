@@ -11,6 +11,9 @@ func (r *classGormRepository) GetAllClasses(class_tier, keyword string, class_le
 
 	query := r.db.Model(&models.Class{})
 
+	// Filter by is_remove (Exclude soft-deleted records)
+	query = query.Where("is_remove = ?", false)
+
 	// Filter by keyword
 	if keyword != "" {
 		query = query.Where("title ILIKE ? OR description ILIKE ?", "%"+keyword+"%", "%"+keyword+"%")
@@ -41,10 +44,11 @@ func (r *classGormRepository) GetAllClasses(class_tier, keyword string, class_le
 		Preload("ClassCategory").
 		Preload("ClassSessions", func(db *gorm.DB) *gorm.DB {
 			// Sort ClassSessions by date (ascending)
-			return db.Order("date ASC")
+			// Filter sessions that are not in the past
+			return db.Where("date >= CURRENT_DATE").Order("date ASC")
 		}).
-		Limit(limit).   // Apply Limit
-		Offset(offset). // Apply Offset
+		Limit(limit).
+		Offset(offset).
 		Find(&classes)
 
 	if result.Error != nil {

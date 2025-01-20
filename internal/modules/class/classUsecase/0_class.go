@@ -11,6 +11,7 @@ import (
 	classCategoryRepository "github.com/gunktp20/digital-hubx-be/internal/modules/classCategory/classCategoryRepository"
 	"github.com/gunktp20/digital-hubx-be/pkg/models"
 	"github.com/gunktp20/digital-hubx-be/pkg/utils"
+	"gorm.io/gorm"
 )
 
 type (
@@ -20,20 +21,25 @@ type (
 		GetAllClasses(class_tier, keyword string, class_level *int, class_category string, page int, limit int) (*[]models.Class, int64, error)
 		GetClassById(classId string) (*models.Class, error)
 		ToggleClassEnableQuestion(classID string) (bool, error)
+		UpdateClassDetails(classID string, title *string, description *string, classCategoryName *string, classTier *string, classLevel *int) error
+		UpdateClassCoverImage(classID string, fileBytes []byte, fileHeader *multipart.FileHeader) error
+		SoftDeleteClass(classID string) error
 	}
 
 	classUsecase struct {
 		classRepo         classRepository.ClassRepositoryService
 		classCategoryRepo classCategoryRepository.ClassCategoryRepositoryService
 		gcsClient         gcs.GcsClientService
+		db                *gorm.DB
 	}
 )
 
-func NewClassUsecase(classRepo classRepository.ClassRepositoryService, classCategoryRepo classCategoryRepository.ClassCategoryRepositoryService, gcsClient gcs.GcsClientService) ClassUsecaseService {
+func NewClassUsecase(classRepo classRepository.ClassRepositoryService, classCategoryRepo classCategoryRepository.ClassCategoryRepositoryService, gcsClient gcs.GcsClientService, db *gorm.DB) ClassUsecaseService {
 	return &classUsecase{
 		classRepo:         classRepo,
 		classCategoryRepo: classCategoryRepo,
 		gcsClient:         gcsClient,
+		db:                db,
 	}
 }
 
@@ -119,4 +125,103 @@ func (u *classUsecase) ToggleClassEnableQuestion(classID string) (bool, error) {
 
 	// ส่งสถานะใหม่กลับไป
 	return newState, nil
+}
+
+func (u *classUsecase) UpdateClassDetails(classID string, title *string, description *string, classCategoryName *string, classTier *string, classLevel *int) error {
+	tx := u.db.Begin()
+
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	updates := make(map[string]interface{})
+
+	if title != nil {
+		updates["title"] = *title
+	}
+
+	if description != nil {
+		updates["description"] = *description
+	}
+
+	if classCategoryName != nil {
+		var classCategory models.ClassCategory
+		err := tx.Where("category_name = ?", *classCategoryName).First(&classCategory).Error
+		if err != nil {
+			tx.Rollback()
+			return fmt.Errorf("class category name does not exist")
+		}
+		updates["class_category_id"] = classCategory.ID
+	}
+
+	if classTier != nil {
+		updates["class_tier"] = *classTier
+	}
+
+	if classLevel != nil {
+		if *classLevel <= 0 {
+			tx.Rollback()
+			return fmt.Errorf("class level must be a positive number")
+		}
+		updates["class_level"] = *classLevel
+	}
+
+	// อัปเดตข้อมูลทั้งหมด
+	err := u.classRepo.UpdateClassDetailsWithTransaction(tx, classID, updates)
+	if err != nil {
+		tx.Rollback()
+		return fmt.Errorf("failed to update class details: %w", err)
+	}
+
+	// Commit Transaction
+	tx.Commit()
+
+	return nil
+}
+
+func (u *classUsecase) UpdateClassCoverImage(classID string, fileBytes []byte, fileHeader *multipart.FileHeader) error {
+
+	_, err := u.classRepo.GetClassById(classID)
+	if err != nil {
+		return errors.New("class not found")
+	}
+
+	// ? Get file extension from fileBytes
+	fileExtension, err := utils.GetImageFileExtension(fileBytes)
+	if err != nil {
+		return err
+	}
+
+	// ? Generate a unique file name
+	fileName := utils.GenerateFileName(16)
+
+	// ? Upload file to GCS
+	err = u.gcsClient.UploadFile(fileName, fileHeader)
+	if err != nil {
+		return err
+	}
+
+	err = u.classRepo.UpdateClassCoverImage(classID, fileName+fileExtension)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (u *classUsecase) SoftDeleteClass(classID string) error {
+
+	_, err := u.classRepo.GetClassById(classID)
+	if err != nil {
+		return errors.New("class not found")
+	}
+
+	err = u.classRepo.SoftDeleteClass(classID)
+	if err != nil {
+		return fmt.Errorf("failed to soft delete class: %w", err)
+	}
+
+	return nil
 }

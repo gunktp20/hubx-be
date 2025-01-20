@@ -31,6 +31,10 @@ type (
 		UpdatedAt            time.Time                 `json:"updated_at"`
 	}
 
+	UpdateClassSessionLocation struct {
+		NewLocation string `json:"new_location" validate:"required"`
+	}
+
 	ClassSessionsRes struct {
 		ID                 string                    `json:"id"`
 		ClassID            string                    `json:"class_id"`

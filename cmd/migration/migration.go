@@ -47,7 +47,7 @@ func main() {
 	}
 
 	// สร้าง enum ใหม่สำหรับ class_session_status
-	if err := db.Exec("CREATE TYPE class_session_status AS ENUM ('available','fullybook')").Error; err != nil {
+	if err := db.Exec("CREATE TYPE class_session_status AS ENUM ('available','closed','cancelled')").Error; err != nil {
 		log.Fatalln(constant.Red+"Failed to create enum class_session_status: "+constant.Reset, err)
 	}
 

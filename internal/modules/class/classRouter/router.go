@@ -14,6 +14,9 @@ func SetClassRoutes(api fiber.Router, classHttpHandler classHandler.ClassHttpHan
 	// ? Admin Routes Group
 	adminRoute := api.Group("/admin/class")
 	adminRoute.Post("/", classHttpHandler.CreateClass)
+	adminRoute.Put("/:class_id", classHttpHandler.UpdateClassDetails)
 	adminRoute.Put("/:class_id/toggle-enable-question", classHttpHandler.ToggleClassEnableQuestion)
+	adminRoute.Put("/:class_id/cover-image", classHttpHandler.UpdateClassCoverImage)
+	adminRoute.Delete("/:class_id", classHttpHandler.DeleteClass)
 
 }

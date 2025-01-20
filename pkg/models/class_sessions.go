@@ -10,23 +10,22 @@ import (
 type ClassSessionStatus string
 
 const (
-	FullyBooked ClassSessionStatus = "fullybook"
-	Available   ClassSessionStatus = "available"
+	Available ClassSessionStatus = "available" // สามารถลงทะเบียนได้
+	Closed    ClassSessionStatus = "closed"    // ปิดการลงทะเบียน
 )
 
 type ClassSession struct {
-	ID                   string             `gorm:"type:uuid;primaryKey;not null" json:"id"`
-	ClassID              string             `gorm:"type:uuid;index;not null" json:"class_id"`
-	Class                Class              `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"class"`
-	Date                 time.Time          `gorm:"index;not null" json:"date"`
-	MaxCapacity          int                `gorm:"not null" json:"max_capacity"`
-	ClassSessionStatus   ClassSessionStatus `gorm:"type:class_session_status;not null;default:'available'" json:"class_session_status"`
-	StartTime            time.Time          `gorm:"index;not null" json:"start_time"`
-	EndTime              time.Time          `gorm:"index;not null" json:"end_time"`
-	Location             string             `gorm:"not null" json:"location"`
-	CancellationDeadline time.Time          `gorm:"not null" json:"cancellation_deadline"`
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
+	ID                 string             `gorm:"type:uuid;primaryKey;not null" json:"id"`
+	ClassID            string             `gorm:"type:uuid;index;not null" json:"class_id"`
+	Class              Class              `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"class"`
+	Date               time.Time          `gorm:"index;not null" json:"date"`
+	MaxCapacity        int                `gorm:"not null" json:"max_capacity"`
+	ClassSessionStatus ClassSessionStatus `gorm:"type:class_session_status;not null;default:'available'" json:"class_session_status"`
+	StartTime          time.Time          `gorm:"index;not null" json:"start_time"`
+	EndTime            time.Time          `gorm:"index;not null" json:"end_time"`
+	Location           string             `gorm:"not null" json:"location"`
+	CreatedAt          time.Time
+	UpdatedAt          time.Time
 
 	Attendances []Attendance `gorm:"foreignKey:ClassSessionID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"attendances"`
 }

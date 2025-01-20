@@ -7,6 +7,10 @@ type (
 		ClassCategoryName string `json:"class_category_name" validate:"required"`
 	}
 
+	UpdateCategoryNameReq struct {
+		ClassCategoryName string `json:"new_class_category_name" validate:"required"`
+	}
+
 	CreateClassCategoryRes struct {
 		ID                string    `json:"id"`
 		ClassCategoryName string    `json:"class_category_name"`

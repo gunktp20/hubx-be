@@ -13,6 +13,7 @@ type (
 	ClassCategoryUsecaseService interface {
 		CreateClassCategory(createClassCategoryReq *classCategoryDto.CreateClassCategoryReq) (*classCategoryDto.CreateClassCategoryRes, error)
 		GetAllClassCategories(keyword string, page int, limit int) (*[]models.ClassCategory, int64, error)
+		UpdateCategoryName(categoryID string, newCategoryName string) error
 	}
 
 	classCategoryUsecase struct {
@@ -44,4 +45,20 @@ func (u *classCategoryUsecase) GetAllClassCategories(keyword string, page int, l
 	}
 
 	return ClassCategories, total, nil
+}
+
+func (u *classCategoryUsecase) UpdateCategoryName(categoryID string, newCategoryName string) error {
+	// ? Check if the category exists
+	_, err := u.classCategoryRepo.GetClassCategoryById(categoryID)
+	if err != nil {
+		return err
+	}
+
+	// ? Update the category name
+	err = u.classCategoryRepo.UpdateCategoryName(categoryID, newCategoryName)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

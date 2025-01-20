@@ -2,21 +2,25 @@ package repository
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	classSessionDto "github.com/gunktp20/digital-hubx-be/internal/modules/classSession/classSessionDto"
 	"github.com/gunktp20/digital-hubx-be/pkg/models"
+	"gorm.io/gorm"
 )
 
 type (
 	ClassSessionRepositoryService interface {
-		CreateClassSession(createClassSessionReq *classSessionDto.CreateClassSessionReq, cancellationDeadline time.Time) (*classSessionDto.CreateClassSessionRes, error)
+		CreateClassSession(createClassSessionReq *classSessionDto.CreateClassSessionReq) (*classSessionDto.CreateClassSessionRes, error)
 		GetAllClassSessions(class_id, class_tier string, page int, limit int) (*[]classSessionDto.ClassSessionsRes, int64, error)
 		CheckSessionDateConflict(classID, classTier string, date time.Time) (bool, error)
 		GetClassSessionById(classSessionID string) (*models.ClassSession, error)
 		GetMaxCapacityOfClassSessionById(classSessionID string) (int, error)
 		SetMaxCapacity(classSessionID string, newCapacity int) error
+		CheckDateConflictForMultipleClassTiers(date time.Time, tiers []models.ClassTier) (int64, error)
+		CountSessionsByDate(date time.Time) (int64, error)
+		CheckClassTierDateConflict(classTier string, date time.Time) (bool, error)
+		UpdateLocation(classSessionID, newLocation string) error
 	}
 )
 
@@ -24,24 +28,37 @@ func (r *classSessionGormRepository) CheckSessionDateConflict(classID, classTier
 	var count int64
 	err := r.db.Model(&models.ClassSession{}).
 		Joins("JOIN classes ON classes.id = class_sessions.class_id").
-		Where("class_sessions.class_id = ? AND class_sessions.date = ? AND classes.class_tier = ?", classID, date, classTier).
+		Where("(class_sessions.class_id = ? OR classes.class_tier = ?) AND DATE(class_sessions.date) = DATE(?)", classID, classTier, date).
 		Count(&count).Error
 	if err != nil {
 		return false, err
 	}
-	return count > 0, nil // ถ้า count > 0 แสดงว่ามี session ซ้ำ
+
+	return count > 0, nil
+}
+func (r *classSessionGormRepository) CheckClassTierDateConflict(classTier string, date time.Time) (bool, error) {
+	var count int64
+	err := r.db.Model(&models.ClassSession{}).
+		Joins("JOIN classes ON classes.id = class_sessions.class_id").
+		Where("DATE(class_sessions.date) = DATE(?) AND classes.class_tier = ? AND classes.is_remove = false", date, classTier).
+		Count(&count).Error
+
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil // ถ้า count > 0 แสดงว่ามีวันซ้ำ
 }
 
-func (r *classSessionGormRepository) CreateClassSession(createClassSessionReq *classSessionDto.CreateClassSessionReq, cancellationDeadline time.Time) (*classSessionDto.CreateClassSessionRes, error) {
+func (r *classSessionGormRepository) CreateClassSession(createClassSessionReq *classSessionDto.CreateClassSessionReq) (*classSessionDto.CreateClassSessionRes, error) {
 
 	classSession := models.ClassSession{
-		ClassID:              createClassSessionReq.ClassID,
-		Date:                 createClassSessionReq.Date,
-		MaxCapacity:          createClassSessionReq.MaxCapacity,
-		CancellationDeadline: cancellationDeadline,
-		StartTime:            createClassSessionReq.StartTime,
-		EndTime:              createClassSessionReq.EndTime,
-		Location:             createClassSessionReq.Location,
+		ClassID:     createClassSessionReq.ClassID,
+		Date:        createClassSessionReq.Date,
+		MaxCapacity: createClassSessionReq.MaxCapacity,
+		StartTime:   createClassSessionReq.StartTime,
+		EndTime:     createClassSessionReq.EndTime,
+		Location:    createClassSessionReq.Location,
 	}
 
 	if err := r.db.Create(&classSession).Error; err != nil {
@@ -49,17 +66,16 @@ func (r *classSessionGormRepository) CreateClassSession(createClassSessionReq *c
 	}
 
 	return &classSessionDto.CreateClassSessionRes{
-		ID:                   classSession.ID,
-		ClassID:              classSession.ClassID,
-		Date:                 classSession.Date,
-		MaxCapacity:          classSession.MaxCapacity,
-		CancellationDeadline: classSession.CancellationDeadline,
-		ClassSessionStatus:   classSession.ClassSessionStatus,
-		StartTime:            classSession.StartTime,
-		EndTime:              classSession.EndTime,
-		Location:             classSession.Location,
-		CreatedAt:            classSession.CreatedAt,
-		UpdatedAt:            classSession.UpdatedAt,
+		ID:                 classSession.ID,
+		ClassID:            classSession.ClassID,
+		Date:               classSession.Date,
+		MaxCapacity:        classSession.MaxCapacity,
+		ClassSessionStatus: classSession.ClassSessionStatus,
+		StartTime:          classSession.StartTime,
+		EndTime:            classSession.EndTime,
+		Location:           classSession.Location,
+		CreatedAt:          classSession.CreatedAt,
+		UpdatedAt:          classSession.UpdatedAt,
 	}, nil
 }
 
@@ -67,24 +83,27 @@ func (r *classSessionGormRepository) GetAllClassSessions(class_id, class_tier st
 	var classSessions []models.ClassSession
 	var total int64
 
-	query := r.db.Model(&models.ClassSession{})
+	query := r.db.Model(&models.ClassSession{}).
+		Joins("JOIN classes ON classes.id = class_sessions.class_id"). // Join with Class table
+		Where("classes.is_remove = false")                             // Ensure Class is not removed
 
 	// Filter by class_id
 	if class_id != "" {
 		query = query.Where("class_id = ?", class_id)
 	}
 
-	fmt.Print("class_tier", class_tier)
-
 	// Filter by class_tier
 	if class_tier != "" {
-		query = query.Joins("JOIN classes ON classes.id = class_sessions.class_id").
-			Where("classes.class_tier = ?", class_tier)
+		query = query.Where("classes.class_tier = ?", class_tier)
 	}
 
+	// Filter sessions that are not in the past
+	query = query.Where("date >= CURRENT_DATE")
+
+	// Count total results
 	query.Count(&total)
 
-	// ? Sort by date (ascending order)
+	// Sort by date (ascending order)
 	query = query.Order("date ASC")
 
 	offset := (page - 1) * limit
@@ -108,7 +127,7 @@ func (r *classSessionGormRepository) GetAllClassSessions(class_id, class_tier st
 			Where("class_session_id = ? AND reg_status != ?", classSessions[i].ID, models.Cancelled).
 			Count(&totalRegistrations)
 
-		// Use append to add elements to the slice
+		// Append session details
 		classSessionsRes = append(classSessionsRes, classSessionDto.ClassSessionsRes{
 			ID:                 classSessions[i].ID,
 			ClassID:            classSessions[i].ClassID,
@@ -130,14 +149,18 @@ func (r *classSessionGormRepository) GetAllClassSessions(class_id, class_tier st
 
 func (r *classSessionGormRepository) GetClassSessionById(classSessionID string) (*models.ClassSession, error) {
 	var classSession = new(models.ClassSession)
-	result := r.db.First(&classSession, "id = ?", classSessionID)
+
+	// Query with filtering to ensure the session is not past and the class is not removed
+	result := r.db.
+		Joins("JOIN classes ON classes.id = class_sessions.class_id").                                                        // Join with Class table
+		Where("class_sessions.id = ? AND class_sessions.date >= CURRENT_DATE AND classes.is_remove = false", classSessionID). // Add is_remove check
+		First(&classSession)
 
 	if result.Error != nil {
-		return &models.ClassSession{}, result.Error
-	}
-
-	if result.RowsAffected == 0 {
-		return &models.ClassSession{}, errors.New("class session record not found")
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, errors.New("class session not found, already past, or associated class has been removed")
+		}
+		return nil, result.Error
 	}
 
 	return classSession, nil
@@ -178,6 +201,53 @@ func (r *classSessionGormRepository) SetMaxCapacity(classSessionID string, newCa
 	}
 
 	classSession.MaxCapacity = newCapacity
+
+	return nil
+}
+
+func (r *classSessionGormRepository) CheckDateConflictForMultipleClassTiers(date time.Time, tiers []models.ClassTier) (int64, error) {
+	var count int64
+	result := r.db.Raw(`
+        SELECT COUNT(DISTINCT classes.class_tier) 
+        FROM class_sessions 
+        JOIN classes ON classes.id = class_sessions.class_id 
+        WHERE class_sessions.date = ? 
+        AND classes.class_tier IN ? 
+        AND classes.is_remove = false
+    `, date, tiers).Scan(&count)
+
+	if result.Error != nil {
+		return 0, result.Error
+	}
+
+	return count, nil
+}
+
+func (r *classSessionGormRepository) CountSessionsByDate(date time.Time) (int64, error) {
+	var count int64
+	err := r.db.Model(&models.ClassSession{}).
+		Where("DATE(class_sessions.date) = DATE(?)", date).
+		Count(&count).Error
+
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
+}
+
+func (r *classSessionGormRepository) UpdateLocation(classSessionID, newLocation string) error {
+	result := r.db.Model(&models.ClassSession{}).
+		Where("id = ?", classSessionID).
+		Update("location", newLocation)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New("no class session found to update location")
+	}
 
 	return nil
 }

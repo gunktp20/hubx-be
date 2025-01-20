@@ -4,6 +4,7 @@ import (
 	"math"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
@@ -18,6 +19,7 @@ type (
 		CreateClassSession(c *fiber.Ctx) error
 		GetAllClassSessions(c *fiber.Ctx) error
 		SetMaxCapacity(c *fiber.Ctx) error
+		UpdateClassSessionLocation(c *fiber.Ctx) error
 	}
 
 	classSessionHttpHandler struct {
@@ -91,5 +93,36 @@ func (h *classSessionHttpHandler) SetMaxCapacity(c *fiber.Ctx) error {
 
 	return response.SuccessResponse(c, http.StatusOK, &fiber.Map{
 		"message": "The max capacity was updated successfully",
+	})
+}
+
+func (h *classSessionHttpHandler) UpdateClassSessionLocation(c *fiber.Ctx) error {
+	classSessionID := c.Params("class_session_id")
+
+	// Parse the request body
+	var body struct {
+		NewLocation string `json:"new_location"`
+	}
+
+	if err := c.BodyParser(&body); err != nil {
+		return response.ErrResponse(c, http.StatusBadRequest, "Invalid request body", nil)
+	}
+
+	// Validate input
+	if body.NewLocation == "" {
+		return response.ErrResponse(c, http.StatusBadRequest, "New location is required", nil)
+	}
+
+	// Call use case to update location
+	err := h.classSessionUsecase.UpdateLocation(classSessionID, body.NewLocation)
+	if err != nil {
+		if strings.Contains(err.Error(), "no class session found") {
+			return response.ErrResponse(c, http.StatusNotFound, err.Error(), nil)
+		}
+		return response.ErrResponse(c, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	return response.SuccessResponse(c, http.StatusOK, fiber.Map{
+		"message": "Class session location updated successfully",
 	})
 }

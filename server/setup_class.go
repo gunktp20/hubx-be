@@ -15,6 +15,7 @@ func (s *fiberServer) initializeClassHttpHandler(api fiber.Router, conf *config.
 		s.container.Repositories.ClassRepo,
 		s.container.Repositories.ClassCategory,
 		s.gcs,
+		s.db.GetDb(),
 	)
 	classHttpHandler := classHandler.NewClassHttpHandler(classUsecase)
 

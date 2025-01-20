@@ -1,5 +1,7 @@
 **/configuration.yml
-
 **/config.json
 
-pkg/migration/config.yml
+/configuration/*.env
+
+*.pem
+*.pk8

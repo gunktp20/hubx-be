@@ -15,6 +15,7 @@ type (
 		DeleteClassCategoryById(categoryId string) error
 		GetAllClassCategories(keyword string, page int, limit int) (*[]models.ClassCategory, int64, error)
 		IsClassCategoryIdExists(classCategoryId string) bool
+		UpdateCategoryName(categoryID string, newCategoryName string) error
 	}
 )
 
@@ -111,4 +112,20 @@ func (r *classCategoryGormRepository) GetAllClassCategories(keyword string, page
 	}
 
 	return &classCategories, total, nil
+}
+
+func (r *classCategoryGormRepository) UpdateCategoryName(categoryID string, newCategoryName string) error {
+	result := r.db.Model(&models.ClassCategory{}).
+		Where("id = ?", categoryID).
+		Update("category_name", newCategoryName)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New("category not found or no changes made")
+	}
+
+	return nil
 }

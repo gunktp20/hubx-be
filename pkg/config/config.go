@@ -56,7 +56,6 @@ var (
 )
 
 func GetConfig(configPath string) *Config {
-
 	once.Do(func() {
 		v := viper.New()
 		v.SetConfigName("config")
@@ -76,7 +75,7 @@ func GetConfig(configPath string) *Config {
 			log.Fatalf("Missing essential configuration")
 		}
 
-		configInstance = &config // ต้องกำหนดค่าให้ configInstance
+		configInstance = &config
 		log.Println(constant.Green + "Configuration loaded successfully" + constant.Reset)
 	})
 

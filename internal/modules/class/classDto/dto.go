@@ -29,4 +29,12 @@ type (
 		CreatedAt       time.Time        `json:"created_at"`
 		UpdatedAt       time.Time        `json:"updated_at"`
 	}
+
+	UpdateClassReq struct {
+		Title             *string `json:"title"`
+		Description       *string `json:"description"`
+		ClassCategoryName *string `json:"class_category_name"`
+		ClassTier         *string `json:"class_tier"`
+		ClassLevel        *int    `json:"class_level"`
+	}
 )
