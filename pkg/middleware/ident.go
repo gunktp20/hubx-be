@@ -15,7 +15,7 @@ const Bearer = "Bearer"
 
 type JWTPayload struct {
 	Name  string   `json:"name"`
-	Email string   `json:"unique_name"`
+	Email string   `json:"preferred_username"`
 	Roles []string `json:"roles"`
 }
 
