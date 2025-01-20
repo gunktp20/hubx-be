@@ -13,9 +13,9 @@ type UserSubQuestionAnswer struct {
 	SubQuestionID       string  `gorm:"type:uuid;not null;" json:"sub_question_id"`
 	SubQuestionChoiceID *string `gorm:"type:uuid;null;" json:"sub_question_choice_id"`
 	ClassID             string  `gorm:"type:uuid;not null;" json:"class_id"`
-	AnswerText          string  `gorm:"null" json:"answer_text"`
+	AnswerText          *string `gorm:"null" json:"answer_text"`
 
-	User              User              `gorm:"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
+	// User              User              `gorm:"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
 	Class             Class             `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"class"`
 	SubQuestion       SubQuestion       `gorm:"foreignKey:SubQuestionID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"sub_question"`
 	SubQuestionChoice SubQuestionChoice `gorm:"foreignKey:SubQuestionChoiceID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"sub_question_choice"`

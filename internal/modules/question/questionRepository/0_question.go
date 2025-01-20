@@ -12,6 +12,7 @@ type (
 		CreateQuestion(createQuestionReq *questionDto.CreateQuestionReq) (*questionDto.CreateQuestionRes, error)
 		GetQuestionsByClassID(classId string, page int, limit int) (*[]models.Question, int64, error)
 		GetQuestionById(questionID string) (*models.Question, error)
+		CountQuestionsByClassID(classId string) (int64, error)
 	}
 )
 
@@ -83,4 +84,19 @@ func (r *questionGormRepository) GetQuestionById(questionID string) (*models.Que
 	}
 
 	return question, nil
+}
+
+func (r *questionGormRepository) CountQuestionsByClassID(classId string) (int64, error) {
+	var total int64
+
+	// Query เพื่อหาจำนวนคำถามใน class ที่กำหนด
+	result := r.db.Model(&models.Question{}).
+		Where("class_id = ?", classId).
+		Count(&total)
+
+	if result.Error != nil {
+		return 0, result.Error
+	}
+
+	return total, nil
 }

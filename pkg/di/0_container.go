@@ -1,6 +1,7 @@
 package di
 
 import (
+	attendanceRepo "github.com/gunktp20/digital-hubx-be/internal/modules/attendance/attendanceRepository"
 	choiceRepo "github.com/gunktp20/digital-hubx-be/internal/modules/choice/choiceRepository"
 	classRepo "github.com/gunktp20/digital-hubx-be/internal/modules/class/classRepository"
 	classCategoryRepo "github.com/gunktp20/digital-hubx-be/internal/modules/classCategory/classCategoryRepository"
@@ -9,7 +10,6 @@ import (
 	questionRepo "github.com/gunktp20/digital-hubx-be/internal/modules/question/questionRepository"
 	subQuestionRepo "github.com/gunktp20/digital-hubx-be/internal/modules/subQuestion/subQuestionRepository"
 	subQuestionChoiceRepo "github.com/gunktp20/digital-hubx-be/internal/modules/subQuestionChoice/subQuestionChoiceRepository"
-	userRepo "github.com/gunktp20/digital-hubx-be/internal/modules/user/userRepository"
 	userQuestionAnswerRepo "github.com/gunktp20/digital-hubx-be/internal/modules/userQuestionAnswer/userQuestionAnswerRepository"
 	userSubQuestionAnswerRepo "github.com/gunktp20/digital-hubx-be/internal/modules/userSubQuestionAnswer/userSubQuestionAnswerRepository"
 	"github.com/gunktp20/digital-hubx-be/pkg/config"
@@ -25,9 +25,9 @@ type Repositories struct {
 	QuestionRepo              questionRepo.QuestionRepositoryService
 	SubQuestionRepo           subQuestionRepo.SubQuestionRepositoryService
 	SubQuestionChoiceRepo     subQuestionChoiceRepo.SubQuestionChoiceRepositoryService
-	UserRepo                  userRepo.UserRepositoryService
 	UserQuestionAnswerRepo    userQuestionAnswerRepo.UserQuestionAnswerRepositoryService
 	UserSubQuestionAnswerRepo userSubQuestionAnswerRepo.UserSubQuestionAnswerRepositoryService
+	AttendanceRepo            attendanceRepo.AttendanceRepositoryService
 }
 
 type Container struct {
@@ -45,9 +45,9 @@ func NewContainer(conf *config.Config, db database.Database) *Container {
 			QuestionRepo:              questionRepo.NewQuestionGormRepository(db.GetDb()),
 			SubQuestionRepo:           subQuestionRepo.NewSubQuestionGormRepository(db.GetDb()),
 			SubQuestionChoiceRepo:     subQuestionChoiceRepo.NewSubQuestionChoiceGormRepository(db.GetDb()),
-			UserRepo:                  userRepo.NewUserGormRepository(db.GetDb()),
 			UserQuestionAnswerRepo:    userQuestionAnswerRepo.NewUserQuestionAnswerGormRepository(db.GetDb()),
 			UserSubQuestionAnswerRepo: userSubQuestionAnswerRepo.NewUserSubQuestionAnswerGormRepository(db.GetDb()),
+			AttendanceRepo:            attendanceRepo.NewAttendanceGormRepository(db.GetDb()),
 			// Initialize other repositories here
 		},
 	}

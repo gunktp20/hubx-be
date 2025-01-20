@@ -16,6 +16,7 @@ type (
 		CheckSessionDateConflict(classID, classTier string, date time.Time) (bool, error)
 		GetClassSessionById(classSessionID string) (*models.ClassSession, error)
 		GetMaxCapacityOfClassSessionById(classSessionID string) (int, error)
+		SetMaxCapacity(classSessionID string, newCapacity int) error
 	}
 )
 
@@ -83,6 +84,9 @@ func (r *classSessionGormRepository) GetAllClassSessions(class_id, class_tier st
 
 	query.Count(&total)
 
+	// ? Sort by date (ascending order)
+	query = query.Order("date ASC")
+
 	offset := (page - 1) * limit
 	result := query.
 		Preload("Class"). // Load related Class data
@@ -101,7 +105,7 @@ func (r *classSessionGormRepository) GetAllClassSessions(class_id, class_tier st
 		var totalRegistrations int64
 
 		r.db.Model(&models.UserClassRegistration{}).
-			Where("class_session_id = ?", classSessions[i].ID).
+			Where("class_session_id = ? AND reg_status != ?", classSessions[i].ID, models.Cancelled).
 			Count(&totalRegistrations)
 
 		// Use append to add elements to the slice
@@ -152,4 +156,28 @@ func (r *classSessionGormRepository) GetMaxCapacityOfClassSessionById(classSessi
 	}
 
 	return classSession.MaxCapacity, nil
+}
+
+func (r *classSessionGormRepository) SetMaxCapacity(classSessionID string, newCapacity int) error {
+	var classSession = new(models.ClassSession)
+	if newCapacity <= 0 {
+		return errors.New("max capacity must be greater than zero")
+	}
+	result := r.db.First(&classSession, "id = ?", classSessionID)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	err := r.db.Model(&models.ClassSession{}).
+		Where("id = ?", classSessionID).
+		Update("max_capacity", newCapacity).Error
+
+	if err != nil {
+		return err
+	}
+
+	classSession.MaxCapacity = newCapacity
+
+	return nil
 }

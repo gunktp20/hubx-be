@@ -19,12 +19,18 @@ func (r *userSubQuestionAnswerGormRepository) CreateUserSubQuestionAnswer(tx *go
 		subQuestionChoiceID = &createUserSubQuestionAnswerReq.SubQuestionChoiceID
 	}
 
+	// แปลง AnswerText เป็น *string
+	var answerText *string
+	if createUserSubQuestionAnswerReq.AnswerText != "" {
+		answerText = &createUserSubQuestionAnswerReq.AnswerText
+	}
+
 	userSubQuestionAnswer := models.UserSubQuestionAnswer{
 		UserEmail:           email,
 		SubQuestionID:       createUserSubQuestionAnswerReq.SubQuestionID,
 		SubQuestionChoiceID: subQuestionChoiceID,
 		ClassID:             createUserSubQuestionAnswerReq.ClassID,
-		AnswerText:          createUserSubQuestionAnswerReq.AnswerText,
+		AnswerText:          answerText, // ใช้ค่า pointer
 	}
 
 	if err := tx.Create(&userSubQuestionAnswer).Error; err != nil {
@@ -37,7 +43,7 @@ func (r *userSubQuestionAnswerGormRepository) CreateUserSubQuestionAnswer(tx *go
 		SubQuestionID:       userSubQuestionAnswer.SubQuestionID,
 		SubQuestionChoiceID: subQuestionChoiceID,
 		ClassID:             userSubQuestionAnswer.ClassID,
-		AnswerText:          userSubQuestionAnswer.AnswerText,
+		AnswerText:          answerText,
 		CreatedAt:           userSubQuestionAnswer.CreatedAt,
 		UpdatedAt:           userSubQuestionAnswer.UpdatedAt,
 	}, nil

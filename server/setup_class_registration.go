@@ -12,9 +12,12 @@ import (
 func (s *fiberServer) initializeClassRegistrationHttpHandler(api fiber.Router, conf *config.Config) {
 	// ? Initialize all layers
 	classRegistrationUsecase := classRegistrationUsecase.NewClassRegistrationUsecase(
+		s.conf,
 		s.container.Repositories.ClassRegistrationRepo,
 		s.container.Repositories.ClassSessionRepo,
 		s.container.Repositories.ClassRepo,
+		s.container.Repositories.UserQuestionAnswerRepo,
+		s.container.Repositories.QuestionRepo,
 	)
 	classRegistrationHttpHandler := classRegistrationHandler.NewClassRegistrationHttpHandler(classRegistrationUsecase)
 

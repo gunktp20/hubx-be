@@ -9,8 +9,9 @@ type (
 	ClassRepositoryService interface {
 		CreateClass(createClassReq *classDto.CreateClassReq, ThumbnailUrl string) (*classDto.CreateClassRes, error)
 		IsClassTitleExists(classTitle string) bool
-		GetAllClasses(class_tier, keyword string, page int, limit int) (*[]models.Class, int64, error)
+		GetAllClasses(class_tier, keyword string, class_level *int, class_category string, page int, limit int) (*[]models.Class, int64, error)
 		GetClassById(classId string) (*models.Class, error)
 		DeleteClassById(classId string) (*models.Class, error)
+		ToggleClassEnableQuestion(classID string) (bool, error)
 	}
 )

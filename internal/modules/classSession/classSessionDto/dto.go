@@ -45,4 +45,8 @@ type (
 		CreatedAt          time.Time                 `json:"created_at"`
 		UpdatedAt          time.Time                 `json:"updated_at"`
 	}
+
+	SetMaxCapacityReq struct {
+		NewCapacity int `json:"new_capacity" validate:"required"`
+	}
 )

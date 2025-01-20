@@ -6,8 +6,9 @@ import (
 )
 
 func SetChoiceRoutes(api fiber.Router, choiceHttpHandler choiceHandler.ChoiceHttpHandlerService) {
-	routes := api.Group("/choice")
+	_ = api.Group("/choice")
 
-	routes.Post("/", choiceHttpHandler.CreateChoice)
-
+	// ? Admin Routes Group
+	adminRoute := api.Group("/admin/choice")
+	adminRoute.Post("/", choiceHttpHandler.CreateChoice)
 }

@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 
 	choiceRepository "github.com/gunktp20/digital-hubx-be/internal/modules/choice/choiceRepository"
 	questionRepository "github.com/gunktp20/digital-hubx-be/internal/modules/question/questionRepository"
@@ -31,7 +32,8 @@ type (
 )
 
 func NewUserQuestionAnswerUsecase(
-	userQuestionAnswerRepo userQuestionAnswerRepository.UserQuestionAnswerRepositoryService, questionRepo questionRepository.QuestionRepositoryService,
+	userQuestionAnswerRepo userQuestionAnswerRepository.UserQuestionAnswerRepositoryService,
+	questionRepo questionRepository.QuestionRepositoryService,
 	choiceRepo choiceRepository.ChoiceRepositoryService,
 	userSubQuestionAnswerRepo userSubQuestionAnswerRepository.UserSubQuestionAnswerRepositoryService,
 	db *gorm.DB,
@@ -96,83 +98,8 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 		return []userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, err
 	}
 
-	// ! Question from All Questions of Selected Class Display
-	// if len(*questionsOfClass) > 0 {
-	// 	for i, req := range *questionsOfClass { // Dereference the pointer res
-	// 		data, err := json.MarshalIndent(req, "", "  ")
-	// 		if err != nil {
-	// 			log.Fatalf("Error marshalling JSON: %v", err)
-	// 		}
-	// 		var question models.Question
-	// 		if err := json.Unmarshal(data, &question); err != nil {
-	// 			log.Fatalf("Error unmarshalling JSON: %v", err)
-	// 		}
+	fmt.Print("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
 
-	// 		log.Print(i+1, ".")
-	// 		log.Println("   Question ID : ", question.ID)
-	// 		log.Println("   Question Description : ", question.Description)
-	// 		if question.QuestionType == "choice" {
-	// 			log.Println("   ❌  Question Type : ", question.QuestionType)
-	// 		} else {
-	// 			log.Println("   ✏️  Question Type : ", question.QuestionType)
-	// 		}
-
-	// 		// ! Choices
-	// 		if len(req.Choices) > 0 {
-	// 			log.Print("         ")
-	// 			log.Println("     Choices :")
-	// 		}
-	// 		if len(req.Choices) > 0 {
-	// 			for _, req_choice := range req.Choices {
-	// 				data, err := json.MarshalIndent(req_choice, "", "  ")
-	// 				if err != nil {
-	// 					log.Fatalf("Error marshalling JSON: %v", err)
-	// 				}
-	// 				var choice models.Choice
-	// 				if err := json.Unmarshal(data, &choice); err != nil {
-	// 					log.Fatalf("Error unmarshalling JSON: %v", err)
-	// 				}
-	// 				log.Println("       Choice :")
-	// 				log.Println("      	  -    Choice ID : ", choice.ID)
-	// 				log.Println("      	  -    Choice Description : ", choice.Description)
-	// 				log.Println("       ")
-	// 				// ! Sub Questions
-	// 				if len(req_choice.SubQuestions) > 0 {
-	// 					log.Println("               Sub Questions ของ Choice  :", choice.Description)
-	// 				}
-	// 				if len(req_choice.SubQuestions) > 0 {
-	// 					for _, req_choice_sub_question := range req_choice.SubQuestions {
-
-	// 						data, err := json.MarshalIndent(req_choice_sub_question, "", "  ")
-	// 						if err != nil {
-	// 							log.Fatalf("Error marshalling JSON: %v", err)
-	// 						}
-	// 						var choice models.Choice
-	// 						if err := json.Unmarshal(data, &choice); err != nil {
-	// 							log.Fatalf("Error unmarshalling JSON: %v", err)
-	// 						}
-	// 						log.Println("      	      -    Sub Question ID : ", req_choice_sub_question.ID)
-	// 						log.Println("      	      -    Sub Question Description : ", req_choice_sub_question.Description)
-	// 						if req_choice_sub_question.QuestionType == "choice" {
-	// 							log.Println("      	      - ❌    Sub Question Type : ", req_choice_sub_question.QuestionType)
-	// 						} else {
-	// 							log.Println("      	      - ✏️    Sub Question Type : ", req_choice_sub_question.QuestionType)
-	// 						}
-
-	// 						// ! Choices SQ
-	// 						if len(req_choice_sub_question.SubQuestionChoices) > 0 {
-	// 							log.Println("      	 ")
-	// 							log.Println("                        Choices SQ ของ SQ :", choice.Description)
-	// 						}
-	// 						if len(req_choice_sub_question.SubQuestionChoices) > 0 {
-	// 							for _, req_choice_sub_question_choice := range req_choice_sub_question.SubQuestionChoices {
-
-	// 								data, err := json.MarshalIndent(req_choice_sub_question_choice, "", "  ")
-	// 								if err != nil {
-	// 									log.Fatalf("Error marshalling JSON: %v", err)
-	// 								}
-
-	// 								var choice models.Choice
 	// 								if err := json.Unmarshal(data, &choice); err != nil {
 	// 									log.Fatalf("Error unmarshalling JSON: %v", err)
 	// 								}
@@ -195,16 +122,21 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 	tx := u.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
+			fmt.Print(" r := recover(); r != nil 8888888888888888888888888888888888888888888888888888888888888888888")
 			tx.Rollback() // Rollback หากมี Panic
 		}
 	}()
 
+	fmt.Println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+
 	// TODO
 	if len(*questionsOfClass) > 0 {
 		for i, question := range *questionsOfClass {
+			fmt.Println("11111111111111111111111111111111111111111111111111111")
 			// ? Check if all provided question IDs exist for the given class
 			// ตรวจสอบว่า Question ID ตรงกับที่ส่งมา
 			if question.ID != createUserQuestionAnswerReqs[i].QuestionID {
+				fmt.Println("2222222222222222222222")
 				tx.Rollback()
 				return []userQuestionAnswerDto.CreateUserQuestionAnswerRes{},
 					errors.New("invalid question ID provided for the given class")
@@ -241,9 +173,20 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 					UserEmail:  email,
 					QuestionID: question.ID,
 					ClassID:    question.ClassID,
-					ChoiceID:   createUserQuestionAnswerReqs[i].SelectedChoiceID,
-					AnswerText: createUserQuestionAnswerReqs[i].AnswerText,
+					ChoiceID: func() *string {
+						if createUserQuestionAnswerReqs[i].SelectedChoiceID == "" {
+							return nil // หากไม่มีค่า ให้ใช้ nil
+						}
+						return &createUserQuestionAnswerReqs[i].SelectedChoiceID // แปลงเป็น pointer
+					}(),
+					AnswerText: func() *string {
+						if createUserQuestionAnswerReqs[i].AnswerText == "" {
+							return nil // หากไม่มีค่า ให้ใช้ nil
+						}
+						return &createUserQuestionAnswerReqs[i].AnswerText // แปลงเป็น pointer
+					}(),
 				})
+
 				if err != nil {
 					tx.Rollback()
 					return []userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, nil
@@ -331,9 +274,15 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 					UserEmail:  email,
 					QuestionID: question.ID,
 					ClassID:    question.ClassID,
-					ChoiceID:   "",
-					AnswerText: createUserQuestionAnswerReqs[i].AnswerText,
+					ChoiceID:   nil, // กำหนดเป็น nil แทน ""
+					AnswerText: func() *string {
+						if createUserQuestionAnswerReqs[i].AnswerText == "" {
+							return nil // หากไม่มีค่า ให้ใช้ nil
+						}
+						return &createUserQuestionAnswerReqs[i].AnswerText
+					}(),
 				})
+
 				if err != nil {
 					tx.Rollback()
 					return []userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, nil
@@ -341,6 +290,8 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 			}
 		}
 	}
+
+	tx.Commit()
 
 	return createUserQuestionAnswerRes, nil
 }

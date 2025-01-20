@@ -6,9 +6,11 @@ import (
 )
 
 func SetQuestionRoutes(api fiber.Router, questionHttpHandler questionHandler.QuestionHttpHandlerService) {
-	routes := api.Group("/question")
+	questionRoute := api.Group("/question")
+	questionRoute.Get("/:class_id/class", questionHttpHandler.GetQuestionsByClassID)
 
-	routes.Post("/", questionHttpHandler.CreateQuestion)
-	routes.Get("/:class_id/class", questionHttpHandler.GetQuestionsByClassID)
+	// ? Admin Routes Group
+	adminRoute := api.Group("/admin/question")
+	adminRoute.Post("/", questionHttpHandler.CreateQuestion)
 
 }

@@ -6,9 +6,12 @@ import (
 )
 
 func SetClassCategoryRoutes(api fiber.Router, classCategoryHttpHandler classCategoryHandler.ClassCategoryHttpHandlerService) {
-	routes := api.Group("/class-category")
+	classCategoryRoute := api.Group("/class-category")
 
-	routes.Get("/", classCategoryHttpHandler.GetAllClassCategories)
-	routes.Post("/", classCategoryHttpHandler.CreateClassCategory)
+	classCategoryRoute.Get("/", classCategoryHttpHandler.GetAllClassCategories)
+
+	// ? Admin Routes Group
+	adminRoute := api.Group("/admin/class-category")
+	adminRoute.Post("/", classCategoryHttpHandler.CreateClassCategory)
 
 }

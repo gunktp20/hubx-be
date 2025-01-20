@@ -13,6 +13,8 @@ import (
 	"github.com/gunktp20/digital-hubx-be/pkg/utils"
 )
 
+var getContextAuth = utils.GetContextAuth
+
 type (
 	UserQuestionAnswerHttpHandlerService interface {
 		// CreateUserQuestionAnswer(c *fiber.Ctx) error
@@ -58,11 +60,7 @@ func NewUserQuestionAnswerHttpHandler(usecase userQuestionAnswerUsecase.UserQues
 // }
 
 func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fiber.Ctx) error {
-
-	userEmail, err := utils.GetUserEmailFromContext(c)
-	if err != nil {
-		return response.ErrResponse(c, http.StatusUnauthorized, err.Error(), nil)
-	}
+	_, _, userEmail := getContextAuth(c.UserContext())
 
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 	limit, _ := strconv.Atoi(c.Query("limit", "10"))
@@ -82,10 +80,7 @@ func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fib
 }
 
 func (h *userQuestionAnswerHttpHandler) CreateMultipleUserQuestionAnswers(c *fiber.Ctx) error {
-	userEmail, err := utils.GetUserEmailFromContext(c)
-	if err != nil {
-		return response.ErrResponse(c, http.StatusUnauthorized, err.Error(), nil)
-	}
+	_, _, userEmail := getContextAuth(c.UserContext())
 
 	var requestBody struct {
 		Answers []userQuestionAnswerDto.CreateUserQuestionAnswerReq `json:"answers"`

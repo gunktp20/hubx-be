@@ -6,8 +6,10 @@ import (
 )
 
 func SetSubQuestionChoiceRoutes(api fiber.Router, subQuestionChoiceHttpHandler subQuestionChoiceHandler.SubQuestionChoiceHttpHandlerService) {
-	routes := api.Group("/sub-question-choice")
+	_ = api.Group("/sub-question-choice")
 
-	routes.Post("/", subQuestionChoiceHttpHandler.CreateSubQuestionChoice)
+	// ? Admin Routes Group
+	adminRoute := api.Group("/admin/class-session")
+	adminRoute.Post("/", subQuestionChoiceHttpHandler.CreateSubQuestionChoice)
 
 }

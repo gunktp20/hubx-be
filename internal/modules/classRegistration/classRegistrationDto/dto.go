@@ -39,4 +39,9 @@ type (
 		CreatedAt            time.Time        `json:"created_at"`
 		UpdatedAt            time.Time        `json:"updated_at"`
 	}
+
+	ResetCancelledQuotaReq struct {
+		UserEmail string `json:"user_email" validate:"required,email"`
+		ClassID   string `json:"class_id" validate:"required,uuid"`
+	}
 )

@@ -17,6 +17,7 @@ type (
 	ClassSessionHttpHandlerService interface {
 		CreateClassSession(c *fiber.Ctx) error
 		GetAllClassSessions(c *fiber.Ctx) error
+		SetMaxCapacity(c *fiber.Ctx) error
 	}
 
 	classSessionHttpHandler struct {
@@ -66,5 +67,29 @@ func (h *classSessionHttpHandler) GetAllClassSessions(c *fiber.Ctx) error {
 		"page":       page,
 		"limit":      limit,
 		"totalPages": int(math.Ceil(float64(total) / float64(limit))),
+	})
+}
+
+func (h *classSessionHttpHandler) SetMaxCapacity(c *fiber.Ctx) error {
+
+	var body classSessionDto.SetMaxCapacityReq
+	// ? Merge fiber http body with dto struct
+	if err := c.BodyParser(&body); err != nil {
+		return response.ErrResponse(c, http.StatusBadRequest, "The input data is invalid", nil)
+	}
+
+	// ? Validate field in body with dynamic function
+	if err := validator.New().Struct(&body); err != nil {
+		validationErrors := utils.TranslateValidationError(err.(validator.ValidationErrors))
+		return response.ErrResponse(c, http.StatusBadRequest, "The input data is invalid", &validationErrors)
+	}
+
+	err := h.classSessionUsecase.SetMaxCapacity(c.Params("class_session_id"), body.NewCapacity)
+	if err != nil {
+		return response.ErrResponse(c, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	return response.SuccessResponse(c, http.StatusOK, &fiber.Map{
+		"message": "The max capacity was updated successfully",
 	})
 }

@@ -12,12 +12,13 @@ type RegStatus string
 const (
 	Completed  RegStatus = "completed"
 	Registered RegStatus = "registered"
+	Cancelled  RegStatus = "cancelled"
 )
 
 type UserClassRegistration struct {
-	ID              string       `gorm:"type:uuid;primaryKey;not null" json:"id"`
-	UserEmail       string       `gorm:"type:varchar(255);index;not null;" json:"user_email"`
-	User            User         `gorm:"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
+	ID        string `gorm:"type:uuid;primaryKey;not null" json:"id"`
+	UserEmail string `gorm:"type:varchar(255);index;not null;" json:"user_email"`
+	// User            User         `gorm:"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user"`
 	ClassID         string       `gorm:"type:uuid;index;not null;" json:"class_id"`
 	Class           Class        `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"class"`
 	ClassSessionID  string       `gorm:"type:uuid;index;not null;" json:"class_session_id"`

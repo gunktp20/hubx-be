@@ -37,6 +37,8 @@ type Class struct {
 
 	UserQuestionAnswers    []UserQuestionAnswer    `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user_question_answers"`
 	UserSubQuestionAnswers []UserSubQuestionAnswer `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"user_sub_question_answers"`
+
+	Attendances []Attendance `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"attendances"`
 }
 
 func (class *Class) BeforeCreate(tx *gorm.DB) (err error) {

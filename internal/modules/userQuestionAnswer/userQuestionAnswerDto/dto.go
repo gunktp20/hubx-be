@@ -45,12 +45,12 @@ type (
 	}
 
 	CreateUserQuestionAnswerRes struct {
-		ID         string `json:"id"`
-		QuestionID string `json:"question_id"`
-		ChoiceID   string `json:"choice_id"`
-		ClassID    string `json:"class_id"`
-		AnswerText string `json:"answer_text"`
-		Email      string `json:"email"`
+		ID         string  `json:"id"`
+		QuestionID string  `json:"question_id"`
+		ChoiceID   *string `json:"choice_id"`
+		ClassID    string  `json:"class_id"`
+		AnswerText string  `json:"answer_text"`
+		Email      string  `json:"email"`
 
 		CreatedAt time.Time `json:"created_at"`
 		UpdatedAt time.Time `json:"updated_at"`

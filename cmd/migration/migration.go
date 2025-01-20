@@ -52,7 +52,7 @@ func main() {
 	}
 
 	// สร้าง enum ใหม่สำหรับ reg_status
-	if err := db.Exec("CREATE TYPE reg_status AS ENUM ('registered','completed')").Error; err != nil {
+	if err := db.Exec("CREATE TYPE reg_status AS ENUM ('registered','completed','cancelled')").Error; err != nil {
 		log.Fatalln(constant.Red+"Failed to create enum reg_status: "+constant.Reset, err)
 	}
 
@@ -65,7 +65,7 @@ func main() {
 		// &models.SubProcess{},
 		//  &models.Type{},
 
-		&models.User{},
+		// &models.User{},
 
 		&models.UserSubQuestionAnswer{},
 		&models.UserClassRegistration{},
@@ -80,6 +80,7 @@ func main() {
 
 		&models.ClassSession{},
 		&models.Class{},
+		&models.Attendance{},
 	)
 
 	if err != nil {

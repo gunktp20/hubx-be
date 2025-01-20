@@ -22,6 +22,7 @@ type (
 		CreateClass(c *fiber.Ctx) error
 		GetAllClasses(c *fiber.Ctx) error
 		GetClassById(c *fiber.Ctx) error
+		ToggleClassEnableQuestion(c *fiber.Ctx) error
 	}
 
 	classHttpHandler struct {
@@ -95,14 +96,34 @@ func (h *classHttpHandler) CreateClass(c *fiber.Ctx) error {
 }
 
 func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
+	// อ่านค่า page และ limit
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 	limit, _ := strconv.Atoi(c.Query("limit", "10"))
 
-	res, total, err := h.classUsecase.GetAllClasses(c.Query("class_tier"), c.Query("keyword"), page, limit)
+	// อ่านค่า class_level และแปลงเป็น *int
+	var classLevel *int
+	if level := c.Query("class_level"); level != "" {
+		parsedLevel, err := strconv.Atoi(level)
+		if err != nil {
+			return response.ErrResponse(c, http.StatusBadRequest, "Invalid class_level value", nil)
+		}
+		classLevel = &parsedLevel
+	}
+
+	// เรียกใช้ usecase
+	res, total, err := h.classUsecase.GetAllClasses(
+		c.Query("class_tier"),
+		c.Query("keyword"),
+		classLevel,
+		c.Query("class_category"),
+		page,
+		limit,
+	)
 	if err != nil {
 		return response.ErrResponse(c, http.StatusInternalServerError, err.Error(), nil)
 	}
 
+	// ส่งผลลัพธ์กลับ
 	return response.SuccessResponse(c, http.StatusOK, fiber.Map{
 		"data":       res,
 		"total":      total,
@@ -113,8 +134,6 @@ func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
 }
 
 func (h *classHttpHandler) GetClassById(c *fiber.Ctx) error {
-	token, _, _ := getContextAuth(c.UserContext())
-	_ = token
 
 	res, err := h.classUsecase.GetClassById(c.Params("class_id"))
 	if err != nil {
@@ -122,4 +141,23 @@ func (h *classHttpHandler) GetClassById(c *fiber.Ctx) error {
 	}
 
 	return response.SuccessResponse(c, http.StatusOK, res)
+}
+
+func (h *classHttpHandler) ToggleClassEnableQuestion(c *fiber.Ctx) error {
+
+	newState, err := h.classUsecase.ToggleClassEnableQuestion(c.Params("class_id"))
+	if err != nil {
+		return response.ErrResponse(c, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	var message string
+	if newState {
+		message = "EnableQuestion is now ENABLED"
+	} else {
+		message = "EnableQuestion is now DISABLED"
+	}
+
+	return response.SuccessResponse(c, http.StatusOK, &fiber.Map{
+		"message": message,
+	})
 }

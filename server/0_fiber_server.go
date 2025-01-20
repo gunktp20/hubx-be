@@ -9,6 +9,7 @@ import (
 	"github.com/gunktp20/digital-hubx-be/pkg/config"
 	"github.com/gunktp20/digital-hubx-be/pkg/database"
 	"github.com/gunktp20/digital-hubx-be/pkg/di"
+	"github.com/gunktp20/digital-hubx-be/pkg/middleware"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -58,6 +59,7 @@ func (s *fiberServer) Start() {
 		AllowCredentials: true,
 	}))
 
+	s.app.Use(middleware.Ident)
 	// Default health check endpoint
 	s.app.Get("", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
@@ -66,6 +68,20 @@ func (s *fiberServer) Start() {
 	})
 
 	api := s.app.Group("/api")
+
+	ident := api.Group("/ident", middleware.Ident)
+	ident.Get("/", func(c *fiber.Ctx) error {
+		email := c.Locals("email").(string)
+		name := c.Locals("name").(string)
+		roles := c.Locals("roles").([]string)
+
+		return c.JSON(fiber.Map{
+			"email": email,
+			"name":  name,
+			"roles": roles,
+		})
+	})
+
 	s.initializeRoutes(api)
 
 	serverUrl := fmt.Sprintf(":%d", s.conf.Server.Port)
@@ -85,6 +101,7 @@ func (s *fiberServer) initializeRoutes(api fiber.Router) {
 	s.initializeUserQuestionAnswerHttpHandler(api, s.conf)
 	s.initializeSubQuestionHttpHandler(api, s.conf)
 	s.initializeSubQuestionChoiceHttpHandler(api, s.conf)
+	s.initializeAttendanceHttpHandler(api, s.conf)
 }
 
 func (s *fiberServer) Shutdown(ctx context.Context) error {

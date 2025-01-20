@@ -6,10 +6,11 @@ import (
 )
 
 func SetUserQuestionAnswerRoutes(api fiber.Router, userQuestionAnswerHttpHandler userQuestionAnswerHandler.UserQuestionAnswerHttpHandlerService) {
-	routes := api.Group("/user-question-answer")
+	userQuestionAnswerRoute := api.Group("/user-question-answer")
+	userQuestionAnswerRoute.Get("/:class_id/class", userQuestionAnswerHttpHandler.GetUserQuestionAnswersWithClassId)
 
-	// routes.Post("/bulk", userQuestionAnswerHttpHandler.CreateMultipleUserQuestionAnswers)
-	routes.Post("/:class_id/class", userQuestionAnswerHttpHandler.CreateMultipleUserQuestionAnswers)
-	routes.Get("/:class_id/class", userQuestionAnswerHttpHandler.GetUserQuestionAnswersWithClassId)
+	// ? Admin Routes Group
+	adminRoute := api.Group("/admin/class-session")
+	adminRoute.Post("/:class_id/class", userQuestionAnswerHttpHandler.CreateMultipleUserQuestionAnswers)
 
 }

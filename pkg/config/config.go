@@ -10,9 +10,10 @@ import (
 
 type (
 	Config struct {
-		Server       *Server             `mapstructure:"SERVER"`
-		Db           *Db                 `mapstructure:"DB"`
-		GcsSignedUrl *GcsSignedUrlConfig `mapstructure:"GCS_SIGNED_URL"`
+		Server        *Server              `mapstructure:"SERVER"`
+		Db            *Db                  `mapstructure:"DB"`
+		GcsSignedUrl  *GcsSignedUrlConfig  `mapstructure:"GCS_SIGNED_URL"`
+		BusinessLogic *BusinessLogicConfig `mapstructure:"BUSINESS_LOGIC"`
 	}
 
 	Server struct {
@@ -40,6 +41,12 @@ type (
 		Expired     int    `mapstructure:"GCS_SIGNED_URL_EXPIRED"`
 		BucketName  string `mapstructure:"GCS_SIGNED_URL_BUCKET_NAME"`
 		Path        string `mapstructure:"GCS_SIGNED_URL_PATH"`
+	}
+
+	BusinessLogicConfig struct {
+		MaxCancelPerClass                   int `mapstructure:"MAX_CANCEL_PER_CLASS"`
+		DaysBeforeClassStartForCancellation int `mapstructure:"DAYS_BEFORE_CLASS_START_FOR_CANCELLATION"`
+		MaxCapacityPerSession               int `mapstructure:"MAX_CAPACITY_PER_SESSION"`
 	}
 )
 

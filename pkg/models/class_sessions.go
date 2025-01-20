@@ -27,6 +27,8 @@ type ClassSession struct {
 	CancellationDeadline time.Time          `gorm:"not null" json:"cancellation_deadline"`
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
+
+	Attendances []Attendance `gorm:"foreignKey:ClassSessionID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"attendances"`
 }
 
 func (classSession *ClassSession) BeforeCreate(tx *gorm.DB) (err error) {

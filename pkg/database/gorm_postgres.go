@@ -39,7 +39,7 @@ func NewGormPostgresDatabase(pctx context.Context, conf *config.Config) *gormPos
 	)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger: logger.Default.LogMode(logger.Info), // TODO Uncomment for monitor SQL query
 	})
 	if err != nil {
 		log.Fatalln(constant.Red+"Gorm Postgres database connection failed"+constant.Reset, err)

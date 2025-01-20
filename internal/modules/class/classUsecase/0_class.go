@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 	"mime/multipart"
 
 	"github.com/gunktp20/digital-hubx-be/external/gcs"
@@ -16,8 +17,9 @@ type (
 	ClassUsecaseService interface {
 		CreateClass(createClassReq *classDto.CreateClassReq, fileBytes []byte, fileHeader *multipart.FileHeader) (*classDto.CreateClassRes, error)
 		// CreateClass(createClassReq *classDto.CreateClassReq, fileBytes []byte) (*classDto.CreateClassRes, error)
-		GetAllClasses(class_level, keyword string, page int, limit int) (*[]models.Class, int64, error)
+		GetAllClasses(class_tier, keyword string, class_level *int, class_category string, page int, limit int) (*[]models.Class, int64, error)
 		GetClassById(classId string) (*models.Class, error)
+		ToggleClassEnableQuestion(classID string) (bool, error)
 	}
 
 	classUsecase struct {
@@ -69,21 +71,23 @@ func (u *classUsecase) CreateClass(createClassReq *classDto.CreateClassReq, file
 	return u.classRepo.CreateClass(createClassReq, fileName+fileExtension)
 }
 
-func (u *classUsecase) GetAllClasses(class_tier, keyword string, page int, limit int) (*[]models.Class, int64, error) {
-	classes, total, err := u.classRepo.GetAllClasses(class_tier, keyword, page, limit)
+func (u *classUsecase) GetAllClasses(class_tier, keyword string, class_level *int, class_category string, page int, limit int) (*[]models.Class, int64, error) {
+	// เรียก Repo พร้อมส่งพารามิเตอร์ที่รองรับ
+	classes, total, err := u.classRepo.GetAllClasses(class_tier, keyword, class_level, class_category, page, limit)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	// ? Loop through each class and update the IconURL with a signed URL
+	// ? Loop through each class and update the CoverImage with a signed URL
 	for i, class := range *classes {
 		// ? Call GetSignedURL to retrieve a temporary signed URL
 		signedUrl, err := u.gcsClient.Download(class.CoverImage)
 		if err != nil {
-			// ? Skip to the next iteration if there is an error retrieving the signed URL
+			// ? Log the error and skip to the next iteration
+			fmt.Printf("Failed to get signed URL for CoverImage: %v\n", err)
 			continue
 		}
-		// ? Update the IconURL of the AppGroup with the signed URL
+		// ? Update the CoverImage of the class with the signed URL
 		(*classes)[i].CoverImage = signedUrl
 	}
 
@@ -91,17 +95,28 @@ func (u *classUsecase) GetAllClasses(class_tier, keyword string, page int, limit
 }
 
 func (u *classUsecase) GetClassById(classId string) (*models.Class, error) {
-	res, err := u.classRepo.GetClassById(classId)
+	selectedClass, err := u.classRepo.GetClassById(classId)
 	if err != nil {
 		return &models.Class{}, nil
 	}
 
-	// signedUrl, err := u.gcsClient.GetSignedURL(res.CoverImage, 20*time.Second)
-	// _, err = u.gcsClient.GetSignedURL(res.CoverImage, 20*time.Second)
-	// if err != nil {
-	// 	return &models.Class{}, err
-	// }
+	signedUrl, err := u.gcsClient.Download(selectedClass.CoverImage)
+	if err != nil {
+		return selectedClass, nil
+	}
 
-	res.CoverImage = "MINECRAFT"
-	return res, nil
+	// ? Update the IconURL of the AppGroup with the signed URL
+	selectedClass.CoverImage = signedUrl
+	return selectedClass, nil
+}
+
+func (u *classUsecase) ToggleClassEnableQuestion(classID string) (bool, error) {
+	// เรียกใช้ Repository เพื่อสลับค่า EnableQuestion
+	newState, err := u.classRepo.ToggleClassEnableQuestion(classID)
+	if err != nil {
+		return false, fmt.Errorf("failed to toggle EnableQuestion for class ID %s: %w", classID, err)
+	}
+
+	// ส่งสถานะใหม่กลับไป
+	return newState, nil
 }

@@ -6,9 +6,14 @@ import (
 )
 
 func SetClassSessionRoutes(api fiber.Router, classSessionHttpHandler classSessionHandler.ClassSessionHttpHandlerService) {
-	routes := api.Group("/class-session")
 
-	routes.Get("/", classSessionHttpHandler.GetAllClassSessions)
-	routes.Post("/", classSessionHttpHandler.CreateClassSession)
+	classSessionRoute := api.Group("/class-session")
+
+	classSessionRoute.Get("/", classSessionHttpHandler.GetAllClassSessions)
+
+	// ? Admin Routes Group
+	adminRoute := api.Group("/admin/class-session")
+	adminRoute.Post("/", classSessionHttpHandler.CreateClassSession)
+	adminRoute.Put("/:class_session_id/max-capacity", classSessionHttpHandler.SetMaxCapacity)
 
 }

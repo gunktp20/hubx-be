@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"strings"
 
 	classCategoryDto "github.com/gunktp20/digital-hubx-be/internal/modules/classCategory/classCategoryDto"
 	classCategoryRepository "github.com/gunktp20/digital-hubx-be/internal/modules/classCategory/classCategoryRepository"
@@ -24,14 +25,15 @@ func NewClassCategoryUsecase(classCategoryRepo classCategoryRepository.ClassCate
 }
 
 func (u *classCategoryUsecase) CreateClassCategory(createClassCategoryReq *classCategoryDto.CreateClassCategoryReq) (*classCategoryDto.CreateClassCategoryRes, error) {
+	createClassCategoryReq.ClassCategoryName = strings.TrimSpace(createClassCategoryReq.ClassCategoryName)
 
-	// ? Check is new app group name is taken yet ?
+	// ? Check if the class category name already exists
 	classCategoryTitleExists := u.classCategoryRepo.IsClassCategoryNameExists(createClassCategoryReq.ClassCategoryName)
-
 	if classCategoryTitleExists {
 		return &classCategoryDto.CreateClassCategoryRes{}, errors.New("class category name was taken")
 	}
 
+	// ? Create the class category in the repository
 	return u.classCategoryRepo.CreateClassCategory(createClassCategoryReq)
 }
 

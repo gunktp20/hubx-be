@@ -12,8 +12,10 @@ import (
 func (s *fiberServer) initializeClassSessionHttpHandler(api fiber.Router, conf *config.Config) {
 	// ? Initialize all layers
 	classSessionUsecase := classSessionUsecase.NewClassSessionUsecase(
+		s.conf,
 		s.container.Repositories.ClassSessionRepo,
 		s.container.Repositories.ClassRepo,
+		s.container.Repositories.ClassRegistrationRepo,
 		s.gcs,
 	)
 	classSessionHttpHandler := classSessionHandler.NewClassSessionHttpHandler(classSessionUsecase)

@@ -29,7 +29,7 @@ type (
 		SubQuestionID       string    `json:"sub_question_id"`
 		SubQuestionChoiceID *string   `json:"sub_question_choice_id"`
 		ClassID             string    `json:"class_id"`
-		AnswerText          string    `json:"answer_text"`
+		AnswerText          *string   `json:"answer_text"`
 		CreatedAt           time.Time `json:"created_at"`
 		UpdatedAt           time.Time `json:"updated_at"`
 	}
