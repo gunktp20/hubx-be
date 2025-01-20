@@ -1,3 +1,16 @@
+// @title Digital HubX API
+// @description Digital HubX API.
+// @version 1.0.0
+// @contact.name API Support (Tanapong R)
+// @contact.url mailto:zTanapongR@pttep.com
+// @contact.email zTanapongR@pttep.com
+// @host hrhyperspace-dev.api.pttep.com
+// @basePath /hubx-service
+
+// @securityDefinitions.apiKey	BearerAuth
+// @in							header
+// @name						Authorization
+// @description		This security definition is used for authenticating API requests using a Bearer token. Clients must include the token in the Authorization header formatted as "Bearer {token}".
 package main
 
 import (
@@ -15,13 +28,6 @@ import (
 	"github.com/gunktp20/digital-hubx-be/server"
 )
 
-// @title digital-hubx
-// @version 1.0
-// @description digital hubx api
-// @contact.name API Support
-// @contact.email support@example.com
-// @host localhost:3000
-// @BasePath /api
 func main() {
 	configPath := "../configuration"
 	ctx := context.Background()
