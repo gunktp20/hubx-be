@@ -21,10 +21,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gunktp20/digital-hubx-be/external/gcs"
-	"github.com/gunktp20/digital-hubx-be/pkg/config"
-	"github.com/gunktp20/digital-hubx-be/pkg/database"
-	"github.com/gunktp20/digital-hubx-be/server"
+	"gitlab.tools.pttep.com/ep-digital-platform/ep-workspace/digitalx-hub/ep-digitalx-hub-be/external/gcs"
+	"gitlab.tools.pttep.com/ep-digital-platform/ep-workspace/digitalx-hub/ep-digitalx-hub-be/pkg/config"
+	"gitlab.tools.pttep.com/ep-digital-platform/ep-workspace/digitalx-hub/ep-digitalx-hub-be/pkg/database"
+	"gitlab.tools.pttep.com/ep-digital-platform/ep-workspace/digitalx-hub/ep-digitalx-hub-be/server"
 )
 
 func main() {
