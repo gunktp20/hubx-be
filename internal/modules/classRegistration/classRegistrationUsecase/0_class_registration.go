@@ -31,12 +31,12 @@ type (
 		classRepo              classRepository.ClassRepositoryService
 		userQuestionAnswerRepo userQuestionAnswerRepository.UserQuestionAnswerRepositoryService
 		questionRepo           questionRepository.QuestionRepositoryService
-		cfg                    config.Config
+		conf                   config.Config
 	}
 )
 
 func NewClassRegistrationUsecase(
-	cfg *config.Config,
+	conf *config.Config,
 	classRegistrationRepo classRegistrationRepository.ClassRegistrationRepositoryService,
 	classSessionRepo classSessionRepository.ClassSessionRepositoryService,
 	classRepo classRepository.ClassRepositoryService,
@@ -44,7 +44,7 @@ func NewClassRegistrationUsecase(
 	questionRepo questionRepository.QuestionRepositoryService,
 ) ClassRegistrationUsecaseService {
 	return &classRegistrationUsecase{
-		cfg:                    *cfg,
+		conf:                   *conf,
 		classRegistrationRepo:  classRegistrationRepo,
 		classSessionRepo:       classSessionRepo,
 		classRepo:              classRepo,
@@ -110,7 +110,7 @@ func (u *classRegistrationUsecase) CreateClassRegistration(createClassRegistrati
 		return &classRegistrationDto.CreateClassRegistrationRes{}, err
 	}
 
-	if cancelledCount >= u.cfg.BusinessLogic.MaxCancelPerClass {
+	if cancelledCount >= u.conf.BusinessLogic.MaxCancelPerClass {
 		return &classRegistrationDto.CreateClassRegistrationRes{}, errors.New("you cannot register for this class because you have reached the maximum cancellation limit. Please contact the administrator if you believe this is an error")
 	}
 
@@ -156,8 +156,8 @@ func (u *classRegistrationUsecase) CancelClassRegistration(email, classSessionID
 	daysUntilClass := int(time.Until(classSession.Date).Hours() / 24)
 
 	// ตรวจสอบว่าสามารถยกเลิกได้ตามนโยบายหรือไม่
-	if daysUntilClass < u.cfg.BusinessLogic.DaysBeforeClassStartForCancellation {
-		return fmt.Errorf("cancellation is not allowed within %d days before the class start date", u.cfg.BusinessLogic.DaysBeforeClassStartForCancellation)
+	if daysUntilClass < u.conf.BusinessLogic.DaysBeforeClassStartForCancellation {
+		return fmt.Errorf("cancellation is not allowed within %d days before the class start date", u.conf.BusinessLogic.DaysBeforeClassStartForCancellation)
 	}
 
 	// ดำเนินการยกเลิกการลงทะเบียน

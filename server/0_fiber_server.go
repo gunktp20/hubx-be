@@ -7,7 +7,6 @@ import (
 
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
-	"github.com/gunktp20/digital-hubx-be/docs"
 	"github.com/gunktp20/digital-hubx-be/external/gcs"
 	"github.com/gunktp20/digital-hubx-be/pkg/config"
 	"github.com/gunktp20/digital-hubx-be/pkg/database"
@@ -52,12 +51,15 @@ func NewFiberServer(conf *config.Config, db database.Database, gcs gcs.GcsClient
 }
 
 func (s *fiberServer) Start() {
-	s.app.Use(logger.New())
+
+	if s.conf.Logger.Enabled {
+		s.app.Use(logger.New())
+	}
 	s.app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:5173,http://example.com",
-		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
-		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
-		AllowCredentials: true,
+		AllowOrigins:     s.conf.CORS.AllowOrigins,
+		AllowMethods:     s.conf.CORS.AllowMethods,
+		AllowHeaders:     s.conf.CORS.AllowHeaders,
+		AllowCredentials: s.conf.CORS.AllowCredentials,
 	}))
 	s.app.Use(recover.New(recover.Config{EnableStackTrace: true}))
 
@@ -81,7 +83,6 @@ func (s *fiberServer) Start() {
 func (s *fiberServer) initializeRoutes(api fiber.Router) {
 
 	if s.conf.Swagger.Enabled {
-		setupSwagger(s.conf.Swagger) // Setup Swagger Doc before begin
 		s.app.Get("/swagger/*", swagger.HandlerDefault)
 		log.Println("Swagger is enabled and available at /swagger/index.html")
 	}
@@ -117,13 +118,4 @@ func (s *fiberServer) Shutdown(ctx context.Context) error {
 
 	log.Println("Server shutdown complete.")
 	return nil
-}
-
-func setupSwagger(conf *config.SwaggerConfig) {
-	docs.SwaggerInfo.Title = conf.Title
-	docs.SwaggerInfo.Description = conf.Description
-	docs.SwaggerInfo.Version = conf.Version
-	docs.SwaggerInfo.Host = conf.Host
-	docs.SwaggerInfo.BasePath = conf.BasePath
-	docs.SwaggerInfo.Schemes = conf.Schemes
 }

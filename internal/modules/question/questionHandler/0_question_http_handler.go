@@ -35,8 +35,8 @@ func NewQuestionHttpHandler(usecase questionUsecase.QuestionUsecaseService) Ques
 // @Produce json
 // @Param body body questionDto.CreateQuestionReq true "Create Question Request Body"
 // @Success 200 {object} questionDto.CreateQuestionRes "Question created successfully"
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /admin/question [post]
 func (h *questionHttpHandler) CreateQuestion(c *fiber.Ctx) error {
 
@@ -67,10 +67,10 @@ func (h *questionHttpHandler) CreateQuestion(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param class_id path string true "Class ID" format(uuid)
-// @Param page query int false "Page number" example:1
-// @Param limit query int false "Number of items per page" example:10
-// @Success 200 {object} map[string]interface{} "List of questions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Param page query int false "Page number"
+// @Param limit query int false "Number of items per page"
+// @Success 200 {object} map[string]interface{} "List of questions"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /question/{class_id}/class [get]
 func (h *questionHttpHandler) GetQuestionsByClassID(c *fiber.Ctx) error {
 

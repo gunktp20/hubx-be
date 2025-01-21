@@ -50,21 +50,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Operation successful\" example:{\"message\":\"Attendance created\",\"status\":200,\"details\":{\"field\":\"value\"}}",
+                        "description": "Operation successful",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -104,21 +104,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Operation successful\" example:{\"message\":\"Choice created\",\"status\":200,\"details\":null}",
+                        "description": "Operation successful",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -190,21 +190,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Operation successful\" example:{\"message\":\"Class created successfully\",\"status\":200,\"details\":null}",
+                        "description": "Operation successful",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -245,21 +245,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Category created successfully\" example:{\"message\":\"Category created successfully\",\"status\":200,\"details\":null}",
+                        "description": "Category created successfully",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"The input data is invalid\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -307,28 +307,28 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Category name updated successfully\" example:{\"message\":\"Category updated successfully\",\"status\":200,\"details\":null}",
+                        "description": "Category name updated successfully",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Validation failed\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "404": {
-                        "description": "Category not found\" example:{\"message\":\"Category not found\",\"status\":404,\"details\":null}",
+                        "description": "Category not found",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -363,14 +363,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Cancellation quota reset successfully\" example:{\"message\":\"The user's cancellation quota for the specified class has been reset\",\"status\":200,\"details\":null}",
+                        "description": "Cancellation quota reset successfully",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -410,21 +410,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Registration deleted successfully\" example:{\"message\":\"User class registration deleted successfully\",\"status\":200,\"details\":null}",
+                        "description": "Registration deleted successfully",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "404": {
-                        "description": "Registration not found\" example:{\"message\":\"Registration not found\",\"status\":404,\"details\":null}",
+                        "description": "Registration not found",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -465,14 +465,14 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -505,14 +505,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Class session deleted successfully\" example:{\"message\":\"Class session deleted successfully\",\"status\":200,\"details\":null}",
+                        "description": "Class session deleted successfully",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -554,21 +554,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Location updated successfully\" example:{\"message\":\"Class session location updated successfully\",\"status\":200,\"details\":null}",
+                        "description": "Location updated successfully",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -610,21 +610,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Max capacity updated successfully\" example:{\"message\":\"The max capacity was updated successfully\",\"status\":200,\"details\":null}",
+                        "description": "Max capacity updated successfully",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -662,21 +662,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Operation successful\" example:{\"message\":\"Class deleted successfully\",\"status\":200,\"details\":null}",
+                        "description": "Operation successful",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "404": {
-                        "description": "Invalid input\" example:{\"message\":\"Class not found\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -721,28 +721,28 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Operation successful\" example:{\"message\":\"Class cover image updated successfully\",\"status\":200,\"details\":null}",
+                        "description": "Operation successful",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input data\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "404": {
-                        "description": "Invalid input\" example:{\"message\":\"Class not found\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -780,21 +780,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Operation successful\" example:{\"message\":\"EnableQuestion status updated\",\"status\":200,\"details\":null}",
+                        "description": "Operation successful",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "404": {
-                        "description": "Invalid input\" example:{\"message\":\"Class not found\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -835,14 +835,14 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -883,14 +883,14 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -931,14 +931,14 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -983,21 +983,21 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success response\" example:{\"message\":\"User question answers created successfully\",\"status\":200,\"details\":null}",
+                        "description": "Success response",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1057,22 +1057,7 @@ const docTemplate = `{
                         "in": "query"
                     }
                 ],
-                "responses": {
-                    "200": {
-                        "description": "Operation successful\" example:{\"message\":\"Class created successfully\",\"status\":200,\"details\":null}",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
+                "responses": {}
             }
         },
         "/class-category": {
@@ -1115,14 +1100,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Paginated categories\" example:{\"message\":\"Categories retrieved successfully\",\"status\":200,\"details\":{\"total\":100,\"categories\":[{\"id\":\"12345\",\"name\":\"Category 1\"}]}}",
+                        "description": "Paginated categories",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1160,14 +1145,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of user registrations\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "description": "List of user registrations",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1206,14 +1191,14 @@ const docTemplate = `{
                         }
                     },
                     "400": {
-                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1246,14 +1231,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Registration cancelled successfully\" example:{\"message\":\"Class session registration cancelled successfully\",\"status\":200,\"details\":null}",
+                        "description": "Registration cancelled successfully",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1303,14 +1288,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of class sessions\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "description": "List of class sessions",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1400,14 +1385,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of questions\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "description": "List of questions",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1453,14 +1438,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of sub-questions\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "description": "List of sub-questions",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1506,14 +1491,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "List of sub-questions\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "description": "List of sub-questions",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -1558,14 +1543,14 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Success response\" example:{\"data\":[...],\"total\":100,\"page\":1,\"limit\":10,\"totalPages\":10}",
+                        "description": "Success response",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
                         }
                     },
                     "500": {
-                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "description": "Internal Server Error",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true
@@ -2588,20 +2573,15 @@ const docTemplate = `{
                     "type": "object",
                     "additionalProperties": {
                         "type": "string"
-                    },
-                    "example": {
-                        "{\"field\"": " \"error detail\"}"
                     }
                 },
                 "message": {
                     "description": "The response message",
-                    "type": "string",
-                    "example": "Operation successful"
+                    "type": "string"
                 },
                 "status": {
                     "description": "HTTP status code",
-                    "type": "integer",
-                    "example": 200
+                    "type": "integer"
                 }
             }
         }

@@ -11,7 +11,7 @@ func SetQuestionRoutes(api fiber.Router, questionHttpHandler questionHandler.Que
 	questionRoute.Get("/:class_id/class", questionHttpHandler.GetQuestionsByClassID)
 
 	// ? Admin Routes
-	adminRoute := api.Group("/admin/question", middleware.PermissionCheck)
+	adminRoute := api.Group("/admin/question", middleware.Ident, middleware.PermissionCheck)
 	adminRoute.Post("/", questionHttpHandler.CreateQuestion)
 
 }

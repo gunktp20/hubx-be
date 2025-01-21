@@ -26,7 +26,7 @@ type (
 	}
 
 	classSessionUsecase struct {
-		cfg                   *config.Config
+		conf                  *config.Config
 		classSessionRepo      classSessionRepository.ClassSessionRepositoryService
 		classRepo             classRepository.ClassRepositoryService
 		classRegistrationRepo classRegistrationRepository.ClassRegistrationRepositoryService
@@ -34,8 +34,8 @@ type (
 	}
 )
 
-func NewClassSessionUsecase(cfg *config.Config, classSessionRepo classSessionRepository.ClassSessionRepositoryService, classRepo classRepository.ClassRepositoryService, classRegistrationRepo classRegistrationRepository.ClassRegistrationRepositoryService, gcsClient gcs.GcsClientService) ClassSessionUsecaseService {
-	return &classSessionUsecase{cfg: cfg, classSessionRepo: classSessionRepo, classRepo: classRepo, classRegistrationRepo: classRegistrationRepo, gcsClient: gcsClient}
+func NewClassSessionUsecase(conf *config.Config, classSessionRepo classSessionRepository.ClassSessionRepositoryService, classRepo classRepository.ClassRepositoryService, classRegistrationRepo classRegistrationRepository.ClassRegistrationRepositoryService, gcsClient gcs.GcsClientService) ClassSessionUsecaseService {
+	return &classSessionUsecase{conf: conf, classSessionRepo: classSessionRepo, classRepo: classRepo, classRegistrationRepo: classRegistrationRepo, gcsClient: gcsClient}
 }
 
 func (u *classSessionUsecase) CreateClassSession(createClassSessionReq *classSessionDto.CreateClassSessionReq) (*classSessionDto.CreateClassSessionRes, error) {
@@ -78,8 +78,8 @@ func (u *classSessionUsecase) CreateClassSession(createClassSessionReq *classSes
 		return &classSessionDto.CreateClassSessionRes{}, errors.New("max capacity must be greater than zero")
 	}
 
-	if createClassSessionReq.MaxCapacity > u.cfg.BusinessLogic.MaxCapacityPerSession {
-		return &classSessionDto.CreateClassSessionRes{}, fmt.Errorf("capacity exceeds the maximum allowed limit of %d for a session", u.cfg.BusinessLogic.MaxCapacityPerSession)
+	if createClassSessionReq.MaxCapacity > u.conf.BusinessLogic.MaxCapacityPerSession {
+		return &classSessionDto.CreateClassSessionRes{}, fmt.Errorf("capacity exceeds the maximum allowed limit of %d for a session", u.conf.BusinessLogic.MaxCapacityPerSession)
 	}
 
 	// ? Create a new ClassSession
@@ -102,8 +102,8 @@ func (u *classSessionUsecase) SetMaxCapacity(classSessionID string, newCapacity 
 		return err
 	}
 
-	if newCapacity > u.cfg.BusinessLogic.MaxCapacityPerSession {
-		return fmt.Errorf("capacity exceeds the maximum allowed limit of %d for a session", u.cfg.BusinessLogic.MaxCapacityPerSession)
+	if newCapacity > u.conf.BusinessLogic.MaxCapacityPerSession {
+		return fmt.Errorf("capacity exceeds the maximum allowed limit of %d for a session", u.conf.BusinessLogic.MaxCapacityPerSession)
 	}
 
 	if countRegistrations > newCapacity {

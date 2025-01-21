@@ -39,8 +39,8 @@ func NewUserQuestionAnswerHttpHandler(usecase userQuestionAnswerUsecase.UserQues
 // @Param class_id path string true "Class ID"
 // @Param page query int false "Page number (default: 1)"
 // @Param limit query int false "Number of items per page (default: 10)"
-// @Success 200 {object} map[string]interface{} "Success response" example:{"data":[...],"total":100,"page":1,"limit":10,"totalPages":10}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Success response"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /user-question-answer/{class_id}/class [get]
 func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())
@@ -69,9 +69,9 @@ func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fib
 // @Produce json
 // @Param class_id path string true "Class ID"
 // @Param body body []userQuestionAnswerDto.CreateUserQuestionAnswerReq true "List of user question answers"
-// @Success 200 {object} map[string]interface{} "Success response" example:{"message":"User question answers created successfully","status":200,"details":null}
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Success response"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /admin/user-question-answer/{class_id}/class [post]
 func (h *userQuestionAnswerHttpHandler) CreateMultipleUserQuestionAnswers(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"sync"
 
@@ -10,18 +11,21 @@ import (
 
 type (
 	Config struct {
-		Server        *Server              `mapstructure:"SERVER"`
-		Db            *Db                  `mapstructure:"DB"`
+		Server        *ServerConfig        `mapstructure:"SERVER"`
+		Db            *DbConfig            `mapstructure:"DB"`
 		GcsSignedUrl  *GcsSignedUrlConfig  `mapstructure:"GCS_SIGNED_URL"`
 		BusinessLogic *BusinessLogicConfig `mapstructure:"BUSINESS_LOGIC"`
 		Swagger       *SwaggerConfig       `mapstructure:"SWAGGER"`
+		Logger        *LoggerConfig        `mapstructure:"LOGGER"`
+		CORS          *CORSConfig          `mapstructure:"CORS"`
 	}
 
-	Server struct {
-		Port int `mapstructure:"SERVER_PORT"`
+	ServerConfig struct {
+		Port           int `mapstructure:"SERVER_PORT"`
+		ReadBufferSize int `mapstructure:"READ_BUFFER_SIZE"`
 	}
 
-	Db struct {
+	DbConfig struct {
 		SSLMode         string `mapstructure:"DB_SSLMODE"`
 		Dns             string `mapstructure:"DB_DNS"`
 		SSLRootCertPath string `mapstructure:"DB_SSLROOTCERT_PATH"`
@@ -51,13 +55,18 @@ type (
 	}
 
 	SwaggerConfig struct {
-		Enabled     bool     `mapstructure:"ENABLED"`
-		Title       string   `mapstructure:"TITLE"`
-		Description string   `mapstructure:"DESCRIPTION"`
-		Version     string   `mapstructure:"VERSION"`
-		BasePath    string   `mapstructure:"BASE_PATH"`
-		Host        string   `mapstructure:"HOST"`
-		Schemes     []string `mapstructure:"SCHEMES"`
+		Enabled bool `mapstructure:"ENABLED"`
+	}
+
+	LoggerConfig struct {
+		Enabled bool `mapstructure:"ENABLED"`
+	}
+
+	CORSConfig struct {
+		AllowOrigins     string `mapstructure:"ALLOW_ORIGINS"`
+		AllowMethods     string `mapstructure:"ALLOW_METHODS"`
+		AllowHeaders     string `mapstructure:"ALLOW_HEADERS"`
+		AllowCredentials bool   `mapstructure:"ALLOW_CREDENTIALS"`
 	}
 )
 
@@ -66,7 +75,7 @@ var (
 	configInstance *Config
 )
 
-func GetConfig(configPath string) *Config {
+func GetConfig(configPath string) (*Config, error) {
 	once.Do(func() {
 		v := viper.New()
 		v.SetConfigName("config")
@@ -75,25 +84,52 @@ func GetConfig(configPath string) *Config {
 
 		// Set default values
 		v.SetDefault("SERVER.SERVER_PORT", 3000)
+		v.SetDefault("SERVER.READ_BUFFER_SIZE", 60000)
 		v.SetDefault("SWAGGER.ENABLED", true)
 
 		if err := v.ReadInConfig(); err != nil {
-			log.Fatalf("Error reading config file, %s", err)
+			log.Printf("Error reading config file: %s", err)
+			return
 		}
 
 		var config Config
 		if err := v.Unmarshal(&config); err != nil {
-			log.Fatalf("Error unmarshaling config, %s", err)
+			log.Printf("Error unmarshaling config: %s", err)
+			return
 		}
 
 		// Validate Config
-		if config.Server == nil || config.Db == nil {
-			log.Fatalf("Missing essential configuration")
+		if err := validateConfig(&config); err != nil {
+			log.Printf("Invalid configuration: %s", err)
+			return
 		}
 
 		configInstance = &config
 		log.Println(constant.Green + "Configuration loaded successfully" + constant.Reset)
 	})
 
-	return configInstance
+	if configInstance == nil {
+		return nil, fmt.Errorf("failed to load configuration")
+	}
+	return configInstance, nil
+}
+
+func validateConfig(config *Config) error {
+	if config.Server == nil || config.Db == nil {
+		return fmt.Errorf("missing essential configuration")
+	}
+
+	if config.Server.Port <= 0 {
+		return fmt.Errorf("invalid server port: %d", config.Server.Port)
+	}
+
+	if config.BusinessLogic.MaxCapacityPerSession <= 0 {
+		return fmt.Errorf("invalid max capacity per session: %d", config.BusinessLogic.MaxCapacityPerSession)
+	}
+
+	if config.Db.DbName == "" || config.Db.DbUser == "" || config.Db.DbHost == "" {
+		return fmt.Errorf("database configuration is incomplete")
+	}
+
+	return nil
 }

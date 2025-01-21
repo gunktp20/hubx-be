@@ -34,9 +34,9 @@ func NewChoiceHttpHandler(usecase choiceUsecase.ChoiceUsecaseService) ChoiceHttp
 // @Accept json
 // @Produce json
 // @Param body body choiceDto.CreateChoiceReq true "Create Choice Request Body"
-// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Choice created","status":200,"details":null}
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Operation successful"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Security BearerAuth
 // @Router /admin/choice [post]
 func (h *choiceHttpHandler) CreateChoice(c *fiber.Ctx) error {

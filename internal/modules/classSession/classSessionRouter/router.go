@@ -13,7 +13,7 @@ func SetClassSessionRoutes(api fiber.Router, classSessionHttpHandler classSessio
 	classSessionRoute.Get("/", classSessionHttpHandler.GetAllClassSessions)
 
 	// ? Admin Routes
-	adminRoute := api.Group("/admin/class-session", middleware.PermissionCheck)
+	adminRoute := api.Group("/admin/class-session", middleware.Ident, middleware.PermissionCheck)
 	adminRoute.Post("/", classSessionHttpHandler.CreateClassSession)
 	adminRoute.Delete("/:class_session_id", classSessionHttpHandler.DeleteClassSessionByID)
 	adminRoute.Put("/:class_session_id/max-capacity", classSessionHttpHandler.SetMaxCapacity)

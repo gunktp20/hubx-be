@@ -40,8 +40,8 @@ func NewClassRegistrationHttpHandler(usecase classRegistrationUsecase.ClassRegis
 // @Produce json
 // @Param body body classRegistrationDto.CreateClassRegistrationReq true "Create Class Registration Request Body"
 // @Success 200 {object} classRegistrationDto.CreateClassRegistrationRes "Registration created successfully"
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /class-registration [post]
 func (h *classRegistrationHttpHandler) CreateClassRegistration(c *fiber.Ctx) error {
 
@@ -72,10 +72,10 @@ func (h *classRegistrationHttpHandler) CreateClassRegistration(c *fiber.Ctx) err
 // @Tags Class Registration
 // @Accept json
 // @Produce json
-// @Param page query int false "Page number" example:1
-// @Param limit query int false "Number of items per page" example:10
-// @Success 200 {object} map[string]interface{} "List of user registrations" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Param page query int false "Page number"
+// @Param limit query int false "Number of items per page"
+// @Success 200 {object} map[string]interface{} "List of user registrations"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /class-registration [get]
 func (h *classRegistrationHttpHandler) GetUserRegistrations(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())
@@ -104,8 +104,8 @@ func (h *classRegistrationHttpHandler) GetUserRegistrations(c *fiber.Ctx) error 
 // @Accept json
 // @Produce json
 // @Param class_session_id path string true "Class session ID"
-// @Success 200 {object} map[string]interface{} "Registration cancelled successfully" example:{"message":"Class session registration cancelled successfully","status":200,"details":null}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Registration cancelled successfully"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /class-registration/{class_session_id}/cancel [delete]
 func (h *classRegistrationHttpHandler) CancelClassRegistration(c *fiber.Ctx) error {
 
@@ -127,8 +127,8 @@ func (h *classRegistrationHttpHandler) CancelClassRegistration(c *fiber.Ctx) err
 // @Accept json
 // @Produce json
 // @Param body body classRegistrationDto.ResetCancelledQuotaReq true "Reset Cancelled Quota Request Body"
-// @Success 200 {object} map[string]interface{} "Cancellation quota reset successfully" example:{"message":"The user's cancellation quota for the specified class has been reset","status":200,"details":null}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Cancellation quota reset successfully"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /admin/class-registration/reset-cancel-quota [post]
 func (h *classRegistrationHttpHandler) ResetCancelledQuota(c *fiber.Ctx) error {
 
@@ -162,9 +162,9 @@ func (h *classRegistrationHttpHandler) ResetCancelledQuota(c *fiber.Ctx) error {
 // @Produce json
 // @Param class_session_id path string true "Class session ID"
 // @Param email path string true "User's email"
-// @Success 200 {object} map[string]interface{} "Registration deleted successfully" example:{"message":"User class registration deleted successfully","status":200,"details":null}
-// @Failure 404 {object} map[string]interface{} "Registration not found" example:{"message":"Registration not found","status":404,"details":null}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Registration deleted successfully"
+// @Failure 404 {object} map[string]interface{} "Registration not found"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /admin/class-registration/{class_session_id}/{email} [delete]
 func (h *classRegistrationHttpHandler) DeleteUserClassRegistrationBySession(c *fiber.Ctx) error {
 	userEmail := c.Query("user_email")

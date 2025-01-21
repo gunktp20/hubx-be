@@ -11,7 +11,7 @@ func SetUserQuestionAnswerRoutes(api fiber.Router, userQuestionAnswerHttpHandler
 	userQuestionAnswerRoute.Get("/:class_id/class", userQuestionAnswerHttpHandler.GetUserQuestionAnswersWithClassId)
 
 	// ? Admin Routes
-	adminRoute := api.Group("/admin/class-session", middleware.PermissionCheck)
+	adminRoute := api.Group("/admin/class-session", middleware.Ident, middleware.PermissionCheck)
 	adminRoute.Post("/:class_id/class", userQuestionAnswerHttpHandler.CreateMultipleUserQuestionAnswers)
 
 }

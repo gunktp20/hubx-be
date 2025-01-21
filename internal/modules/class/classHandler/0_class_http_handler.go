@@ -48,9 +48,9 @@ func NewClassHttpHandler(usecase classUsecase.ClassUsecaseService) ClassHttpHand
 // @Param class_category_id formData string true "Class Category ID"
 // @Param class_tier formData string true "Class Tier" enum(Essential,Literacy,Mastery)
 // @Param class_level formData int false "Class Level"
-// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Class created successfully","status":200,"details":null}
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Operation successful"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Security BearerAuth
 // @Router /admin/class [post]
 func (h *classHttpHandler) CreateClass(c *fiber.Ctx) error {
@@ -124,8 +124,6 @@ func (h *classHttpHandler) CreateClass(c *fiber.Ctx) error {
 // @Param keyword query string false "Search keyword"
 // @Param class_level query int false "Filter by class level"
 // @Param class_category query string false "Filter by class category"
-// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Class created successfully","status":200,"details":null}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
 // @Router /class [get]
 func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
 	page, _ := strconv.Atoi(c.Query("page", "1"))
@@ -189,9 +187,9 @@ func (h *classHttpHandler) GetClassById(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param class_id path string true "Class ID"
-// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"EnableQuestion status updated","status":200,"details":null}
-// @Failure 404 {object} map[string]interface{} "Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Operation successful"
+// @Failure 404 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Security BearerAuth
 // @Router /admin/class/{class_id}/toggle-enable-question [put]
 func (h *classHttpHandler) ToggleClassEnableQuestion(c *fiber.Ctx) error {
@@ -220,9 +218,9 @@ func (h *classHttpHandler) ToggleClassEnableQuestion(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param body body map[string]interface{} true "Create Class Category Request Body"
-// @Success 200 {object} map[string]interface{} "Category created successfully" example:{"message":"Category created successfully","status":200,"details":null}
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"The input data is invalid","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Category created successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Security BearerAuth
 // @Router /admin/class-category [post]
 func (h *classHttpHandler) UpdateClassDetails(c *fiber.Ctx) error {
@@ -255,10 +253,10 @@ func (h *classHttpHandler) UpdateClassDetails(c *fiber.Ctx) error {
 // @Produce json
 // @Param class_id path string true "Class ID"
 // @Param new_cover_image formData file true "New Cover Image"
-// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Class cover image updated successfully","status":200,"details":null}
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input data","status":400,"details":{"field":"error description"}}
-// @Failure 404 {object} map[string]interface{} "Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Operation successful"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 404 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Security BearerAuth
 // @Router /admin/class/{class_id}/cover-image [put]
 func (h *classHttpHandler) UpdateClassCoverImage(c *fiber.Ctx) error {
@@ -299,9 +297,9 @@ func (h *classHttpHandler) UpdateClassCoverImage(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Param class_id path string true "Class ID"
-// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Class deleted successfully","status":200,"details":null}
-// @Failure 404 {object} map[string]interface{} "Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Operation successful"
+// @Failure 404 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Security BearerAuth
 // @Router /admin/class/{class_id} [delete]
 func (h *classHttpHandler) DeleteClass(c *fiber.Ctx) error {

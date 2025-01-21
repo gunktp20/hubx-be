@@ -39,8 +39,8 @@ func NewClassSessionHttpHandler(usecase classSessionUsecase.ClassSessionUsecaseS
 // @Produce json
 // @Param body body classSessionDto.CreateClassSessionReq true "Create Class Session Request Body"
 // @Success 200 {object} classSessionDto.CreateClassSessionRes "Class session created successfully"
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /admin/class-session [post]
 func (h *classSessionHttpHandler) CreateClassSession(c *fiber.Ctx) error {
 
@@ -72,10 +72,10 @@ func (h *classSessionHttpHandler) CreateClassSession(c *fiber.Ctx) error {
 // @Produce json
 // @Param class_id query string false "Class ID"
 // @Param class_tier query string false "Class tier"
-// @Param page query int false "Page number" example:1
-// @Param limit query int false "Number of items per page" example:10
-// @Success 200 {object} map[string]interface{} "List of class sessions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Param page query int false "Page number"
+// @Param limit query int false "Number of items per page"
+// @Success 200 {object} map[string]interface{} "List of class sessions"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /class-session [get]
 func (h *classSessionHttpHandler) GetAllClassSessions(c *fiber.Ctx) error {
 	page, _ := strconv.Atoi(c.Query("page", "1"))
@@ -102,9 +102,9 @@ func (h *classSessionHttpHandler) GetAllClassSessions(c *fiber.Ctx) error {
 // @Produce json
 // @Param class_session_id path string true "Class session ID"
 // @Param body body classSessionDto.SetMaxCapacityReq true "Max Capacity Update Request Body"
-// @Success 200 {object} map[string]interface{} "Max capacity updated successfully" example:{"message":"The max capacity was updated successfully","status":200,"details":null}
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Max capacity updated successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /admin/class-session/{class_session_id}/max-capacity [put]
 func (h *classSessionHttpHandler) SetMaxCapacity(c *fiber.Ctx) error {
 
@@ -137,9 +137,9 @@ func (h *classSessionHttpHandler) SetMaxCapacity(c *fiber.Ctx) error {
 // @Produce json
 // @Param class_session_id path string true "Class session ID"
 // @Param body body classSessionDto.UpdateClassSessionLocation true "Location Update Request Body"
-// @Success 200 {object} map[string]interface{} "Location updated successfully" example:{"message":"Class session location updated successfully","status":200,"details":null}
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Location updated successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /admin/class-session/{class_session_id}/location [put]
 func (h *classSessionHttpHandler) UpdateClassSessionLocation(c *fiber.Ctx) error {
 	classSessionID := c.Params("class_session_id")
@@ -175,8 +175,8 @@ func (h *classSessionHttpHandler) UpdateClassSessionLocation(c *fiber.Ctx) error
 // @Accept json
 // @Produce json
 // @Param class_session_id path string true "Class session ID"
-// @Success 200 {object} map[string]interface{} "Class session deleted successfully" example:{"message":"Class session deleted successfully","status":200,"details":null}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Class session deleted successfully"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /admin/class-session/{class_session_id} [delete]
 func (h *classSessionHttpHandler) DeleteClassSessionByID(c *fiber.Ctx) error {
 	classSessionID := c.Params("class_session_id")

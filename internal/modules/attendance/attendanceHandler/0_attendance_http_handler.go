@@ -34,9 +34,9 @@ func NewAttendanceHttpHandler(usecase attendanceUsecase.AttendanceUsecaseService
 // @Accept json
 // @Produce json
 // @Param body body attendanceDto.CreateAttendanceReq true "Create Attendance Request Body"
-// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Attendance created","status":200,"details":{"field":"value"}}
-// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
-// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Success 200 {object} map[string]interface{} "Operation successful"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Security BearerAuth
 // @Router /admin/attendance [post]
 func (h *attendanceHttpHandler) CreateAttendance(c *fiber.Ctx) error {

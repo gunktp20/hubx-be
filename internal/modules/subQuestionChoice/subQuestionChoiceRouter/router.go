@@ -10,7 +10,7 @@ func SetSubQuestionChoiceRoutes(api fiber.Router, subQuestionChoiceHttpHandler s
 	_ = api.Group("/sub-question-choice")
 
 	// ? Admin Routes Group
-	adminRoute := api.Group("/admin/class-session", middleware.PermissionCheck)
+	adminRoute := api.Group("/admin/class-session", middleware.Ident, middleware.PermissionCheck)
 	adminRoute.Post("/", subQuestionChoiceHttpHandler.CreateSubQuestionChoice)
 
 }

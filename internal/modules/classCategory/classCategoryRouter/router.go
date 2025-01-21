@@ -12,7 +12,7 @@ func SetClassCategoryRoutes(api fiber.Router, classCategoryHttpHandler classCate
 	classCategoryRoute.Get("/", classCategoryHttpHandler.GetAllClassCategories)
 
 	// ? Admin Routes Group
-	adminRoute := api.Group("/admin/class-category", middleware.PermissionCheck)
+	adminRoute := api.Group("/admin/class-category", middleware.Ident, middleware.PermissionCheck)
 	adminRoute.Post("/", classCategoryHttpHandler.CreateClassCategory)
 	adminRoute.Put("/:category_id", classCategoryHttpHandler.UpdateCategoryName)
 
