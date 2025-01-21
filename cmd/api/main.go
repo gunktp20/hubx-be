@@ -23,7 +23,6 @@ import (
 
 	"github.com/gunktp20/digital-hubx-be/external/gcs"
 	"github.com/gunktp20/digital-hubx-be/pkg/config"
-	"github.com/gunktp20/digital-hubx-be/pkg/constant"
 	"github.com/gunktp20/digital-hubx-be/pkg/database"
 	"github.com/gunktp20/digital-hubx-be/server"
 )
@@ -32,9 +31,9 @@ func main() {
 	configPath := "../configuration"
 	ctx := context.Background()
 
-	conf := config.GetConfig(configPath)
-	if conf == nil {
-		log.Fatalln(constant.Red + "Failed to load configuration" + constant.Reset)
+	conf, err := config.GetConfig(configPath)
+	if err != nil {
+		log.Fatalf("Failed to load configuration: %v", err)
 	}
 
 	db := database.NewGormPostgresDatabase(ctx, conf)
