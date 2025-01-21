@@ -27,8 +27,19 @@ func NewAttendanceHttpHandler(usecase attendanceUsecase.AttendanceUsecaseService
 	return &attendanceHttpHandler{attendanceUsecase: usecase}
 }
 
+// CreateAttendance creates an attendance record for a class session.
+// @Summary Create a new attendance record
+// @Description Allows an admin to create an attendance record for a specific class session.
+// @Tags Admin/Attendance
+// @Accept json
+// @Produce json
+// @Param body body attendanceDto.CreateAttendanceReq true "Create Attendance Request Body"
+// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Attendance created","status":200,"details":{"field":"value"}}
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/attendance [post]
 func (h *attendanceHttpHandler) CreateAttendance(c *fiber.Ctx) error {
-
 	var body attendanceDto.CreateAttendanceReq
 
 	// ? Merge fiber http body with dto struct

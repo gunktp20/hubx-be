@@ -7,6 +7,14 @@ import (
 )
 
 type (
+	// CreateClassSessionReq represents the request body for creating a class session.
+	// @Description Request body for creating a class session.
+	// @Param class_id body string true "Class ID" format(uuid)
+	// @Param date body string true "Session date" format(date-time)
+	// @Param max_capacity body int true "Maximum capacity"
+	// @Param start_time body string true "Start time" format(date-time)
+	// @Param end_time body string true "End time" format(date-time)
+	// @Param location body string true "Location"
 	CreateClassSessionReq struct {
 		ClassID     string    `json:"class_id" validate:"required,uuid"`
 		Date        time.Time `json:"date" validate:"required"`
@@ -17,6 +25,9 @@ type (
 		Location  string    `json:"location" validate:"required"`
 	}
 
+	// SetMaxCapacityReq represents the request body for updating max capacity.
+	// @Description Request body for updating max capacity for a class session.
+	// @Param new_capacity body int true "New max capacity"
 	CreateClassSessionRes struct {
 		ID                   string                    `json:"id"`
 		ClassID              string                    `json:"class_id"`
@@ -31,10 +42,15 @@ type (
 		UpdatedAt            time.Time                 `json:"updated_at"`
 	}
 
+	// UpdateClassSessionLocation represents the request body for updating a class session's location.
+	// @Description Request body for updating a class session's location.
+	// @Param new_location body string true "New location"
 	UpdateClassSessionLocation struct {
 		NewLocation string `json:"new_location" validate:"required"`
 	}
 
+	// CreateClassSessionRes represents the response body after creating a class session.
+	// @Description Response body for creating a class session.
 	ClassSessionsRes struct {
 		ID                 string                    `json:"id"`
 		ClassID            string                    `json:"class_id"`
@@ -50,6 +66,9 @@ type (
 		UpdatedAt          time.Time                 `json:"updated_at"`
 	}
 
+	// SetMaxCapacityReq represents the request body for updating max capacity.
+	// @Description Request body for updating max capacity for a class session.
+	// @Param new_capacity body int true "New max capacity"
 	SetMaxCapacityReq struct {
 		NewCapacity int `json:"new_capacity" validate:"required"`
 	}

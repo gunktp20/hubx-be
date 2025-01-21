@@ -27,6 +27,18 @@ func NewChoiceHttpHandler(usecase choiceUsecase.ChoiceUsecaseService) ChoiceHttp
 	return &choiceHttpHandler{choiceUsecase: usecase}
 }
 
+// CreateChoice creates a choice for a specific question.
+// @Summary Create a new choice
+// @Description Allows an admin to create a choice for a specific question.
+// @Tags Admin/Choice
+// @Accept json
+// @Produce json
+// @Param body body choiceDto.CreateChoiceReq true "Create Choice Request Body"
+// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Choice created","status":200,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/choice [post]
 func (h *choiceHttpHandler) CreateChoice(c *fiber.Ctx) error {
 
 	var body choiceDto.CreateChoiceReq

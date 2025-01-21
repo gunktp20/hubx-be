@@ -7,15 +7,12 @@ import (
 )
 
 type (
-	// ? first
-	// CreateUserQuestionAnswerReq struct {
-	// 	QuestionID string `json:"question_id" validate:"required"`
-	// 	ClassID    string `json:"class_id" validate:"required"`
-	// 	ChoiceID   string `json:"choice_id"`
 
-	// 	AnswerText string `json:"answer_text"`
-	// }
-
+	// SubQuestionsAnswer represents an answer for a sub-question.
+	// @Description Details of a sub-question answer.
+	// @Param sub_question_id body string true "Sub-question ID"
+	// @Param answer_text body string false "Answer text"
+	// @Param selected_sub_question_choice_id body string false "Selected sub-question choice ID"
 	SubQuestionsAnswer struct {
 		SubQuestionID  string `json:"sub_question_id"`
 		Description    string `json:"description"`
@@ -80,6 +77,11 @@ type (
 		Description string `json:"description"`
 	}
 
+	// GetUserQuestionAnswerRes represents the response body for a user question answer.
+	// @Description Response body for a user question answer.
+	// @Param question_id body string true "Question ID"
+	// @Param selected_choice_id body string false "Selected choice ID"
+	// @Param answer_text body string false "Answer text"
 	GetUserQuestionAnswerRes struct {
 		ID               string                         `json:"id"`
 		QuestionID       string                         `json:"question_id"`

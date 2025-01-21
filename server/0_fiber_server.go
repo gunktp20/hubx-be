@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/swagger"
+	"github.com/gunktp20/digital-hubx-be/docs"
 	"github.com/gunktp20/digital-hubx-be/external/gcs"
 	"github.com/gunktp20/digital-hubx-be/pkg/config"
 	"github.com/gunktp20/digital-hubx-be/pkg/database"
 	"github.com/gunktp20/digital-hubx-be/pkg/di"
-	"github.com/gunktp20/digital-hubx-be/pkg/middleware"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-
 	_ "github.com/gunktp20/digital-hubx-be/docs"
 )
 
@@ -58,8 +59,8 @@ func (s *fiberServer) Start() {
 		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
 		AllowCredentials: true,
 	}))
+	s.app.Use(recover.New(recover.Config{EnableStackTrace: true}))
 
-	s.app.Use(middleware.Ident)
 	// Default health check endpoint
 	s.app.Get("", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{
@@ -67,21 +68,8 @@ func (s *fiberServer) Start() {
 		})
 	})
 
-	api := s.app.Group("/api")
-
-	ident := api.Group("/ident", middleware.Ident)
-	ident.Get("/", func(c *fiber.Ctx) error {
-		email := c.Locals("email").(string)
-		name := c.Locals("name").(string)
-		roles := c.Locals("roles").([]string)
-
-		return c.JSON(fiber.Map{
-			"email": email,
-			"name":  name,
-			"roles": roles,
-		})
-	})
-
+	api := s.app.Group("/hubx-service")
+	// Initialize routes (include Swagger)
 	s.initializeRoutes(api)
 
 	serverUrl := fmt.Sprintf(":%d", s.conf.Server.Port)
@@ -91,6 +79,16 @@ func (s *fiberServer) Start() {
 }
 
 func (s *fiberServer) initializeRoutes(api fiber.Router) {
+
+	if s.conf.Swagger.Enabled {
+		setupSwagger(s.conf.Swagger) // Setup Swagger Doc before begin
+		s.app.Get("/swagger/*", swagger.HandlerDefault)
+		log.Println("Swagger is enabled and available at /swagger/index.html")
+	}
+
+	// ? Ident middleware on top of http layer
+	// s.app.Use(middleware.Ident) // TODO Remove this comment to enable bearer token validation for all entry endpoints.
+
 	// ? initial http handler layer
 	s.initializeClassHttpHandler(api, s.conf)
 	s.initializeClassCategoryHttpHandler(api, s.conf)
@@ -119,4 +117,13 @@ func (s *fiberServer) Shutdown(ctx context.Context) error {
 
 	log.Println("Server shutdown complete.")
 	return nil
+}
+
+func setupSwagger(conf *config.SwaggerConfig) {
+	docs.SwaggerInfo.Title = conf.Title
+	docs.SwaggerInfo.Description = conf.Description
+	docs.SwaggerInfo.Version = conf.Version
+	docs.SwaggerInfo.Host = conf.Host
+	docs.SwaggerInfo.BasePath = conf.BasePath
+	docs.SwaggerInfo.Schemes = conf.Schemes
 }

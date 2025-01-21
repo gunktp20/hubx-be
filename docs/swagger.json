@@ -1,20 +1,26 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "digital hubx api",
-        "title": "digital-hubx",
+        "description": "Digital HubX API.",
+        "title": "Digital HubX API",
         "contact": {
-            "name": "API Support",
-            "email": "support@example.com"
+            "name": "API Support (Tanapong R)",
+            "url": "mailto:zTanapongR@pttep.com",
+            "email": "zTanapongR@pttep.com"
         },
-        "version": "1.0"
+        "version": "1.0.0"
     },
     "host": "localhost:3000",
-    "basePath": "/api",
+    "basePath": "/hubx-service",
     "paths": {
-        "/auth/login": {
+        "/admin/attendance": {
             "post": {
-                "description": "This endpoint allows you to authenticate",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to create an attendance record for a specific class session.",
                 "consumes": [
                     "application/json"
                 ],
@@ -22,25 +28,1541 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Auth"
+                    "Admin/Attendance"
                 ],
-                "summary": "Authenticate",
+                "summary": "Create a new attendance record",
                 "parameters": [
                     {
-                        "description": "Authentication detail",
+                        "description": "Create Attendance Request Body",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.AuthenticationReq"
+                            "$ref": "#/definitions/dto.CreateAttendanceReq"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "Operation successful\" example:{\"message\":\"Attendance created\",\"status\":200,\"details\":{\"field\":\"value\"}}",
                         "schema": {
-                            "$ref": "#/definitions/dto.AuthenticationRes"
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/choice": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to create a choice for a specific question.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Choice"
+                ],
+                "summary": "Create a new choice",
+                "parameters": [
+                    {
+                        "description": "Create Choice Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateChoiceReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful\" example:{\"message\":\"Choice created\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to create a new class by providing title, description, category, tier, and other details.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class"
+                ],
+                "summary": "Create a new class",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class Title",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Class Description",
+                        "name": "description",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Class Cover Image",
+                        "name": "cover_image",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Class Category ID",
+                        "name": "class_category_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Class Tier",
+                        "name": "class_tier",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Class Level",
+                        "name": "class_level",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful\" example:{\"message\":\"Class created successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class-category": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to create a new class category.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class"
+                ],
+                "summary": "Create a new class category",
+                "parameters": [
+                    {
+                        "description": "Create Class Category Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category created successfully\" example:{\"message\":\"Category created successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"The input data is invalid\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class-category/{category_id}": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to update the name of a class category.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class Category"
+                ],
+                "summary": "Update class category name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Update Category Name Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Category name updated successfully\" example:{\"message\":\"Category updated successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Validation failed\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Category not found\" example:{\"message\":\"Category not found\",\"status\":404,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class-registration/reset-cancel-quota": {
+            "post": {
+                "description": "Allows an admin to reset a user's cancellation quota for a class.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class Registration"
+                ],
+                "summary": "Reset user's cancellation quota",
+                "parameters": [
+                    {
+                        "description": "Reset Cancelled Quota Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ResetCancelledQuotaReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cancellation quota reset successfully\" example:{\"message\":\"The user's cancellation quota for the specified class has been reset\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class-registration/{class_session_id}/{email}": {
+            "delete": {
+                "description": "Allows an admin to delete a user's registration for a specific class session.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class Registration"
+                ],
+                "summary": "Delete a user's class registration",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class session ID",
+                        "name": "class_session_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "User's email",
+                        "name": "email",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registration deleted successfully\" example:{\"message\":\"User class registration deleted successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Registration not found\" example:{\"message\":\"Registration not found\",\"status\":404,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class-session": {
+            "post": {
+                "description": "Allows an admin to create a new class session for a class.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class Session"
+                ],
+                "summary": "Create a new class session",
+                "parameters": [
+                    {
+                        "description": "Create Class Session Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateClassSessionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Class session created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateClassSessionRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class-session/{class_session_id}": {
+            "delete": {
+                "description": "Allows an admin to delete a specific class session by ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class Session"
+                ],
+                "summary": "Delete a class session",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class session ID",
+                        "name": "class_session_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Class session deleted successfully\" example:{\"message\":\"Class session deleted successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class-session/{class_session_id}/location": {
+            "put": {
+                "description": "Allows an admin to update the location for a class session.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class Session"
+                ],
+                "summary": "Update location for a class session",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class session ID",
+                        "name": "class_session_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Location Update Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateClassSessionLocation"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Location updated successfully\" example:{\"message\":\"Class session location updated successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class-session/{class_session_id}/max-capacity": {
+            "put": {
+                "description": "Allows an admin to update the maximum capacity for a class session.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class Session"
+                ],
+                "summary": "Update max capacity for a class session",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class session ID",
+                        "name": "class_session_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Max Capacity Update Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.SetMaxCapacityReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Max capacity updated successfully\" example:{\"message\":\"The max capacity was updated successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class/{class_id}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Soft deletes a class by marking it as removed.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Class"
+                ],
+                "summary": "Delete a class",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful\" example:{\"message\":\"Class deleted successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Invalid input\" example:{\"message\":\"Class not found\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class/{class_id}/cover-image": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to update the cover image of a class.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class"
+                ],
+                "summary": "Update class cover image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "New Cover Image",
+                        "name": "new_cover_image",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful\" example:{\"message\":\"Class cover image updated successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input data\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Invalid input\" example:{\"message\":\"Class not found\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/class/{class_id}/toggle-enable-question": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Enables or disables question functionality for a specific class.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class"
+                ],
+                "summary": "Toggle EnableQuestion status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful\" example:{\"message\":\"EnableQuestion status updated\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "404": {
+                        "description": "Invalid input\" example:{\"message\":\"Class not found\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/question": {
+            "post": {
+                "description": "Allows an admin to create a question for a class.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Question"
+                ],
+                "summary": "Create a new question",
+                "parameters": [
+                    {
+                        "description": "Create Question Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateQuestionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Question created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateQuestionRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/sub-question": {
+            "post": {
+                "description": "Allows an admin to create a sub-question for a specific choice.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/SubQuestion"
+                ],
+                "summary": "Create a new sub-question",
+                "parameters": [
+                    {
+                        "description": "Create SubQuestion Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateSubQuestionReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sub-question created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateSubQuestionRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/sub-question-choice": {
+            "post": {
+                "description": "Allows an admin to create a choice for a specific sub-question.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Sub Question Choice"
+                ],
+                "summary": "Create a new sub-question choice",
+                "parameters": [
+                    {
+                        "description": "Create SubQuestion Choice Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateSubQuestionChoicesReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sub-question choice created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateSubQuestionChoicesRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/user-question-answer/{class_id}/class": {
+            "post": {
+                "description": "Allows an admin to submit multiple question answers for a specific class.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/User Question Answer"
+                ],
+                "summary": "Create multiple user question answers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "List of user question answers",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.CreateUserQuestionAnswerReq"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response\" example:{\"message\":\"User question answers created successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/class": {
+            "get": {
+                "description": "Fetch all classes with optional filters like tier, keyword, and category.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class"
+                ],
+                "summary": "Get all classes",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page (default: 10)",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Class Tier",
+                        "name": "class_tier",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search keyword",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Filter by class level",
+                        "name": "class_level",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by class category",
+                        "name": "class_category",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful\" example:{\"message\":\"Class created successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/class-category": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieves a paginated list of class categories.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "ClassCategory"
+                ],
+                "summary": "Get all class categories",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Keyword to filter categories",
+                        "name": "keyword",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of records per page (default: 10)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated categories\" example:{\"message\":\"Categories retrieved successfully\",\"status\":200,\"details\":{\"total\":100,\"categories\":[{\"id\":\"12345\",\"name\":\"Category 1\"}]}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/class-registration": {
+            "get": {
+                "description": "Fetch paginated user registrations.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class Registration"
+                ],
+                "summary": "Get user registrations",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of user registrations\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Allows a user to register for a class session.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class Registration"
+                ],
+                "summary": "Create a class registration",
+                "parameters": [
+                    {
+                        "description": "Create Class Registration Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateClassRegistrationReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registration created successfully",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateClassRegistrationRes"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input\" example:{\"message\":\"Invalid input\",\"status\":400,\"details\":{\"field\":\"error description\"}}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/class-registration/{class_session_id}/cancel": {
+            "delete": {
+                "description": "Allows a user to cancel their class session registration.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class Registration"
+                ],
+                "summary": "Cancel a class registration",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class session ID",
+                        "name": "class_session_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Registration cancelled successfully\" example:{\"message\":\"Class session registration cancelled successfully\",\"status\":200,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/class-session": {
+            "get": {
+                "description": "Retrieves a list of class sessions with optional filters.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class Session"
+                ],
+                "summary": "Get all class sessions",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Class tier",
+                        "name": "class_tier",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of class sessions\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/class/{class_id}": {
+            "get": {
+                "description": "Fetch the details of a specific class by its ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Class"
+                ],
+                "summary": "Get class by ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Class details",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateClassRes"
+                        }
+                    },
+                    "404": {
+                        "description": "Class not found",
+                        "schema": {
+                            "$ref": "#/definitions/response.MsgResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.MsgResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/question/{class_id}/class": {
+            "get": {
+                "description": "Retrieves a list of questions associated with a specific class.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Question"
+                ],
+                "summary": "Get questions by class ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of questions\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/sub-question/{choice_id}/choice": {
+            "get": {
+                "description": "Retrieves sub-questions for a given choice ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SubQuestion"
+                ],
+                "summary": "Get sub-questions by choice ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Choice ID",
+                        "name": "choice_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of sub-questions\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/sub-question/{question_id}/question": {
+            "get": {
+                "description": "Retrieves sub-questions for a given question ID.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SubQuestion"
+                ],
+                "summary": "Get sub-questions by question ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "Question ID",
+                        "name": "question_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of sub-questions\" example:{\"data\":[],\"total\":0,\"page\":1,\"limit\":10,\"totalPages\":1}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/user-question-answer/{class_id}/class": {
+            "get": {
+                "description": "Fetches a paginated list of user question answers for a specific class.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserQuestionAnswer"
+                ],
+                "summary": "Retrieve user question answers by class ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Number of items per page (default: 10)",
+                        "name": "limit",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response\" example:{\"data\":[...],\"total\":100,\"page\":1,\"limit\":10,\"totalPages\":10}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error\" example:{\"message\":\"Internal Server Error\",\"status\":500,\"details\":null}",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     }
                 }
@@ -48,39 +1570,1042 @@
         }
     },
     "definitions": {
-        "dto.AuthenticationReq": {
+        "dto.ChoiceRes": {
             "type": "object",
-            "required": [
-                "email",
-                "password"
-            ],
             "properties": {
-                "email": {
-                    "type": "string"
-                },
-                "password": {
+                "description": {
                     "type": "string"
                 }
             }
         },
-        "dto.AuthenticationRes": {
+        "dto.CreateAttendanceReq": {
+            "description": "Request body for creating an attendance record.",
             "type": "object",
             "required": [
-                "access_token",
-                "email",
-                "user_id"
+                "class_session_id",
+                "user_email"
             ],
             "properties": {
-                "access_token": {
+                "class_id": {
+                    "description": "Class ID",
+                    "type": "string"
+                },
+                "class_session_id": {
+                    "description": "Class session ID",
+                    "type": "string"
+                },
+                "user_email": {
+                    "description": "User's email",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateChoiceReq": {
+            "description": "Request body for creating a new choice.",
+            "type": "object",
+            "required": [
+                "description",
+                "question_id"
+            ],
+            "properties": {
+                "description": {
+                    "description": "Choice description",
+                    "type": "string"
+                },
+                "question_id": {
+                    "description": "Question ID",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateClassRegistrationReq": {
+            "description": "Request body for creating a class registration.",
+            "type": "object",
+            "required": [
+                "class_id",
+                "class_session_id"
+            ],
+            "properties": {
+                "class_id": {
+                    "type": "string"
+                },
+                "class_session_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateClassRegistrationRes": {
+            "description": "Response body for a successful class registration creation.",
+            "type": "object",
+            "properties": {
+                "cancellation_deadline": {
+                    "type": "string"
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "class_session_id": {
+                    "type": "string"
+                },
+                "created_at": {
                     "type": "string"
                 },
                 "email": {
                     "type": "string"
                 },
-                "user_id": {
+                "id": {
+                    "type": "string"
+                },
+                "is_banned": {
+                    "type": "boolean"
+                },
+                "reg_status": {
+                    "$ref": "#/definitions/models.RegStatus"
+                },
+                "registered_at": {
+                    "type": "string"
+                },
+                "unattended_quota": {
+                    "type": "integer"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }
+        },
+        "dto.CreateClassRes": {
+            "description": "Response body after creating a class.",
+            "type": "object",
+            "properties": {
+                "class_category_id": {
+                    "type": "string"
+                },
+                "class_level": {
+                    "type": "integer"
+                },
+                "class_tier": {
+                    "$ref": "#/definitions/models.ClassTier"
+                },
+                "cover_image": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "is_remove": {
+                    "type": "boolean"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateClassSessionReq": {
+            "description": "Request body for creating a class session.",
+            "type": "object",
+            "required": [
+                "class_id",
+                "date",
+                "end_time",
+                "location",
+                "max_capacity",
+                "start_time"
+            ],
+            "properties": {
+                "class_id": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "end_time": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "max_capacity": {
+                    "type": "integer"
+                },
+                "start_time": {
+                    "description": "ClassSessionStatus models.ClassSessionStatus `json:\"class_session_status\" validate:\"required\"`",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateClassSessionRes": {
+            "description": "Request body for updating max capacity for a class session.",
+            "type": "object",
+            "properties": {
+                "cancellation_deadline": {
+                    "type": "string"
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "class_session_status": {
+                    "$ref": "#/definitions/models.ClassSessionStatus"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "end_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "max_capacity": {
+                    "type": "integer"
+                },
+                "start_time": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateQuestionReq": {
+            "description": "Request body for creating a question.",
+            "type": "object",
+            "required": [
+                "class_id",
+                "description",
+                "question_type"
+            ],
+            "properties": {
+                "class_id": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "question_type": {
+                    "$ref": "#/definitions/models.QuestionTypes"
+                }
+            }
+        },
+        "dto.CreateQuestionRes": {
+            "description": "Response body for creating a question.",
+            "type": "object",
+            "required": [
+                "choices"
+            ],
+            "properties": {
+                "choices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Choice"
+                    }
+                },
+                "class": {
+                    "$ref": "#/definitions/dto.QuestionClass"
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "question_type": {
+                    "$ref": "#/definitions/models.QuestionTypes"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateSubQuestionChoiceRes": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateSubQuestionChoicesReq": {
+            "description": "Request body for creating a sub-question choice.",
+            "type": "object",
+            "required": [
+                "description",
+                "sub_question_id"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "sub_question_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateSubQuestionChoicesRes": {
+            "description": "Response body for creating a sub-question choice.",
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "sub_question_id": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateSubQuestionReq": {
+            "description": "Request body for creating a sub-question.",
+            "type": "object",
+            "required": [
+                "choice_id",
+                "description",
+                "question_type"
+            ],
+            "properties": {
+                "choice_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "question_id": {
+                    "description": "? User can ignore these",
+                    "type": "string"
+                },
+                "question_type": {
+                    "$ref": "#/definitions/models.QuestionTypes"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateSubQuestionRes": {
+            "description": "Response body for creating a sub-question.",
+            "type": "object",
+            "properties": {
+                "choice": {
+                    "$ref": "#/definitions/dto.ChoiceRes"
+                },
+                "choice_id": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "question": {
+                    "$ref": "#/definitions/dto.QuestionRes"
+                },
+                "question_id": {
+                    "type": "string"
+                },
+                "question_type": {
+                    "$ref": "#/definitions/models.QuestionTypes"
+                },
+                "sub_question_choices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.CreateSubQuestionChoiceRes"
+                    }
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.CreateUserQuestionAnswerReq": {
+            "type": "object",
+            "required": [
+                "question_id"
+            ],
+            "properties": {
+                "answer_text": {
+                    "type": "string"
+                },
+                "question_id": {
+                    "type": "string"
+                },
+                "selected_choice_id": {
+                    "type": "string"
+                },
+                "sub_question_answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SubQuestionsAnswer"
+                    }
+                }
+            }
+        },
+        "dto.QuestionClass": {
+            "type": "object",
+            "properties": {
+                "class_level": {
+                    "type": "integer"
+                },
+                "class_tier": {
+                    "$ref": "#/definitions/models.ClassTier"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.QuestionRes": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.ResetCancelledQuotaReq": {
+            "description": "Request body for resetting a user's cancellation quota.",
+            "type": "object",
+            "required": [
+                "class_id",
+                "user_email"
+            ],
+            "properties": {
+                "class_id": {
+                    "type": "string"
+                },
+                "user_email": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.SetMaxCapacityReq": {
+            "description": "Request body for updating max capacity for a class session.",
+            "type": "object",
+            "required": [
+                "new_capacity"
+            ],
+            "properties": {
+                "new_capacity": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.SubQuestionsAnswer": {
+            "description": "Details of a sub-question answer.",
+            "type": "object",
+            "properties": {
+                "answer_text": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "parent_choice_id": {
+                    "type": "string"
+                },
+                "question_type": {
+                    "type": "string"
+                },
+                "selected_sub_question_choice_description": {
+                    "type": "string"
+                },
+                "selected_sub_question_choice_id": {
+                    "type": "string"
+                },
+                "sub_question_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateClassSessionLocation": {
+            "description": "Request body for updating a class session's location.",
+            "type": "object",
+            "required": [
+                "new_location"
+            ],
+            "properties": {
+                "new_location": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Attendance": {
+            "type": "object",
+            "properties": {
+                "check_in_time": {
+                    "type": "string"
+                },
+                "class": {
+                    "$ref": "#/definitions/models.Class"
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "class_session": {
+                    "$ref": "#/definitions/models.ClassSession"
+                },
+                "class_session_id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_email": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Choice": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "question": {
+                    "$ref": "#/definitions/models.Question"
+                },
+                "question_id": {
+                    "description": "?",
+                    "type": "string"
+                },
+                "sub_questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.SubQuestion"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_question_answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserQuestionAnswer"
+                    }
+                }
+            }
+        },
+        "models.Class": {
+            "type": "object",
+            "properties": {
+                "attendances": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Attendance"
+                    }
+                },
+                "class_category": {
+                    "$ref": "#/definitions/models.ClassCategory"
+                },
+                "class_category_id": {
+                    "type": "string"
+                },
+                "class_high_light_images": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ClassHighLightImage"
+                    }
+                },
+                "class_level": {
+                    "type": "integer"
+                },
+                "class_sessions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ClassSession"
+                    }
+                },
+                "class_tier": {
+                    "$ref": "#/definitions/models.ClassTier"
+                },
+                "cover_image": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "enable_question": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "is_remove": {
+                    "type": "boolean"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "questions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Question"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_question_answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserQuestionAnswer"
+                    }
+                },
+                "user_sub_question_answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserSubQuestionAnswer"
+                    }
+                }
+            }
+        },
+        "models.ClassCategory": {
+            "type": "object",
+            "properties": {
+                "category_name": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ClassHighLightImage": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "$ref": "#/definitions/models.Class"
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "image_url": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ClassSession": {
+            "type": "object",
+            "properties": {
+                "attendances": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Attendance"
+                    }
+                },
+                "class": {
+                    "$ref": "#/definitions/models.Class"
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "class_session_status": {
+                    "$ref": "#/definitions/models.ClassSessionStatus"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "end_time": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "max_capacity": {
+                    "type": "integer"
+                },
+                "start_time": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ClassSessionStatus": {
+            "type": "string",
+            "enum": [
+                "available",
+                "closed"
+            ],
+            "x-enum-comments": {
+                "Available": "สามารถลงทะเบียนได้",
+                "Closed": "ปิดการลงทะเบียน"
+            },
+            "x-enum-varnames": [
+                "Available",
+                "Closed"
+            ]
+        },
+        "models.ClassTier": {
+            "type": "string",
+            "enum": [
+                "essential",
+                "literacy",
+                "mastery"
+            ],
+            "x-enum-varnames": [
+                "Essential",
+                "Literacy",
+                "Mastery"
+            ]
+        },
+        "models.Question": {
+            "type": "object",
+            "properties": {
+                "choices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Choice"
+                    }
+                },
+                "class": {
+                    "$ref": "#/definitions/models.Class"
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "question_type": {
+                    "$ref": "#/definitions/models.QuestionTypes"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_question_answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserQuestionAnswer"
+                    }
+                }
+            }
+        },
+        "models.QuestionTypes": {
+            "type": "string",
+            "enum": [
+                "choice",
+                "text"
+            ],
+            "x-enum-varnames": [
+                "QChoice",
+                "QText"
+            ]
+        },
+        "models.RegStatus": {
+            "type": "string",
+            "enum": [
+                "completed",
+                "registered",
+                "cancelled"
+            ],
+            "x-enum-varnames": [
+                "Completed",
+                "Registered",
+                "Cancelled"
+            ]
+        },
+        "models.SubQuestion": {
+            "type": "object",
+            "properties": {
+                "choice": {
+                    "$ref": "#/definitions/models.Choice"
+                },
+                "choice_id": {
+                    "description": "เพิ่ม",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "description": "เพิ่ม",
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "question": {
+                    "$ref": "#/definitions/models.Question"
+                },
+                "question_id": {
+                    "description": "เพิ่ม",
+                    "type": "string"
+                },
+                "question_type": {
+                    "$ref": "#/definitions/models.QuestionTypes"
+                },
+                "sub_question_choices": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.SubQuestionChoice"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_sub_question_answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserSubQuestionAnswer"
+                    }
+                }
+            }
+        },
+        "models.SubQuestionChoice": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "order": {
+                    "type": "integer"
+                },
+                "sub_question": {
+                    "$ref": "#/definitions/models.SubQuestion"
+                },
+                "sub_question_id": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_sub_question_answers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserSubQuestionAnswer"
+                    }
+                }
+            }
+        },
+        "models.UserQuestionAnswer": {
+            "type": "object",
+            "properties": {
+                "answer_text": {
+                    "type": "string"
+                },
+                "choice": {
+                    "$ref": "#/definitions/models.Choice"
+                },
+                "choice_id": {
+                    "type": "string"
+                },
+                "class": {
+                    "description": "User     User     `gorm:\"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;\" json:\"user\"`",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.Class"
+                        }
+                    ]
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "question": {
+                    "$ref": "#/definitions/models.Question"
+                },
+                "question_id": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_email": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserSubQuestionAnswer": {
+            "type": "object",
+            "properties": {
+                "answer_text": {
+                    "type": "string"
+                },
+                "class": {
+                    "description": "User              User              `gorm:\"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;\" json:\"user\"`",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/models.Class"
+                        }
+                    ]
+                },
+                "class_id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "sub_question": {
+                    "$ref": "#/definitions/models.SubQuestion"
+                },
+                "sub_question_choice": {
+                    "$ref": "#/definitions/models.SubQuestionChoice"
+                },
+                "sub_question_choice_id": {
+                    "type": "string"
+                },
+                "sub_question_id": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_email": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.MsgResponse": {
+            "type": "object",
+            "properties": {
+                "details": {
+                    "description": "Additional details (optional)",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "example": {
+                        "{\"field\"": " \"error detail\"}"
+                    }
+                },
+                "message": {
+                    "description": "The response message",
+                    "type": "string",
+                    "example": "Operation successful"
+                },
+                "status": {
+                    "description": "HTTP status code",
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "This security definition is used for authenticating",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

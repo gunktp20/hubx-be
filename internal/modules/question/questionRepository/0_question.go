@@ -89,7 +89,6 @@ func (r *questionGormRepository) GetQuestionById(questionID string) (*models.Que
 func (r *questionGormRepository) CountQuestionsByClassID(classId string) (int64, error) {
 	var total int64
 
-	// Query เพื่อหาจำนวนคำถามใน class ที่กำหนด
 	result := r.db.Model(&models.Question{}).
 		Where("class_id = ?", classId).
 		Count(&total)

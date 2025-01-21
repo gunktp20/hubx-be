@@ -7,6 +7,11 @@ import (
 )
 
 type (
+
+	// CreateSubQuestionChoicesReq represents the request body for creating a sub-question choice.
+	// @Description Request body for creating a sub-question choice.
+	// @Param description body string true "Description of the sub-question choice"
+	// @Param sub_question_id body string true "Sub-question ID" format(uuid)
 	CreateSubQuestionChoicesReq struct {
 		Description   string `json:"description" validate:"required"`
 		SubQuestionID string `json:"sub_question_id" validate:"required,uuid"`
@@ -19,6 +24,13 @@ type (
 		ClassLevel  int              `json:"class_level"`
 	}
 
+	// CreateSubQuestionChoicesRes represents the response body after creating a sub-question choice.
+	// @Description Response body for creating a sub-question choice.
+	// @Param id body string true "Sub-question choice ID" format(uuid)
+	// @Param description body string true "Description of the sub-question choice"
+	// @Param sub_question_id body string true "Sub-question ID" format(uuid)
+	// @Param created_at body string true "Timestamp of creation" format(date-time)
+	// @Param updated_at body string true "Timestamp of last update" format(date-time)
 	CreateSubQuestionChoicesRes struct {
 		ID            string    `json:"id"`
 		Description   string    `json:"description"`

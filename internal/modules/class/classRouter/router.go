@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gofiber/fiber/v2"
 	classHandler "github.com/gunktp20/digital-hubx-be/internal/modules/class/classHandler"
+	"github.com/gunktp20/digital-hubx-be/pkg/middleware"
 )
 
 func SetClassRoutes(api fiber.Router, classHttpHandler classHandler.ClassHttpHandlerService) {
@@ -11,8 +12,8 @@ func SetClassRoutes(api fiber.Router, classHttpHandler classHandler.ClassHttpHan
 	classRoute.Get("/", classHttpHandler.GetAllClasses)
 	classRoute.Get("/:class_id", classHttpHandler.GetClassById)
 
-	// ? Admin Routes Group
-	adminRoute := api.Group("/admin/class")
+	// ? Admin Routes
+	adminRoute := api.Group("/admin/class", middleware.Ident, middleware.PermissionCheck)
 	adminRoute.Post("/", classHttpHandler.CreateClass)
 	adminRoute.Put("/:class_id", classHttpHandler.UpdateClassDetails)
 	adminRoute.Put("/:class_id/toggle-enable-question", classHttpHandler.ToggleClassEnableQuestion)

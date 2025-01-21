@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 
 	choiceRepository "github.com/gunktp20/digital-hubx-be/internal/modules/choice/choiceRepository"
 	questionRepository "github.com/gunktp20/digital-hubx-be/internal/modules/question/questionRepository"
@@ -47,38 +46,6 @@ func NewUserQuestionAnswerUsecase(
 	}
 }
 
-// func (u *userQuestionAnswerUsecase) CreateUserQuestionAnswer(createUserQuestionAnswerReq *userQuestionAnswerDto.CreateUserQuestionAnswerReq, email string) (*userQuestionAnswerDto.CreateUserQuestionAnswerRes, error) {
-
-// 	_, err := u.questionRepo.GetQuestionById(createUserQuestionAnswerReq.QuestionID)
-// 	if err != nil {
-// 		return &userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, err
-// 	}
-// 	// ? check class id request equal actual class id of question
-// 	// if question.ClassID != createUserQuestionAnswerReq.ClassID {
-// 	// 	return &userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, errors.New("actual class id of question doesn't match with class that you provided")
-// 	// }
-
-// 	// choice, err := u.choiceRepo.GetChoiceById(createUserQuestionAnswerReq.ChoiceID)
-// 	if err != nil {
-// 		return &userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, err
-// 	}
-// 	// ? check question id request equal actual question id of choice
-// 	// if choice.QuestionID != createUserQuestionAnswerReq.QuestionID {
-// 	// 	return &userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, errors.New("actual question id of choice doesn't match with question that you provided")
-// 	// }
-
-// 	isAnswered, err := u.userQuestionAnswerRepo.IsUserAnsweredThisQuestion(email, createUserQuestionAnswerReq.QuestionID)
-// 	if err != nil {
-// 		return &userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, err
-// 	}
-
-// 	if isAnswered {
-// 		return &userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, errors.New("user has already answered this question")
-// 	}
-
-// 	return u.userQuestionAnswerRepo.CreateUserQuestionAnswer(createUserQuestionAnswerReq, email)
-// }
-
 func (u *userQuestionAnswerUsecase) GetUserQuestionAnswersWithClassId(email, classID string, page int, limit int) (*[]userQuestionAnswerDto.GetUserQuestionAnswerRes, int64, error) {
 
 	userQuestionAnswers, total, err := u.userQuestionAnswerRepo.GetUserQuestionAnswersWithClassId(email, classID, page, limit)
@@ -98,45 +65,20 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 		return []userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, err
 	}
 
-	fmt.Print("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
-
-	// 								if err := json.Unmarshal(data, &choice); err != nil {
-	// 									log.Fatalf("Error unmarshalling JSON: %v", err)
-	// 								}
-	// 								log.Println("      	               -    🔹 Choice ID SQ : ", req_choice_sub_question_choice.ID)
-	// 								log.Println("      	               -    🔹 Choice Description SQ : ", req_choice_sub_question_choice.Description)
-	// 								log.Println("      	 ")
-	// 							}
-	// 						}
-	// 						log.Println("      	 ")
-	// 					}
-	// 				}
-	// 				log.Println("      	 ")
-	// 			}
-	// 		}
-	// 		log.Println("___________________________________________________________________________________________")
-	// 	}
-	// }
-
-	// เริ่ม Transaction
+	// ? init transaction
 	tx := u.db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Print(" r := recover(); r != nil 8888888888888888888888888888888888888888888888888888888888888888888")
-			tx.Rollback() // Rollback หากมี Panic
+			tx.Rollback() // Rollback if there is panic
 		}
 	}()
-
-	fmt.Println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
 
 	// TODO
 	if len(*questionsOfClass) > 0 {
 		for i, question := range *questionsOfClass {
-			fmt.Println("11111111111111111111111111111111111111111111111111111")
+
 			// ? Check if all provided question IDs exist for the given class
-			// ตรวจสอบว่า Question ID ตรงกับที่ส่งมา
 			if question.ID != createUserQuestionAnswerReqs[i].QuestionID {
-				fmt.Println("2222222222222222222222")
 				tx.Rollback()
 				return []userQuestionAnswerDto.CreateUserQuestionAnswerRes{},
 					errors.New("invalid question ID provided for the given class")
@@ -175,13 +117,13 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 					ClassID:    question.ClassID,
 					ChoiceID: func() *string {
 						if createUserQuestionAnswerReqs[i].SelectedChoiceID == "" {
-							return nil // หากไม่มีค่า ให้ใช้ nil
+							return nil
 						}
 						return &createUserQuestionAnswerReqs[i].SelectedChoiceID // แปลงเป็น pointer
 					}(),
 					AnswerText: func() *string {
 						if createUserQuestionAnswerReqs[i].AnswerText == "" {
-							return nil // หากไม่มีค่า ให้ใช้ nil
+							return nil
 						}
 						return &createUserQuestionAnswerReqs[i].AnswerText // แปลงเป็น pointer
 					}(),
@@ -274,10 +216,10 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 					UserEmail:  email,
 					QuestionID: question.ID,
 					ClassID:    question.ClassID,
-					ChoiceID:   nil, // กำหนดเป็น nil แทน ""
+					ChoiceID:   nil,
 					AnswerText: func() *string {
 						if createUserQuestionAnswerReqs[i].AnswerText == "" {
-							return nil // หากไม่มีค่า ให้ใช้ nil
+							return nil
 						}
 						return &createUserQuestionAnswerReqs[i].AnswerText
 					}(),
@@ -291,6 +233,7 @@ func (u *userQuestionAnswerUsecase) CreateMultipleUserQuestionAnswers(createUser
 		}
 	}
 
+	// ? Commit transaction
 	tx.Commit()
 
 	return createUserQuestionAnswerRes, nil

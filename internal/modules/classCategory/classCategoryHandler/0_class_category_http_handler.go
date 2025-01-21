@@ -30,6 +30,18 @@ func NewClassCategoryHttpHandler(usecase classCategoryUsecase.ClassCategoryUseca
 	return &classCategoryHttpHandler{classCategoryUsecase: usecase}
 }
 
+// CreateClassCategory creates a new class category.
+// @Summary Create a new class category
+// @Description Allows an admin to create a new class category.
+// @Tags Admin/Class Category
+// @Accept json
+// @Produce json
+// @Param body body map[string]interface{} true "Create Class Category Request Body"
+// @Success 200 {object} map[string]interface{} "Category created successfully" example:{"message":"Category created successfully","status":200,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"The input data is invalid","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/class-category [post]
 func (h *classCategoryHttpHandler) CreateClassCategory(c *fiber.Ctx) error {
 
 	var body classCategoryDto.CreateClassCategoryReq
@@ -53,6 +65,19 @@ func (h *classCategoryHttpHandler) CreateClassCategory(c *fiber.Ctx) error {
 	return response.SuccessResponse(c, http.StatusOK, res)
 }
 
+// GetAllClassCategories retrieves all class categories.
+// @Summary Get all class categories
+// @Description Retrieves a paginated list of class categories.
+// @Tags ClassCategory
+// @Accept json
+// @Produce json
+// @Param keyword query string false "Keyword to filter categories"
+// @Param page query int false "Page number (default: 1)"
+// @Param limit query int false "Number of records per page (default: 10)"
+// @Success 200 {object} map[string]interface{} "Paginated categories" example:{"message":"Categories retrieved successfully","status":200,"details":{"total":100,"categories":[{"id":"12345","name":"Category 1"}]}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /class-category [get]
 func (h *classCategoryHttpHandler) GetAllClassCategories(c *fiber.Ctx) error {
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 	limit, _ := strconv.Atoi(c.Query("limit", "10"))
@@ -71,6 +96,20 @@ func (h *classCategoryHttpHandler) GetAllClassCategories(c *fiber.Ctx) error {
 	})
 }
 
+// UpdateCategoryName updates the name of an existing class category.
+// @Summary Update class category name
+// @Description Allows an admin to update the name of a class category.
+// @Tags Admin/Class Category
+// @Accept json
+// @Produce json
+// @Param category_id path string true "Category ID"
+// @Param body body map[string]interface{} true "Update Category Name Request Body"
+// @Success 200 {object} map[string]interface{} "Category name updated successfully" example:{"message":"Category updated successfully","status":200,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Validation failed","status":400,"details":{"field":"error description"}}
+// @Failure 404 {object} map[string]interface{} "Category not found" example:{"message":"Category not found","status":404,"details":null}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/class-category/{category_id} [put]
 func (h *classCategoryHttpHandler) UpdateCategoryName(c *fiber.Ctx) error {
 
 	var body classCategoryDto.UpdateCategoryNameReq

@@ -22,6 +22,7 @@ type (
 		GetUserRegistrations(email string, page int, limit int) (*[]classRegistrationDto.GetUserRegistrationsRes, int64, error)
 		CancelClassRegistration(email, classID string) error
 		ResetCancelledQuota(resetCancelledQuotaReq *classRegistrationDto.ResetCancelledQuotaReq) error
+		DeleteUserClassRegistrationBySession(userEmail, classSessionID string) error
 	}
 
 	classRegistrationUsecase struct {
@@ -175,6 +176,15 @@ func (u *classRegistrationUsecase) ResetCancelledQuota(resetCancelledQuotaReq *c
 	err := u.classRegistrationRepo.ResetCancelledQuota(resetCancelledQuotaReq)
 	if err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (u *classRegistrationUsecase) DeleteUserClassRegistrationBySession(userEmail, classSessionID string) error {
+	err := u.classRegistrationRepo.DeleteUserClassRegistrationBySession(userEmail, classSessionID)
+	if err != nil {
+		return fmt.Errorf("failed to delete user class registration: %v", err)
 	}
 
 	return nil

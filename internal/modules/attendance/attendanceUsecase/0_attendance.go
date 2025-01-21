@@ -20,7 +20,6 @@ type (
 		attendanceRepo        attendanceRepository.AttendanceRepositoryService
 		classSessionRepo      classSessionRepository.ClassSessionRepositoryService
 		classRegistrationRepo classRegistrationRepository.ClassRegistrationRepositoryService
-		// gcsClient gcs.GcsClientService
 	}
 )
 
@@ -30,31 +29,25 @@ func NewAttendanceUsecase(attendanceRepo attendanceRepository.AttendanceReposito
 
 func (u *attendanceUsecase) CreateAttendance(createAttendanceReq *attendanceDto.CreateAttendanceReq) (*attendanceDto.CreateAttendanceRes, error) {
 
-	// ! ตรวจสอบว่าผู้ใช้เคยเข้าร่วม class session นี้ไปแล้วไหม
 	userAttendanceCount, err := u.attendanceRepo.CountAttendancesByClassSessionIDAndEmail(createAttendanceReq.ClassSessionID, createAttendanceReq.UserEmail)
 	if err != nil {
 		return &attendanceDto.CreateAttendanceRes{}, err
 	}
-
-	// ! ถ้ามากกว่า 0 แปลว่ามี Attendance อยู่แล้วหรือเคยเข้าร่วมไปแล้ว
 	if userAttendanceCount > 0 {
 		return &attendanceDto.CreateAttendanceRes{}, fmt.Errorf("user with email %s has already attended class session with ID %s", createAttendanceReq.UserEmail, createAttendanceReq.ClassSessionID)
 	}
 
-	// ! ตรวจดูว่า class session ที่ส่งมามีอยู่ในระบบหรือไม่
 	selectedClassSession, err := u.classSessionRepo.GetClassSessionById(createAttendanceReq.ClassSessionID)
 	if err != nil {
 		return &attendanceDto.CreateAttendanceRes{}, err
 	}
 	createAttendanceReq.ClassID = selectedClassSession.ClassID
 
-	// ! ถ้า class session ที่ส่งมามีอยู่ในระบบให้ทำการแกะ class id ของ class session ออกมา
 	isUserRegistered, err := u.classRegistrationRepo.HasUserRegisteredByClassSessionID(createAttendanceReq.UserEmail, createAttendanceReq.ClassSessionID)
 	if err != nil {
 		return &attendanceDto.CreateAttendanceRes{}, err
 	}
 
-	// ! หากผู้ใช้ยังไม่ได้ลงทะเบียน class session นี้่
 	if !isUserRegistered {
 		return &attendanceDto.CreateAttendanceRes{}, fmt.Errorf("user with email %s has not registered for class session with ID %s", createAttendanceReq.UserEmail, createAttendanceReq.ClassSessionID)
 	}

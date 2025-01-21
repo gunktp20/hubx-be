@@ -31,34 +31,17 @@ func NewUserQuestionAnswerHttpHandler(usecase userQuestionAnswerUsecase.UserQues
 	return &userQuestionAnswerHttpHandler{userQuestionAnswerUsecase: usecase}
 }
 
-// func (h *userQuestionAnswerHttpHandler) CreateUserQuestionAnswer(c *fiber.Ctx) error {
-
-// 	userIDStr, err := utils.GetUserIDFromContext(c)
-// 	if err != nil {
-// 		return response.ErrResponse(c, http.StatusUnauthorized, err.Error(), nil)
-// 	}
-
-// 	var body userQuestionAnswerDto.CreateUserQuestionAnswerReq
-
-// 	// ? Merge fiber http body with dto struct
-// 	if err := c.BodyParser(&body); err != nil {
-// 		return response.ErrResponse(c, http.StatusBadRequest, "The input data is invalid", nil)
-// 	}
-
-// 	// ? Validate field in body with dynamic function
-// 	if err := validator.New().Struct(&body); err != nil {
-// 		validationErrors := utils.TranslateValidationError(err.(validator.ValidationErrors))
-// 		return response.ErrResponse(c, http.StatusBadRequest, "The input data is invalid", &validationErrors)
-// 	}
-
-// 	res, err := h.userQuestionAnswerUsecase.CreateUserQuestionAnswer(&body, userIDStr)
-// 	if err != nil {
-// 		return response.ErrResponse(c, http.StatusInternalServerError, err.Error(), nil)
-// 	}
-
-// 	return response.SuccessResponse(c, http.StatusOK, res)
-// }
-
+// @Summary Retrieve user question answers by class ID
+// @Description Fetches a paginated list of user question answers for a specific class.
+// @Tags UserQuestionAnswer
+// @Accept json
+// @Produce json
+// @Param class_id path string true "Class ID"
+// @Param page query int false "Page number (default: 1)"
+// @Param limit query int false "Number of items per page (default: 10)"
+// @Success 200 {object} map[string]interface{} "Success response" example:{"data":[...],"total":100,"page":1,"limit":10,"totalPages":10}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /user-question-answer/{class_id}/class [get]
 func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())
 
@@ -79,6 +62,17 @@ func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fib
 	})
 }
 
+// @Summary Create multiple user question answers
+// @Description Allows an admin to submit multiple question answers for a specific class.
+// @Tags Admin/User Question Answer
+// @Accept json
+// @Produce json
+// @Param class_id path string true "Class ID"
+// @Param body body []userQuestionAnswerDto.CreateUserQuestionAnswerReq true "List of user question answers"
+// @Success 200 {object} map[string]interface{} "Success response" example:{"message":"User question answers created successfully","status":200,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /admin/user-question-answer/{class_id}/class [post]
 func (h *userQuestionAnswerHttpHandler) CreateMultipleUserQuestionAnswers(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())
 

@@ -21,6 +21,7 @@ type (
 		CountSessionsByDate(date time.Time) (int64, error)
 		CheckClassTierDateConflict(classTier string, date time.Time) (bool, error)
 		UpdateLocation(classSessionID, newLocation string) error
+		DeleteClassSessionByID(classSessionID string) error
 	}
 )
 
@@ -36,6 +37,7 @@ func (r *classSessionGormRepository) CheckSessionDateConflict(classID, classTier
 
 	return count > 0, nil
 }
+
 func (r *classSessionGormRepository) CheckClassTierDateConflict(classTier string, date time.Time) (bool, error) {
 	var count int64
 	err := r.db.Model(&models.ClassSession{}).
@@ -47,7 +49,7 @@ func (r *classSessionGormRepository) CheckClassTierDateConflict(classTier string
 		return false, err
 	}
 
-	return count > 0, nil // ถ้า count > 0 แสดงว่ามีวันซ้ำ
+	return count > 0, nil // ? If count > 0, there are repeating days.
 }
 
 func (r *classSessionGormRepository) CreateClassSession(createClassSessionReq *classSessionDto.CreateClassSessionReq) (*classSessionDto.CreateClassSessionRes, error) {
@@ -249,5 +251,16 @@ func (r *classSessionGormRepository) UpdateLocation(classSessionID, newLocation 
 		return errors.New("no class session found to update location")
 	}
 
+	return nil
+}
+
+func (r *classSessionGormRepository) DeleteClassSessionByID(classSessionID string) error {
+	result := r.db.Where("id = ?", classSessionID).Delete(&models.ClassSession{})
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected == 0 {
+		return errors.New("class session not found or already deleted")
+	}
 	return nil
 }

@@ -20,6 +20,7 @@ type (
 		ResetCancelledQuota(resetCancelledQuotaReq *classRegistrationDto.ResetCancelledQuotaReq) error
 		GetUserRegistrationsByClassSessionID(classSessionID string, page int, limit int) (*[]classRegistrationDto.GetUserRegistrationsRes, int64, error)
 		HasUserRegisteredByClassSessionID(email string, classSessionID string) (bool, error)
+		DeleteUserClassRegistrationBySession(userEmail, classSessionID string) error
 	}
 )
 
@@ -248,4 +249,20 @@ func (r *classRegistrationGormRepository) CountRegistrationsByClassSessionID(cla
 	}
 
 	return int(count), nil
+}
+
+func (r *classRegistrationGormRepository) DeleteUserClassRegistrationBySession(userEmail, classSessionID string) error {
+	result := r.db.Model(&models.UserClassRegistration{}).
+		Where("user_email = ? AND class_session_id = ?", userEmail, classSessionID).
+		Delete(&models.UserClassRegistration{})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return errors.New("no user class registration found for the provided user email and class session ID")
+	}
+
+	return nil
 }

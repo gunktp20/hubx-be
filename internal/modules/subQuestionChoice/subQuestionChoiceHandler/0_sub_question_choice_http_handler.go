@@ -25,6 +25,16 @@ func NewSubQuestionChoiceHttpHandler(usecase subQuestionChoiceUsecase.SubQuestio
 	return &subQuestionChoiceHttpHandler{subQuestionChoiceUsecase: usecase}
 }
 
+// @Summary Create a new sub-question choice
+// @Description Allows an admin to create a choice for a specific sub-question.
+// @Tags Admin/Sub Question Choice
+// @Accept json
+// @Produce json
+// @Param body body subQuestionChoiceDto.CreateSubQuestionChoicesReq true "Create SubQuestion Choice Request Body"
+// @Success 200 {object} subQuestionChoiceDto.CreateSubQuestionChoicesRes "Sub-question choice created successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /admin/sub-question-choice [post]
 func (h *subQuestionChoiceHttpHandler) CreateSubQuestionChoice(c *fiber.Ctx) error {
 
 	var body subQuestionChoiceDto.CreateSubQuestionChoicesReq

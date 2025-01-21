@@ -36,6 +36,23 @@ func NewClassHttpHandler(usecase classUsecase.ClassUsecaseService) ClassHttpHand
 	return &classHttpHandler{classUsecase: usecase}
 }
 
+// CreateClass creates a new class.
+// @Summary Create a new class
+// @Description Allows an admin to create a new class by providing title, description, category, tier, and other details.
+// @Tags Admin/Class
+// @Accept multipart/form-data
+// @Produce json
+// @Param title formData string true "Class Title"
+// @Param description formData string true "Class Description"
+// @Param cover_image formData file true "Class Cover Image"
+// @Param class_category_id formData string true "Class Category ID"
+// @Param class_tier formData string true "Class Tier" enum(Essential,Literacy,Mastery)
+// @Param class_level formData int false "Class Level"
+// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Class created successfully","status":200,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/class [post]
 func (h *classHttpHandler) CreateClass(c *fiber.Ctx) error {
 
 	fileHeader, err := c.FormFile("cover_image")
@@ -95,12 +112,25 @@ func (h *classHttpHandler) CreateClass(c *fiber.Ctx) error {
 	return response.SuccessResponse(c, http.StatusOK, res)
 }
 
+// GetAllClasses retrieves a paginated list of classes.
+// @Summary Get all classes
+// @Description Fetch all classes with optional filters like tier, keyword, and category.
+// @Tags Class
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number (default: 1)"
+// @Param limit query int false "Number of items per page (default: 10)"
+// @Param class_tier query string false "Class Tier" enum(Essential,Literacy,Mastery)
+// @Param keyword query string false "Search keyword"
+// @Param class_level query int false "Filter by class level"
+// @Param class_category query string false "Filter by class category"
+// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Class created successfully","status":200,"details":null}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /class [get]
 func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
-	// อ่านค่า page และ limit
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 	limit, _ := strconv.Atoi(c.Query("limit", "10"))
 
-	// อ่านค่า class_level และแปลงเป็น *int
 	var classLevel *int
 	if level := c.Query("class_level"); level != "" {
 		parsedLevel, err := strconv.Atoi(level)
@@ -110,7 +140,6 @@ func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
 		classLevel = &parsedLevel
 	}
 
-	// เรียกใช้ usecase
 	res, total, err := h.classUsecase.GetAllClasses(
 		c.Query("class_tier"),
 		c.Query("keyword"),
@@ -123,7 +152,6 @@ func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
 		return response.ErrResponse(c, http.StatusInternalServerError, err.Error(), nil)
 	}
 
-	// ส่งผลลัพธ์กลับ
 	return response.SuccessResponse(c, http.StatusOK, fiber.Map{
 		"data":       res,
 		"total":      total,
@@ -133,6 +161,17 @@ func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
 	})
 }
 
+// GetClassById retrieves a class by its ID.
+// @Summary Get class by ID
+// @Description Fetch the details of a specific class by its ID.
+// @Tags Class
+// @Accept json
+// @Produce json
+// @Param class_id path string true "Class ID"
+// @Success 200 {object} classDto.CreateClassRes "Class details"
+// @Failure 404 {object} response.MsgResponse "Class not found"
+// @Failure 500 {object} response.MsgResponse "Internal Server Error"
+// @Router /class/{class_id} [get]
 func (h *classHttpHandler) GetClassById(c *fiber.Ctx) error {
 
 	res, err := h.classUsecase.GetClassById(c.Params("class_id"))
@@ -143,6 +182,18 @@ func (h *classHttpHandler) GetClassById(c *fiber.Ctx) error {
 	return response.SuccessResponse(c, http.StatusOK, res)
 }
 
+// ToggleClassEnableQuestion toggles the question enablement status of a class.
+// @Summary Toggle EnableQuestion status
+// @Description Enables or disables question functionality for a specific class.
+// @Tags Class
+// @Accept json
+// @Produce json
+// @Param class_id path string true "Class ID"
+// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"EnableQuestion status updated","status":200,"details":null}
+// @Failure 404 {object} map[string]interface{} "Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/class/{class_id}/toggle-enable-question [put]
 func (h *classHttpHandler) ToggleClassEnableQuestion(c *fiber.Ctx) error {
 
 	newState, err := h.classUsecase.ToggleClassEnableQuestion(c.Params("class_id"))
@@ -162,6 +213,18 @@ func (h *classHttpHandler) ToggleClassEnableQuestion(c *fiber.Ctx) error {
 	})
 }
 
+// CreateClassCategory creates a new class category.
+// @Summary Create a new class category
+// @Description Allows an admin to create a new class category.
+// @Tags Admin/Class
+// @Accept json
+// @Produce json
+// @Param body body map[string]interface{} true "Create Class Category Request Body"
+// @Success 200 {object} map[string]interface{} "Category created successfully" example:{"message":"Category created successfully","status":200,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"The input data is invalid","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/class-category [post]
 func (h *classHttpHandler) UpdateClassDetails(c *fiber.Ctx) error {
 	var body classDto.UpdateClassReq
 
@@ -184,6 +247,20 @@ func (h *classHttpHandler) UpdateClassDetails(c *fiber.Ctx) error {
 	})
 }
 
+// UpdateClassCoverImage updates the cover image of a class.
+// @Summary Update class cover image
+// @Description Allows an admin to update the cover image of a class.
+// @Tags Class
+// @Accept multipart/form-data
+// @Produce json
+// @Param class_id path string true "Class ID"
+// @Param new_cover_image formData file true "New Cover Image"
+// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Class cover image updated successfully","status":200,"details":null}
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input data","status":400,"details":{"field":"error description"}}
+// @Failure 404 {object} map[string]interface{} "Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/class/{class_id}/cover-image [put]
 func (h *classHttpHandler) UpdateClassCoverImage(c *fiber.Ctx) error {
 
 	fileHeader, err := c.FormFile("new_cover_image")
@@ -215,14 +292,25 @@ func (h *classHttpHandler) UpdateClassCoverImage(c *fiber.Ctx) error {
 	})
 }
 
+// DeleteClass soft deletes a class by its ID.
+// @Summary Delete a class
+// @Description Soft deletes a class by marking it as removed.
+// @Tags Admin/Class
+// @Accept json
+// @Produce json
+// @Param class_id path string true "Class ID"
+// @Success 200 {object} map[string]interface{} "Operation successful" example:{"message":"Class deleted successfully","status":200,"details":null}
+// @Failure 404 {object} map[string]interface{} "Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Security BearerAuth
+// @Router /admin/class/{class_id} [delete]
 func (h *classHttpHandler) DeleteClass(c *fiber.Ctx) error {
-	// ดึง class_id จาก URL
+
 	classID := c.Params("class_id")
 	if classID == "" {
 		return response.ErrResponse(c, http.StatusBadRequest, "class ID is required", nil)
 	}
 
-	// เรียก Usecase เพื่อลบคลาส
 	err := h.classUsecase.SoftDeleteClass(classID)
 	if err != nil {
 		if err.Error() == "class not found" {

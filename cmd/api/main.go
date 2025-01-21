@@ -4,13 +4,13 @@
 // @contact.name API Support (Tanapong R)
 // @contact.url mailto:zTanapongR@pttep.com
 // @contact.email zTanapongR@pttep.com
-// @host hrhyperspace-dev.api.pttep.com
+// @host localhost:3000
 // @basePath /hubx-service
 
-// @securityDefinitions.apiKey	BearerAuth
-// @in							header
-// @name						Authorization
-// @description		This security definition is used for authenticating API requests using a Bearer token. Clients must include the token in the Authorization header formatted as "Bearer {token}".
+// @securityDefinitions.apiKey BearerAuth
+// @in header
+// @name Authorization
+// @description This security definition is used for authenticating
 package main
 
 import (
@@ -42,22 +42,22 @@ func main() {
 
 	srv := server.NewFiberServer(conf, db, gcsClient)
 
-	// Channel สำหรับจับสัญญาณ
+	// Create a channel to listen for system signals
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
-	// รันเซิร์ฟเวอร์ใน Goroutine
+	// Run the server in a separate goroutine
 	go func() {
 		srv.Start()
 	}()
 
 	log.Println("Server is running... Press Ctrl+C to shut down.")
 
-	// รอจนกว่าจะมีสัญญาณ
+	// Wait for termination signal
 	<-quit
 	log.Println("Gracefully shutting down...")
 
-	// ทำการปิดเซิร์ฟเวอร์
+	// Shut down the server with a timeout context
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
 	defer cancel()
 

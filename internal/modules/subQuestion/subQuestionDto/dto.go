@@ -7,6 +7,12 @@ import (
 )
 
 type (
+
+	// CreateSubQuestionReq represents the request body for creating a sub-question.
+	// @Description Request body for creating a sub-question.
+	// @Param description body string true "Sub-question description"
+	// @Param choice_id body string true "Choice ID" format(uuid)
+	// @Param question_type body string true "Question type" enum(SingleChoice,MultipleChoice)
 	CreateSubQuestionReq struct {
 		Description  string               `json:"description" validate:"required"`
 		ChoiceID     string               `json:"choice_id" validate:"required,uuid"`
@@ -38,6 +44,15 @@ type (
 		Description string `json:"description"`
 	}
 
+	// CreateSubQuestionRes represents the response body after creating a sub-question.
+	// @Description Response body for creating a sub-question.
+	// @Param id body string true "Sub-question ID" format(uuid)
+	// @Param description body string true "Sub-question description"
+	// @Param choice_id body string true "Choice ID" format(uuid)
+	// @Param question_type body string true "Question type" enum(SingleChoice,MultipleChoice)
+	// @Param created_at body string true "Timestamp of creation" format(date-time)
+	// @Param updated_at body string true "Timestamp of last update" format(date-time)
+	// @Param sub_question_choices body []CreateSubQuestionChoiceRes true "Associated sub-question choices"
 	CreateSubQuestionRes struct {
 		ID          string      `json:"id"`
 		Description string      `json:"description"`

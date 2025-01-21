@@ -26,7 +26,6 @@ func (r *userQuestionAnswerGormRepository) CreateUserQuestionAnswer(tx *gorm.DB,
 		return &userQuestionAnswerDto.CreateUserQuestionAnswerRes{}, err
 	}
 
-	// แปลงค่า AnswerText จาก *string เป็น string ถ้ามีค่า
 	var answerText string
 	if userQuestionAnswer.AnswerText != nil {
 		answerText = *userQuestionAnswer.AnswerText
@@ -36,7 +35,6 @@ func (r *userQuestionAnswerGormRepository) CreateUserQuestionAnswer(tx *gorm.DB,
 		ID:         userQuestionAnswer.ID,
 		QuestionID: userQuestionAnswer.QuestionID,
 		ChoiceID:   userQuestionAnswer.ChoiceID,
-		// ClassID:    createUserQuestionAnswerReq.ClassID,
 		AnswerText: answerText,
 		Email:      userQuestionAnswer.UserEmail,
 		CreatedAt:  userQuestionAnswer.CreatedAt,
@@ -65,7 +63,6 @@ func (r *userQuestionAnswerGormRepository) GetUserQuestionAnswersWithClassId(ema
 
 		var userSubQuestionAnswers []models.UserSubQuestionAnswer
 
-		// ใช้ Preload และระบุเงื่อนไขในการ Join
 		result := r.db.Model(&models.UserSubQuestionAnswer{}).
 			Joins("JOIN sub_questions ON sub_questions.id = user_sub_question_answers.sub_question_id").
 			Where("user_sub_question_answers.user_email = ? AND sub_questions.choice_id = ?", email, userQuestionAnswers[i].ChoiceID).
@@ -81,7 +78,7 @@ func (r *userQuestionAnswerGormRepository) GetUserQuestionAnswersWithClassId(ema
 
 		var subQuestionAnswersRes []userQuestionAnswerDto.SubQuestionAnswerRes
 		for _, subQuestionAnswer := range userSubQuestionAnswers {
-			// แปลง *string เป็น string สำหรับ AnswerText
+
 			answerText := ""
 			if subQuestionAnswer.AnswerText != nil {
 				answerText = *subQuestionAnswer.AnswerText
@@ -97,7 +94,6 @@ func (r *userQuestionAnswerGormRepository) GetUserQuestionAnswersWithClassId(ema
 			})
 		}
 
-		// แปลง *string เป็น string สำหรับ ChoiceID
 		choiceID := ""
 		if userQuestionAnswers[i].ChoiceID != nil {
 			choiceID = *userQuestionAnswers[i].ChoiceID
@@ -111,7 +107,7 @@ func (r *userQuestionAnswerGormRepository) GetUserQuestionAnswersWithClassId(ema
 			},
 			QuestionType:     userQuestionAnswers[i].Question.QuestionType,
 			ClassID:          userQuestionAnswers[i].ClassID,
-			SelectedChoiceID: choiceID, // ใช้ค่า ChoiceID ที่แปลงแล้ว
+			SelectedChoiceID: choiceID,
 			SelectedChoice: userQuestionAnswerDto.GetUserQuestionAnswersChoice{
 				ID:                 userQuestionAnswers[i].Choice.ID,
 				Description:        userQuestionAnswers[i].Choice.Description,
@@ -167,7 +163,6 @@ func (r *userQuestionAnswerGormRepository) IsUserAnsweredThisQuestion(email, que
 func (r *userQuestionAnswerGormRepository) CountUserAnswersByEmailAndClassId(email, classID string) (int64, error) {
 	var total int64
 
-	// Query เพื่อหาจำนวนคำตอบของผู้ใช้สำหรับ class ที่กำหนด
 	result := r.db.Model(&models.UserQuestionAnswer{}).
 		Where("user_email = ? AND class_id = ?", email, classID).
 		Count(&total)

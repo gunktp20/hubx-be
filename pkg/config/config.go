@@ -14,6 +14,7 @@ type (
 		Db            *Db                  `mapstructure:"DB"`
 		GcsSignedUrl  *GcsSignedUrlConfig  `mapstructure:"GCS_SIGNED_URL"`
 		BusinessLogic *BusinessLogicConfig `mapstructure:"BUSINESS_LOGIC"`
+		Swagger       *SwaggerConfig       `mapstructure:"SWAGGER"`
 	}
 
 	Server struct {
@@ -48,6 +49,16 @@ type (
 		DaysBeforeClassStartForCancellation int `mapstructure:"DAYS_BEFORE_CLASS_START_FOR_CANCELLATION"`
 		MaxCapacityPerSession               int `mapstructure:"MAX_CAPACITY_PER_SESSION"`
 	}
+
+	SwaggerConfig struct {
+		Enabled     bool     `mapstructure:"ENABLED"`
+		Title       string   `mapstructure:"TITLE"`
+		Description string   `mapstructure:"DESCRIPTION"`
+		Version     string   `mapstructure:"VERSION"`
+		BasePath    string   `mapstructure:"BASE_PATH"`
+		Host        string   `mapstructure:"HOST"`
+		Schemes     []string `mapstructure:"SCHEMES"`
+	}
 )
 
 var (
@@ -62,6 +73,10 @@ func GetConfig(configPath string) *Config {
 		v.SetConfigType("json")
 		v.AddConfigPath(configPath)
 
+		// Set default values
+		v.SetDefault("SERVER.SERVER_PORT", 3000)
+		v.SetDefault("SWAGGER.ENABLED", true)
+
 		if err := v.ReadInConfig(); err != nil {
 			log.Fatalf("Error reading config file, %s", err)
 		}
@@ -71,6 +86,7 @@ func GetConfig(configPath string) *Config {
 			log.Fatalf("Error unmarshaling config, %s", err)
 		}
 
+		// Validate Config
 		if config.Server == nil || config.Db == nil {
 			log.Fatalf("Missing essential configuration")
 		}

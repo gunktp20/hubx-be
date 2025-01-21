@@ -168,7 +168,6 @@ func (u *classUsecase) UpdateClassDetails(classID string, title *string, descrip
 		updates["class_level"] = *classLevel
 	}
 
-	// อัปเดตข้อมูลทั้งหมด
 	err := u.classRepo.UpdateClassDetailsWithTransaction(tx, classID, updates)
 	if err != nil {
 		tx.Rollback()

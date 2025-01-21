@@ -28,6 +28,16 @@ func NewQuestionHttpHandler(usecase questionUsecase.QuestionUsecaseService) Ques
 	return &questionHttpHandler{questionUsecase: usecase}
 }
 
+// @Summary Create a new question
+// @Description Allows an admin to create a question for a class.
+// @Tags Admin/Question
+// @Accept json
+// @Produce json
+// @Param body body questionDto.CreateQuestionReq true "Create Question Request Body"
+// @Success 200 {object} questionDto.CreateQuestionRes "Question created successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /admin/question [post]
 func (h *questionHttpHandler) CreateQuestion(c *fiber.Ctx) error {
 
 	var body questionDto.CreateQuestionReq
@@ -51,6 +61,17 @@ func (h *questionHttpHandler) CreateQuestion(c *fiber.Ctx) error {
 	return response.SuccessResponse(c, http.StatusOK, res)
 }
 
+// @Summary Get questions by class ID
+// @Description Retrieves a list of questions associated with a specific class.
+// @Tags Question
+// @Accept json
+// @Produce json
+// @Param class_id path string true "Class ID" format(uuid)
+// @Param page query int false "Page number" example:1
+// @Param limit query int false "Number of items per page" example:10
+// @Success 200 {object} map[string]interface{} "List of questions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /question/{class_id}/class [get]
 func (h *questionHttpHandler) GetQuestionsByClassID(c *fiber.Ctx) error {
 
 	page, _ := strconv.Atoi(c.Query("page", "1"))

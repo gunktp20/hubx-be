@@ -1,74 +1,73 @@
 package middleware
 
-// func PermissionCheck(c *fiber.Ctx) error {
-// 	perm := strings.Join([]string{
-// 		constant.BaseRole,
-// 	}, ".")
-// 	allowPerm := map[string]bool{
-// 		constant.RolePermissionSuper:  true,
-// 		constant.RolePermissionMember: false,
-// 		constant.RolePermissionAdmin:  true,
-// 	}
-// 	if err := checkPermAndSetRole(c, perm, allowPerm); err != nil {
-// 		return err
-// 	}
-// 	ctx := context.WithValue(c.UserContext(), constant.CtxPageName, constant.RolePagePcmDbContractSummaryFg)
-// 	c.SetUserContext(ctx)
-// 	return c.Next()
-// }
+import (
+	"context"
+	"log"
+	"strings"
 
-// func checkPermAndSetRole(c *fiber.Ctx, perm string, allowRole map[string]bool) error {
-// 	roles, ok := c.Locals("roles").([]string)
-// 	if !ok {
-// 		return exception.NewWithStatus(http.StatusBadRequest, "invalid roles type.")
-// 	}
-// 	foundPerm, err := getAllAllowPerm(roles, perm, allowRole)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	var roleVal string
-// 	if findSuper(foundPerm, allowRole) {
-// 		roleVal = constant.RolePermissionSuper
-// 	} else {
-// 		roleVal = getRoleValFromPermString(foundPerm[0])
-// 	}
-// 	ctx := context.WithValue(c.UserContext(), constant.CtxPcmPermission, roleVal)
-// 	c.SetUserContext(ctx)
-// 	return nil
-// }
+	"github.com/gofiber/fiber/v2"
+	"github.com/gunktp20/digital-hubx-be/pkg/constant"
+)
 
-// func mockCtx(c *fiber.Ctx) {
-// 	ctx := context.WithValue(c.UserContext(), constant.CtxPcmPermission, constant.RolePermissionMember)
-// 	c.SetUserContext(ctx)
-// }
+func PermissionCheck(c *fiber.Ctx) error {
+	// Base permission prefix
+	permPrefix := constant.BaseRole
 
-// func getAllAllowPerm(roles []string, perm string, allowRole map[string]bool) ([]string, error) {
-// 	foundPerm := []string{}
-// 	for _, r := range roles {
-// 		role, hasPrefix := strings.CutPrefix(r, perm+".")
-// 		role = strings.Split(role, ".")[0]
-// 		if hasPrefix && allowRole[role] {
-// 			foundPerm = append(foundPerm, r)
-// 		}
-// 	}
-// 	if len(foundPerm) == 0 {
-// 		return nil, exception.NewWithStatus(http.StatusForbidden, "access denied")
-// 	}
-// 	return foundPerm, nil
-// }
+	// Get roles from payload
+	roles, ok := c.Locals("roles").([]string)
+	if !ok {
+		log.Println("No roles found in payload")
+		return fiber.NewError(fiber.StatusUnauthorized, "No roles found in payload")
+	}
 
-// func findSuper(roles []string, allowRole map[string]bool) bool {
-// 	for _, p := range roles {
-// 		rp := strings.Split(p, ".")
-// 		p := rp[len(rp)-1]
-// 		if p == constant.RolePermissionSuper {
-// 			return true
-// 		}
-// 	}
-// 	return false
-// }
+	// Define allowed permissions using constants
+	allowPerm := map[string]bool{
+		constant.RolePermissionUserRead:        false,
+		constant.RolePermissionAdminFullAccess: true,
+		constant.RolePermissionSuper:           true,
+	}
 
-// func getRoleValFromPermString(val string) string {
-// 	v := strings.Split(val, ".")
-// 	return v[len(v)-1]
-// }
+	// Define role hierarchy (optional)
+	roleHierarchy := map[string][]string{
+		constant.RolePermissionAdminFullAccess: {
+			constant.RolePermissionUserRead, // Admin has access to User permissions
+		},
+		constant.RolePermissionSuper: {
+			constant.RolePermissionAdminFullAccess, // Super includes Admin and User permissions
+			constant.RolePermissionUserRead,
+		},
+	}
+
+	// Iterate through all roles and check permissions
+	for _, role := range roles {
+		// Ensure the role starts with the base permission prefix
+		if strings.HasPrefix(role, permPrefix) {
+			// Extract the permission name (e.g., "User.Read" from "Digital.X.HUB.User.Read")
+			perm := strings.TrimPrefix(role, permPrefix+".")
+
+			// Check explicit permission
+			if isAllowed, exists := allowPerm[perm]; exists && isAllowed {
+				log.Printf("Permission granted: %s\n", perm)
+				ctx := context.WithValue(c.UserContext(), constant.CtxPageName, perm)
+				c.SetUserContext(ctx)
+				return c.Next()
+			}
+
+			// Check permission hierarchy
+			if higherPerms, ok := roleHierarchy[perm]; ok {
+				for _, higherPerm := range higherPerms {
+					if isAllowed, exists := allowPerm[higherPerm]; exists && isAllowed {
+						log.Printf("Permission granted through hierarchy: %s\n", higherPerm)
+						ctx := context.WithValue(c.UserContext(), constant.CtxPageName, higherPerm)
+						c.SetUserContext(ctx)
+						return c.Next()
+					}
+				}
+			}
+		}
+	}
+
+	// If no role matches, return unauthorized
+	log.Println("Access denied: insufficient permissions")
+	return fiber.NewError(fiber.StatusForbidden, "Access denied: insufficient permissions")
+}

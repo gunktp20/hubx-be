@@ -19,7 +19,7 @@ func (r *userSubQuestionAnswerGormRepository) CreateUserSubQuestionAnswer(tx *go
 		subQuestionChoiceID = &createUserSubQuestionAnswerReq.SubQuestionChoiceID
 	}
 
-	// แปลง AnswerText เป็น *string
+	// convert answer text to *string
 	var answerText *string
 	if createUserSubQuestionAnswerReq.AnswerText != "" {
 		answerText = &createUserSubQuestionAnswerReq.AnswerText
@@ -30,7 +30,7 @@ func (r *userSubQuestionAnswerGormRepository) CreateUserSubQuestionAnswer(tx *go
 		SubQuestionID:       createUserSubQuestionAnswerReq.SubQuestionID,
 		SubQuestionChoiceID: subQuestionChoiceID,
 		ClassID:             createUserSubQuestionAnswerReq.ClassID,
-		AnswerText:          answerText, // ใช้ค่า pointer
+		AnswerText:          answerText, //must be pointer
 	}
 
 	if err := tx.Create(&userSubQuestionAnswer).Error; err != nil {

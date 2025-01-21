@@ -19,15 +19,6 @@ type (
 
 func (r *attendanceGormRepository) CreateAttendance(createAttendanceReq *attendanceDto.CreateAttendanceReq) (*attendanceDto.CreateAttendanceRes, error) {
 
-	// ID             string    `gorm:"type:uuid;primaryKey;not null" json:"id"`
-	// UserEmail      string    `gorm:"type:varchar(255);index;not null;" json:"user_email"`
-	// ClassID        string    `gorm:"type:uuid;index;not null;" json:"class_id"`
-	// Class          Class     `gorm:"foreignKey:ClassID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"class"`
-	// ClassSessionID string    `gorm:"type:uuid;index;not null;" json:"class_session_id"`
-	// ClassSession   Question  `gorm:"foreignKey:ClassSessionID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;" json:"class_session"`
-	// CheckInTime    time.Time `gorm:"autoCreateTime" json:"check_in_time"`
-	// Status         string    `gorm:"type:varchar(50);default:'Present';not null" json:"status"`
-
 	attendance := models.Attendance{
 		UserEmail:      createAttendanceReq.UserEmail,
 		ClassID:        createAttendanceReq.ClassID,
@@ -102,7 +93,6 @@ func (r *attendanceGormRepository) GetAttendanceById(attendanceID string) (*mode
 func (r *attendanceGormRepository) CountAttendancesByClassSessionIDAndEmail(classSessionID string, userEmail string) (int64, error) {
 	var total int64
 
-	// นับจำนวน attendances ที่ตรงกับ class_session_id และ email
 	result := r.db.Model(&models.Attendance{}).
 		Where("class_session_id = ? AND user_email = ?", classSessionID, userEmail).
 		Count(&total)

@@ -1,57 +1,1817 @@
-lbasePath: /api
+basePath: /hubx-service
 definitions:
-  dto.AuthenticationReq:
+  dto.ChoiceRes:
     properties:
-      email:
+      description:
         type: string
-      password:
-        type: string
-    required:
-    - email
-    - password
     type: object
-  dto.AuthenticationRes:
+  dto.CreateAttendanceReq:
+    description: Request body for creating an attendance record.
     properties:
-      access_token:
+      class_id:
+        description: Class ID
+        type: string
+      class_session_id:
+        description: Class session ID
+        type: string
+      user_email:
+        description: User's email
+        type: string
+    required:
+    - class_session_id
+    - user_email
+    type: object
+  dto.CreateChoiceReq:
+    description: Request body for creating a new choice.
+    properties:
+      description:
+        description: Choice description
+        type: string
+      question_id:
+        description: Question ID
+        type: string
+    required:
+    - description
+    - question_id
+    type: object
+  dto.CreateClassRegistrationReq:
+    description: Request body for creating a class registration.
+    properties:
+      class_id:
+        type: string
+      class_session_id:
+        type: string
+    required:
+    - class_id
+    - class_session_id
+    type: object
+  dto.CreateClassRegistrationRes:
+    description: Response body for a successful class registration creation.
+    properties:
+      cancellation_deadline:
+        type: string
+      class_id:
+        type: string
+      class_session_id:
+        type: string
+      created_at:
         type: string
       email:
         type: string
-      user_id:
+      id:
+        type: string
+      is_banned:
+        type: boolean
+      reg_status:
+        $ref: '#/definitions/models.RegStatus'
+      registered_at:
+        type: string
+      unattended_quota:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+  dto.CreateClassRes:
+    description: Response body after creating a class.
+    properties:
+      class_category_id:
+        type: string
+      class_level:
+        type: integer
+      class_tier:
+        $ref: '#/definitions/models.ClassTier'
+      cover_image:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      is_remove:
+        type: boolean
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.CreateClassSessionReq:
+    description: Request body for creating a class session.
+    properties:
+      class_id:
+        type: string
+      date:
+        type: string
+      end_time:
+        type: string
+      location:
+        type: string
+      max_capacity:
+        type: integer
+      start_time:
+        description: ClassSessionStatus models.ClassSessionStatus `json:"class_session_status"
+          validate:"required"`
         type: string
     required:
-    - access_token
-    - email
-    - user_id
+    - class_id
+    - date
+    - end_time
+    - location
+    - max_capacity
+    - start_time
+    type: object
+  dto.CreateClassSessionRes:
+    description: Request body for updating max capacity for a class session.
+    properties:
+      cancellation_deadline:
+        type: string
+      class_id:
+        type: string
+      class_session_status:
+        $ref: '#/definitions/models.ClassSessionStatus'
+      created_at:
+        type: string
+      date:
+        type: string
+      end_time:
+        type: string
+      id:
+        type: string
+      location:
+        type: string
+      max_capacity:
+        type: integer
+      start_time:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.CreateQuestionReq:
+    description: Request body for creating a question.
+    properties:
+      class_id:
+        type: string
+      description:
+        type: string
+      question_type:
+        $ref: '#/definitions/models.QuestionTypes'
+    required:
+    - class_id
+    - description
+    - question_type
+    type: object
+  dto.CreateQuestionRes:
+    description: Response body for creating a question.
+    properties:
+      choices:
+        items:
+          $ref: '#/definitions/models.Choice'
+        type: array
+      class:
+        $ref: '#/definitions/dto.QuestionClass'
+      class_id:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      question_type:
+        $ref: '#/definitions/models.QuestionTypes'
+      updated_at:
+        type: string
+    required:
+    - choices
+    type: object
+  dto.CreateSubQuestionChoiceRes:
+    properties:
+      description:
+        type: string
+    type: object
+  dto.CreateSubQuestionChoicesReq:
+    description: Request body for creating a sub-question choice.
+    properties:
+      description:
+        type: string
+      sub_question_id:
+        type: string
+    required:
+    - description
+    - sub_question_id
+    type: object
+  dto.CreateSubQuestionChoicesRes:
+    description: Response body for creating a sub-question choice.
+    properties:
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      sub_question_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.CreateSubQuestionReq:
+    description: Request body for creating a sub-question.
+    properties:
+      choice_id:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      question_id:
+        description: '? User can ignore these'
+        type: string
+      question_type:
+        $ref: '#/definitions/models.QuestionTypes'
+      updated_at:
+        type: string
+    required:
+    - choice_id
+    - description
+    - question_type
+    type: object
+  dto.CreateSubQuestionRes:
+    description: Response body for creating a sub-question.
+    properties:
+      choice:
+        $ref: '#/definitions/dto.ChoiceRes'
+      choice_id:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      question:
+        $ref: '#/definitions/dto.QuestionRes'
+      question_id:
+        type: string
+      question_type:
+        $ref: '#/definitions/models.QuestionTypes'
+      sub_question_choices:
+        items:
+          $ref: '#/definitions/dto.CreateSubQuestionChoiceRes'
+        type: array
+      updated_at:
+        type: string
+    type: object
+  dto.CreateUserQuestionAnswerReq:
+    properties:
+      answer_text:
+        type: string
+      question_id:
+        type: string
+      selected_choice_id:
+        type: string
+      sub_question_answers:
+        items:
+          $ref: '#/definitions/dto.SubQuestionsAnswer'
+        type: array
+    required:
+    - question_id
+    type: object
+  dto.QuestionClass:
+    properties:
+      class_level:
+        type: integer
+      class_tier:
+        $ref: '#/definitions/models.ClassTier'
+      description:
+        type: string
+      title:
+        type: string
+    type: object
+  dto.QuestionRes:
+    properties:
+      description:
+        type: string
+    type: object
+  dto.ResetCancelledQuotaReq:
+    description: Request body for resetting a user's cancellation quota.
+    properties:
+      class_id:
+        type: string
+      user_email:
+        type: string
+    required:
+    - class_id
+    - user_email
+    type: object
+  dto.SetMaxCapacityReq:
+    description: Request body for updating max capacity for a class session.
+    properties:
+      new_capacity:
+        type: integer
+    required:
+    - new_capacity
+    type: object
+  dto.SubQuestionsAnswer:
+    description: Details of a sub-question answer.
+    properties:
+      answer_text:
+        type: string
+      description:
+        type: string
+      parent_choice_id:
+        type: string
+      question_type:
+        type: string
+      selected_sub_question_choice_description:
+        type: string
+      selected_sub_question_choice_id:
+        type: string
+      sub_question_id:
+        type: string
+    type: object
+  dto.UpdateClassSessionLocation:
+    description: Request body for updating a class session's location.
+    properties:
+      new_location:
+        type: string
+    required:
+    - new_location
+    type: object
+  models.Attendance:
+    properties:
+      check_in_time:
+        type: string
+      class:
+        $ref: '#/definitions/models.Class'
+      class_id:
+        type: string
+      class_session:
+        $ref: '#/definitions/models.ClassSession'
+      class_session_id:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      status:
+        type: string
+      updatedAt:
+        type: string
+      user_email:
+        type: string
+    type: object
+  models.Choice:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      order:
+        type: integer
+      question:
+        $ref: '#/definitions/models.Question'
+      question_id:
+        description: '?'
+        type: string
+      sub_questions:
+        items:
+          $ref: '#/definitions/models.SubQuestion'
+        type: array
+      updatedAt:
+        type: string
+      user_question_answers:
+        items:
+          $ref: '#/definitions/models.UserQuestionAnswer'
+        type: array
+    type: object
+  models.Class:
+    properties:
+      attendances:
+        items:
+          $ref: '#/definitions/models.Attendance'
+        type: array
+      class_category:
+        $ref: '#/definitions/models.ClassCategory'
+      class_category_id:
+        type: string
+      class_high_light_images:
+        items:
+          $ref: '#/definitions/models.ClassHighLightImage'
+        type: array
+      class_level:
+        type: integer
+      class_sessions:
+        items:
+          $ref: '#/definitions/models.ClassSession'
+        type: array
+      class_tier:
+        $ref: '#/definitions/models.ClassTier'
+      cover_image:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      enable_question:
+        type: boolean
+      id:
+        type: string
+      is_active:
+        type: boolean
+      is_remove:
+        type: boolean
+      order:
+        type: integer
+      questions:
+        items:
+          $ref: '#/definitions/models.Question'
+        type: array
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_question_answers:
+        items:
+          $ref: '#/definitions/models.UserQuestionAnswer'
+        type: array
+      user_sub_question_answers:
+        items:
+          $ref: '#/definitions/models.UserSubQuestionAnswer'
+        type: array
+    type: object
+  models.ClassCategory:
+    properties:
+      category_name:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.ClassHighLightImage:
+    properties:
+      class:
+        $ref: '#/definitions/models.Class'
+      class_id:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      image_url:
+        type: string
+      order:
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  models.ClassSession:
+    properties:
+      attendances:
+        items:
+          $ref: '#/definitions/models.Attendance'
+        type: array
+      class:
+        $ref: '#/definitions/models.Class'
+      class_id:
+        type: string
+      class_session_status:
+        $ref: '#/definitions/models.ClassSessionStatus'
+      createdAt:
+        type: string
+      date:
+        type: string
+      end_time:
+        type: string
+      id:
+        type: string
+      location:
+        type: string
+      max_capacity:
+        type: integer
+      start_time:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.ClassSessionStatus:
+    enum:
+    - available
+    - closed
+    type: string
+    x-enum-comments:
+      Available: สามารถลงทะเบียนได้
+      Closed: ปิดการลงทะเบียน
+    x-enum-varnames:
+    - Available
+    - Closed
+  models.ClassTier:
+    enum:
+    - essential
+    - literacy
+    - mastery
+    type: string
+    x-enum-varnames:
+    - Essential
+    - Literacy
+    - Mastery
+  models.Question:
+    properties:
+      choices:
+        items:
+          $ref: '#/definitions/models.Choice'
+        type: array
+      class:
+        $ref: '#/definitions/models.Class'
+      class_id:
+        type: string
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      order:
+        type: integer
+      question_type:
+        $ref: '#/definitions/models.QuestionTypes'
+      updatedAt:
+        type: string
+      user_question_answers:
+        items:
+          $ref: '#/definitions/models.UserQuestionAnswer'
+        type: array
+    type: object
+  models.QuestionTypes:
+    enum:
+    - choice
+    - text
+    type: string
+    x-enum-varnames:
+    - QChoice
+    - QText
+  models.RegStatus:
+    enum:
+    - completed
+    - registered
+    - cancelled
+    type: string
+    x-enum-varnames:
+    - Completed
+    - Registered
+    - Cancelled
+  models.SubQuestion:
+    properties:
+      choice:
+        $ref: '#/definitions/models.Choice'
+      choice_id:
+        description: เพิ่ม
+        type: string
+      createdAt:
+        type: string
+      description:
+        description: เพิ่ม
+        type: string
+      id:
+        type: string
+      order:
+        type: integer
+      question:
+        $ref: '#/definitions/models.Question'
+      question_id:
+        description: เพิ่ม
+        type: string
+      question_type:
+        $ref: '#/definitions/models.QuestionTypes'
+      sub_question_choices:
+        items:
+          $ref: '#/definitions/models.SubQuestionChoice'
+        type: array
+      updatedAt:
+        type: string
+      user_sub_question_answers:
+        items:
+          $ref: '#/definitions/models.UserSubQuestionAnswer'
+        type: array
+    type: object
+  models.SubQuestionChoice:
+    properties:
+      createdAt:
+        type: string
+      description:
+        type: string
+      id:
+        type: string
+      order:
+        type: integer
+      sub_question:
+        $ref: '#/definitions/models.SubQuestion'
+      sub_question_id:
+        type: string
+      updatedAt:
+        type: string
+      user_sub_question_answers:
+        items:
+          $ref: '#/definitions/models.UserSubQuestionAnswer'
+        type: array
+    type: object
+  models.UserQuestionAnswer:
+    properties:
+      answer_text:
+        type: string
+      choice:
+        $ref: '#/definitions/models.Choice'
+      choice_id:
+        type: string
+      class:
+        allOf:
+        - $ref: '#/definitions/models.Class'
+        description: User     User     `gorm:"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"
+          json:"user"`
+      class_id:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      question:
+        $ref: '#/definitions/models.Question'
+      question_id:
+        type: string
+      updatedAt:
+        type: string
+      user_email:
+        type: string
+    type: object
+  models.UserSubQuestionAnswer:
+    properties:
+      answer_text:
+        type: string
+      class:
+        allOf:
+        - $ref: '#/definitions/models.Class'
+        description: User              User              `gorm:"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"
+          json:"user"`
+      class_id:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      sub_question:
+        $ref: '#/definitions/models.SubQuestion'
+      sub_question_choice:
+        $ref: '#/definitions/models.SubQuestionChoice'
+      sub_question_choice_id:
+        type: string
+      sub_question_id:
+        type: string
+      updatedAt:
+        type: string
+      user_email:
+        type: string
+    type: object
+  response.MsgResponse:
+    properties:
+      details:
+        additionalProperties:
+          type: string
+        description: Additional details (optional)
+        example:
+          '{"field"': ' "error detail"}'
+        type: object
+      message:
+        description: The response message
+        example: Operation successful
+        type: string
+      status:
+        description: HTTP status code
+        example: 200
+        type: integer
     type: object
 host: localhost:3000
 info:
   contact:
-    email: support@example.com
-    name: API Support
-  description: digital hubx api
-  title: digital-hubx
-  version: "1.0"
+    email: zTanapongR@pttep.com
+    name: API Support (Tanapong R)
+    url: mailto:zTanapongR@pttep.com
+  description: Digital HubX API.
+  title: Digital HubX API
+  version: 1.0.0
 paths:
-  /auth/login:
+  /admin/attendance:
     post:
       consumes:
       - application/json
-      description: This endpoint allows you to authenticate
+      description: Allows an admin to create an attendance record for a specific class
+        session.
       parameters:
-      - description: Authentication detail
+      - description: Create Attendance Request Body
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.AuthenticationReq'
+          $ref: '#/definitions/dto.CreateAttendanceReq'
       produces:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Operation successful" example:{"message":"Attendance created","status":200,"details":{"field":"value"}}
           schema:
-            $ref: '#/definitions/dto.AuthenticationRes'
-      summary: Authenticate
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new attendance record
       tags:
-      - Auth
+      - Admin/Attendance
+  /admin/choice:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a choice for a specific question.
+      parameters:
+      - description: Create Choice Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateChoiceReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Operation successful" example:{"message":"Choice created","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new choice
+      tags:
+      - Admin/Choice
+  /admin/class:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Allows an admin to create a new class by providing title, description,
+        category, tier, and other details.
+      parameters:
+      - description: Class Title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Class Description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Class Cover Image
+        in: formData
+        name: cover_image
+        required: true
+        type: file
+      - description: Class Category ID
+        in: formData
+        name: class_category_id
+        required: true
+        type: string
+      - description: Class Tier
+        in: formData
+        name: class_tier
+        required: true
+        type: string
+      - description: Class Level
+        in: formData
+        name: class_level
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Operation successful" example:{"message":"Class created successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new class
+      tags:
+      - Admin/Class
+  /admin/class-category:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a new class category.
+      parameters:
+      - description: Create Class Category Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category created successfully" example:{"message":"Category
+            created successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"The input data is invalid","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create a new class category
+      tags:
+      - Admin/Class
+  /admin/class-category/{category_id}:
+    put:
+      consumes:
+      - application/json
+      description: Allows an admin to update the name of a class category.
+      parameters:
+      - description: Category ID
+        in: path
+        name: category_id
+        required: true
+        type: string
+      - description: Update Category Name Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          additionalProperties: true
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Category name updated successfully" example:{"message":"Category
+            updated successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"Validation failed","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Category not found" example:{"message":"Category not found","status":404,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update class category name
+      tags:
+      - Admin/Class Category
+  /admin/class-registration/{class_session_id}/{email}:
+    delete:
+      consumes:
+      - application/json
+      description: Allows an admin to delete a user's registration for a specific
+        class session.
+      parameters:
+      - description: Class session ID
+        in: path
+        name: class_session_id
+        required: true
+        type: string
+      - description: User's email
+        in: path
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Registration deleted successfully" example:{"message":"User
+            class registration deleted successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Registration not found" example:{"message":"Registration not
+            found","status":404,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a user's class registration
+      tags:
+      - Admin/Class Registration
+  /admin/class-registration/reset-cancel-quota:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to reset a user's cancellation quota for a class.
+      parameters:
+      - description: Reset Cancelled Quota Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ResetCancelledQuotaReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Cancellation quota reset successfully" example:{"message":"The
+            user's cancellation quota for the specified class has been reset","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Reset user's cancellation quota
+      tags:
+      - Admin/Class Registration
+  /admin/class-session:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a new class session for a class.
+      parameters:
+      - description: Create Class Session Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateClassSessionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Class session created successfully
+          schema:
+            $ref: '#/definitions/dto.CreateClassSessionRes'
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new class session
+      tags:
+      - Admin/Class Session
+  /admin/class-session/{class_session_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Allows an admin to delete a specific class session by ID.
+      parameters:
+      - description: Class session ID
+        in: path
+        name: class_session_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Class session deleted successfully" example:{"message":"Class
+            session deleted successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a class session
+      tags:
+      - Admin/Class Session
+  /admin/class-session/{class_session_id}/location:
+    put:
+      consumes:
+      - application/json
+      description: Allows an admin to update the location for a class session.
+      parameters:
+      - description: Class session ID
+        in: path
+        name: class_session_id
+        required: true
+        type: string
+      - description: Location Update Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateClassSessionLocation'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Location updated successfully" example:{"message":"Class session
+            location updated successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update location for a class session
+      tags:
+      - Admin/Class Session
+  /admin/class-session/{class_session_id}/max-capacity:
+    put:
+      consumes:
+      - application/json
+      description: Allows an admin to update the maximum capacity for a class session.
+      parameters:
+      - description: Class session ID
+        in: path
+        name: class_session_id
+        required: true
+        type: string
+      - description: Max Capacity Update Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SetMaxCapacityReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Max capacity updated successfully" example:{"message":"The
+            max capacity was updated successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update max capacity for a class session
+      tags:
+      - Admin/Class Session
+  /admin/class/{class_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Soft deletes a class by marking it as removed.
+      parameters:
+      - description: Class ID
+        in: path
+        name: class_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Operation successful" example:{"message":"Class deleted successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete a class
+      tags:
+      - Admin/Class
+  /admin/class/{class_id}/cover-image:
+    put:
+      consumes:
+      - multipart/form-data
+      description: Allows an admin to update the cover image of a class.
+      parameters:
+      - description: Class ID
+        in: path
+        name: class_id
+        required: true
+        type: string
+      - description: New Cover Image
+        in: formData
+        name: new_cover_image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Operation successful" example:{"message":"Class cover image
+            updated successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"Invalid input data","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update class cover image
+      tags:
+      - Class
+  /admin/class/{class_id}/toggle-enable-question:
+    put:
+      consumes:
+      - application/json
+      description: Enables or disables question functionality for a specific class.
+      parameters:
+      - description: Class ID
+        in: path
+        name: class_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Operation successful" example:{"message":"EnableQuestion status
+            updated","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Invalid input" example:{"message":"Class not found","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Toggle EnableQuestion status
+      tags:
+      - Class
+  /admin/question:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a question for a class.
+      parameters:
+      - description: Create Question Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateQuestionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Question created successfully
+          schema:
+            $ref: '#/definitions/dto.CreateQuestionRes'
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new question
+      tags:
+      - Admin/Question
+  /admin/sub-question:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a sub-question for a specific choice.
+      parameters:
+      - description: Create SubQuestion Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSubQuestionReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sub-question created successfully
+          schema:
+            $ref: '#/definitions/dto.CreateSubQuestionRes'
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new sub-question
+      tags:
+      - Admin/SubQuestion
+  /admin/sub-question-choice:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create a choice for a specific sub-question.
+      parameters:
+      - description: Create SubQuestion Choice Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSubQuestionChoicesReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Sub-question choice created successfully
+          schema:
+            $ref: '#/definitions/dto.CreateSubQuestionChoicesRes'
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a new sub-question choice
+      tags:
+      - Admin/Sub Question Choice
+  /admin/user-question-answer/{class_id}/class:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to submit multiple question answers for a specific
+        class.
+      parameters:
+      - description: Class ID
+        in: path
+        name: class_id
+        required: true
+        type: string
+      - description: List of user question answers
+        in: body
+        name: body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/dto.CreateUserQuestionAnswerReq'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response" example:{"message":"User question answers
+            created successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create multiple user question answers
+      tags:
+      - Admin/User Question Answer
+  /class:
+    get:
+      consumes:
+      - application/json
+      description: Fetch all classes with optional filters like tier, keyword, and
+        category.
+      parameters:
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Number of items per page (default: 10)'
+        in: query
+        name: limit
+        type: integer
+      - description: Class Tier
+        in: query
+        name: class_tier
+        type: string
+      - description: Search keyword
+        in: query
+        name: keyword
+        type: string
+      - description: Filter by class level
+        in: query
+        name: class_level
+        type: integer
+      - description: Filter by class category
+        in: query
+        name: class_category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Operation successful" example:{"message":"Class created successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all classes
+      tags:
+      - Class
+  /class-category:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a paginated list of class categories.
+      parameters:
+      - description: Keyword to filter categories
+        in: query
+        name: keyword
+        type: string
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Number of records per page (default: 10)'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Paginated categories" example:{"message":"Categories retrieved
+            successfully","status":200,"details":{"total":100,"categories":[{"id":"12345","name":"Category
+            1"}]}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all class categories
+      tags:
+      - ClassCategory
+  /class-registration:
+    get:
+      consumes:
+      - application/json
+      description: Fetch paginated user registrations.
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of user registrations" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get user registrations
+      tags:
+      - Class Registration
+    post:
+      consumes:
+      - application/json
+      description: Allows a user to register for a class session.
+      parameters:
+      - description: Create Class Registration Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateClassRegistrationReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Registration created successfully
+          schema:
+            $ref: '#/definitions/dto.CreateClassRegistrationRes'
+        "400":
+          description: Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error
+            description"}}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create a class registration
+      tags:
+      - Class Registration
+  /class-registration/{class_session_id}/cancel:
+    delete:
+      consumes:
+      - application/json
+      description: Allows a user to cancel their class session registration.
+      parameters:
+      - description: Class session ID
+        in: path
+        name: class_session_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Registration cancelled successfully" example:{"message":"Class
+            session registration cancelled successfully","status":200,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Cancel a class registration
+      tags:
+      - Class Registration
+  /class-session:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of class sessions with optional filters.
+      parameters:
+      - description: Class ID
+        in: query
+        name: class_id
+        type: string
+      - description: Class tier
+        in: query
+        name: class_tier
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of class sessions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all class sessions
+      tags:
+      - Class Session
+  /class/{class_id}:
+    get:
+      consumes:
+      - application/json
+      description: Fetch the details of a specific class by its ID.
+      parameters:
+      - description: Class ID
+        in: path
+        name: class_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Class details
+          schema:
+            $ref: '#/definitions/dto.CreateClassRes'
+        "404":
+          description: Class not found
+          schema:
+            $ref: '#/definitions/response.MsgResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.MsgResponse'
+      summary: Get class by ID
+      tags:
+      - Class
+  /question/{class_id}/class:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of questions associated with a specific class.
+      parameters:
+      - description: Class ID
+        format: uuid
+        in: path
+        name: class_id
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of questions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get questions by class ID
+      tags:
+      - Question
+  /sub-question/{choice_id}/choice:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves sub-questions for a given choice ID.
+      parameters:
+      - description: Choice ID
+        format: uuid
+        in: path
+        name: choice_id
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of sub-questions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get sub-questions by choice ID
+      tags:
+      - SubQuestion
+  /sub-question/{question_id}/question:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves sub-questions for a given question ID.
+      parameters:
+      - description: Question ID
+        format: uuid
+        in: path
+        name: question_id
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of sub-questions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get sub-questions by question ID
+      tags:
+      - SubQuestion
+  /user-question-answer/{class_id}/class:
+    get:
+      consumes:
+      - application/json
+      description: Fetches a paginated list of user question answers for a specific
+        class.
+      parameters:
+      - description: Class ID
+        in: path
+        name: class_id
+        required: true
+        type: string
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Number of items per page (default: 10)'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response" example:{"data":[...],"total":100,"page":1,"limit":10,"totalPages":10}
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error" example:{"message":"Internal Server
+            Error","status":500,"details":null}
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Retrieve user question answers by class ID
+      tags:
+      - UserQuestionAnswer
+securityDefinitions:
+  BearerAuth:
+    description: This security definition is used for authenticating
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

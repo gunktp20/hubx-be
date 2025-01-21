@@ -37,7 +37,7 @@ func (r *classGormRepository) UpdateClassDetailsWithTransaction(tx *gorm.DB, cla
 }
 
 func (r *classGormRepository) UpdateClassCoverImage(classID string, coverImagePath string) error {
-	// อัปเดต cover_image ของคลาสที่ตรงกับ classID
+
 	result := r.db.Model(&models.Class{}).
 		Where("id = ?", classID).
 		Update("cover_image", coverImagePath)
@@ -46,7 +46,6 @@ func (r *classGormRepository) UpdateClassCoverImage(classID string, coverImagePa
 		return result.Error
 	}
 
-	// ตรวจสอบว่ามีการอัปเดตหรือไม่
 	if result.RowsAffected == 0 {
 		return errors.New("no class found with the given ID")
 	}

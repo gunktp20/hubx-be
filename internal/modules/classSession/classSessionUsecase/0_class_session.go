@@ -12,6 +12,7 @@ import (
 	classSessionDto "github.com/gunktp20/digital-hubx-be/internal/modules/classSession/classSessionDto"
 	classSessionRepository "github.com/gunktp20/digital-hubx-be/internal/modules/classSession/classSessionRepository"
 	"github.com/gunktp20/digital-hubx-be/pkg/config"
+	"github.com/gunktp20/digital-hubx-be/pkg/models"
 	"github.com/gunktp20/digital-hubx-be/pkg/utils"
 )
 
@@ -21,6 +22,7 @@ type (
 		GetAllClassSessions(class_id, class_tier string, page int, limit int) (*[]classSessionDto.ClassSessionsRes, int64, error)
 		SetMaxCapacity(classSessionID string, newCapacity int) error
 		UpdateLocation(classSessionID, newLocation string) error
+		DeleteClassSessionByID(classSessionID string) error
 	}
 
 	classSessionUsecase struct {
@@ -38,31 +40,22 @@ func NewClassSessionUsecase(cfg *config.Config, classSessionRepo classSessionRep
 
 func (u *classSessionUsecase) CreateClassSession(createClassSessionReq *classSessionDto.CreateClassSessionReq) (*classSessionDto.CreateClassSessionRes, error) {
 
-	// count, err := u.classSessionRepo.CountSessionsByDate(createClassSessionReq.Date)
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// fmt.Println("+================================================================================+")
-	// fmt.Println(count)
-	// fmt.Println("+================================================================================+")
-
-	// ? ดึงข้อมูล Class
+	// ? Retrieve Class information
 	selectedClass, err := u.classRepo.GetClassById(createClassSessionReq.ClassID)
 	if err != nil {
 		return &classSessionDto.CreateClassSessionRes{}, err
 	}
 
+	// ? Validate that all date and time fields are in the future
 	dateFields := []time.Time{
 		createClassSessionReq.Date, createClassSessionReq.StartTime, createClassSessionReq.EndTime,
 	}
-
-	// ? ตรวจสอบว่า วันที่และเวลาทั้งหมดต้องอยู่ในอนาคต
 	_, err = utils.AreAllFutureDates(dateFields)
 	if err != nil {
 		return &classSessionDto.CreateClassSessionRes{}, err
 	}
 
-	// ? เช็ควันที่ซ้ำกันสำหรับ ClassSession ของ ClassID และ ClassTier เดียวกัน
+	// ? Check for date conflicts within the same ClassID and ClassTier
 	isDateConflict, err := u.classSessionRepo.CheckSessionDateConflict(createClassSessionReq.ClassID, string(selectedClass.ClassTier), createClassSessionReq.Date)
 	if err != nil {
 		return &classSessionDto.CreateClassSessionRes{}, err
@@ -71,7 +64,7 @@ func (u *classSessionUsecase) CreateClassSession(createClassSessionReq *classSes
 		return &classSessionDto.CreateClassSessionRes{}, errors.New("class session date conflicts with an existing session for this class")
 	}
 
-	// ? เช็ควันที่ซ้ำกันสำหรับ ClassTier เดียวกัน
+	// ? Check for date conflicts within the same ClassTier
 	isClassTierConflict, err := u.classSessionRepo.CheckClassTierDateConflict(string(selectedClass.ClassTier), createClassSessionReq.Date)
 	if err != nil {
 		return &classSessionDto.CreateClassSessionRes{}, err
@@ -80,7 +73,7 @@ func (u *classSessionUsecase) CreateClassSession(createClassSessionReq *classSes
 		return &classSessionDto.CreateClassSessionRes{}, errors.New("class session date conflicts with another session of the same tier")
 	}
 
-	// ? ตรวจสอบความจุ
+	// ? Validate capacity
 	if createClassSessionReq.MaxCapacity <= 0 {
 		return &classSessionDto.CreateClassSessionRes{}, errors.New("max capacity must be greater than zero")
 	}
@@ -89,7 +82,7 @@ func (u *classSessionUsecase) CreateClassSession(createClassSessionReq *classSes
 		return &classSessionDto.CreateClassSessionRes{}, fmt.Errorf("capacity exceeds the maximum allowed limit of %d for a session", u.cfg.BusinessLogic.MaxCapacityPerSession)
 	}
 
-	// ? สร้าง ClassSession
+	// ? Create a new ClassSession
 	return u.classSessionRepo.CreateClassSession(createClassSessionReq)
 }
 
@@ -138,4 +131,17 @@ func (u *classSessionUsecase) UpdateLocation(classSessionID, newLocation string)
 	}
 
 	return nil
+}
+
+func (u *classSessionUsecase) DeleteClassSessionByID(classSessionID string) error {
+	classSession, err := u.classSessionRepo.GetClassSessionById(classSessionID)
+	if err != nil {
+		return errors.New("class session not found")
+	}
+
+	if classSession.ClassSessionStatus == models.ClassSessionStatus(models.Cancelled) {
+		return errors.New("cannot delete a cancelled class session")
+	}
+
+	return u.classSessionRepo.DeleteClassSessionByID(classSessionID)
 }

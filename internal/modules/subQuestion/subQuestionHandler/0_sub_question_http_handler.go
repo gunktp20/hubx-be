@@ -29,6 +29,16 @@ func NewSubQuestionHttpHandler(usecase subQuestionUsecase.SubQuestionUsecaseServ
 	return &subQuestionHttpHandler{subQuestionUsecase: usecase}
 }
 
+// @Summary Create a new sub-question
+// @Description Allows an admin to create a sub-question for a specific choice.
+// @Tags Admin/SubQuestion
+// @Accept json
+// @Produce json
+// @Param body body subQuestionDto.CreateSubQuestionReq true "Create SubQuestion Request Body"
+// @Success 200 {object} subQuestionDto.CreateSubQuestionRes "Sub-question created successfully"
+// @Failure 400 {object} map[string]interface{} "Invalid input" example:{"message":"Invalid input","status":400,"details":{"field":"error description"}}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /admin/sub-question [post]
 func (h *subQuestionHttpHandler) CreateSubQuestion(c *fiber.Ctx) error {
 
 	var body subQuestionDto.CreateSubQuestionReq
@@ -52,6 +62,17 @@ func (h *subQuestionHttpHandler) CreateSubQuestion(c *fiber.Ctx) error {
 	return response.SuccessResponse(c, http.StatusOK, res)
 }
 
+// @Summary Get sub-questions by question ID
+// @Description Retrieves sub-questions for a given question ID.
+// @Tags SubQuestion
+// @Accept json
+// @Produce json
+// @Param question_id path string true "Question ID" format(uuid)
+// @Param page query int false "Page number" example:1
+// @Param limit query int false "Number of items per page" example:10
+// @Success 200 {object} map[string]interface{} "List of sub-questions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /sub-question/{question_id}/question [get]
 func (h *subQuestionHttpHandler) GetSubQuestionsByQuestionID(c *fiber.Ctx) error {
 
 	page, _ := strconv.Atoi(c.Query("page", "1"))
@@ -72,6 +93,17 @@ func (h *subQuestionHttpHandler) GetSubQuestionsByQuestionID(c *fiber.Ctx) error
 	})
 }
 
+// @Summary Get sub-questions by choice ID
+// @Description Retrieves sub-questions for a given choice ID.
+// @Tags SubQuestion
+// @Accept json
+// @Produce json
+// @Param choice_id path string true "Choice ID" format(uuid)
+// @Param page query int false "Page number" example:1
+// @Param limit query int false "Number of items per page" example:10
+// @Success 200 {object} map[string]interface{} "List of sub-questions" example:{"data":[],"total":0,"page":1,"limit":10,"totalPages":1}
+// @Failure 500 {object} map[string]interface{} "Internal Server Error" example:{"message":"Internal Server Error","status":500,"details":null}
+// @Router /sub-question/{choice_id}/choice [get]
 func (h *subQuestionHttpHandler) GetSubQuestionsByChoiceID(c *fiber.Ctx) error {
 
 	page, _ := strconv.Atoi(c.Query("page", "1"))
