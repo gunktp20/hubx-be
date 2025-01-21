@@ -1057,7 +1057,22 @@ const docTemplate = `{
                         "in": "query"
                     }
                 ],
-                "responses": {}
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
             }
         },
         "/class-category": {
@@ -2569,18 +2584,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "details": {
-                    "description": "Additional details (optional)",
                     "type": "object",
                     "additionalProperties": {
                         "type": "string"
                     }
                 },
                 "message": {
-                    "description": "The response message",
                     "type": "string"
                 },
                 "status": {
-                    "description": "HTTP status code",
                     "type": "integer"
                 }
             }

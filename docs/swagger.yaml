@@ -682,13 +682,10 @@ definitions:
       details:
         additionalProperties:
           type: string
-        description: Additional details (optional)
         type: object
       message:
-        description: The response message
         type: string
       status:
-        description: HTTP status code
         type: integer
     type: object
 host: localhost:3000
@@ -1396,7 +1393,17 @@ paths:
         type: string
       produces:
       - application/json
-      responses: {}
+      responses:
+        "200":
+          description: Operation successful
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
       summary: Get all classes
       tags:
       - Class

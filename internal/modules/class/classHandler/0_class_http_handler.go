@@ -124,6 +124,8 @@ func (h *classHttpHandler) CreateClass(c *fiber.Ctx) error {
 // @Param keyword query string false "Search keyword"
 // @Param class_level query int false "Filter by class level"
 // @Param class_category query string false "Filter by class category"
+// @Success 200 {object} map[string]interface{} "Operation successful"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Router /class [get]
 func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
 	page, _ := strconv.Atoi(c.Query("page", "1"))
