@@ -7,7 +7,7 @@ import (
 )
 
 func SetClassRegistrationRoutes(api fiber.Router, classRegistrationHttpHandler classRegistrationHandler.ClassRegistrationHttpHandlerService) {
-	classRegistrationRoute := api.Group("/class-registration")
+	classRegistrationRoute := api.Group("/class-registration", middleware.Ident)
 
 	classRegistrationRoute.Get("/", classRegistrationHttpHandler.GetUserRegistrations)
 	classRegistrationRoute.Post("/", classRegistrationHttpHandler.CreateClassRegistration)
