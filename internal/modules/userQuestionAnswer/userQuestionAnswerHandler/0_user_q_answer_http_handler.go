@@ -64,7 +64,7 @@ func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fib
 
 // @Summary Create multiple user question answers
 // @Description Allows an admin to submit multiple question answers for a specific class.
-// @Tags Admin/User Question Answer
+// @Tags UserQuestionAnswer
 // @Accept json
 // @Produce json
 // @Param class_id path string true "Class ID"
@@ -72,7 +72,7 @@ func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fib
 // @Success 200 {object} map[string]interface{} "Success response"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
-// @Router /admin/user-question-answer/{class_id}/class [post]
+// @Router /user-question-answer/{class_id}/class [post]
 func (h *userQuestionAnswerHttpHandler) CreateMultipleUserQuestionAnswers(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())
 

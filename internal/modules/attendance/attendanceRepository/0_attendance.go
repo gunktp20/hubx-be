@@ -14,6 +14,7 @@ type (
 		GetAttendancesByClassSessionID(classSessionID string, page int, limit int) (*[]models.Attendance, int64, error)
 		GetAttendanceById(attendanceID string) (*models.Attendance, error)
 		CountAttendancesByClassSessionIDAndEmail(classSessionID string, userEmail string) (int64, error)
+		CreateAttendances(createAttendanceReqs []attendanceDto.CreateAttendanceReq) ([]attendanceDto.CreateAttendanceRes, error)
 	}
 )
 
@@ -102,4 +103,32 @@ func (r *attendanceGormRepository) CountAttendancesByClassSessionIDAndEmail(clas
 	}
 
 	return total, nil
+}
+
+func (r *attendanceGormRepository) CreateAttendances(createAttendanceReqs []attendanceDto.CreateAttendanceReq) ([]attendanceDto.CreateAttendanceRes, error) {
+	var attendances []models.Attendance
+	var results []attendanceDto.CreateAttendanceRes
+
+	for _, req := range createAttendanceReqs {
+		attendances = append(attendances, models.Attendance{
+			UserEmail:      req.UserEmail,
+			ClassID:        req.ClassID,
+			ClassSessionID: req.ClassSessionID,
+		})
+	}
+
+	if err := r.db.Create(&attendances).Error; err != nil {
+		return nil, err
+	}
+
+	for _, attendance := range attendances {
+		results = append(results, attendanceDto.CreateAttendanceRes{
+			ID:             attendance.ID,
+			UserEmail:      attendance.UserEmail,
+			ClassID:        attendance.ClassID,
+			ClassSessionID: attendance.ClassSessionID,
+		})
+	}
+
+	return results, nil
 }

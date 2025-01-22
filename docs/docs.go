@@ -73,6 +73,63 @@ const docTemplate = `{
                 }
             }
         },
+        "/admin/attendances": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Allows an admin to create multiple attendance records for a specific class session in a single request.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admin/Attendance"
+                ],
+                "summary": "Create multiple attendance records",
+                "parameters": [
+                    {
+                        "description": "Create Attendances Request Body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.CreateAttendanceReq"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Operation successful",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
         "/admin/choice": {
             "post": {
                 "security": [
@@ -947,65 +1004,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/admin/user-question-answer/{class_id}/class": {
-            "post": {
-                "description": "Allows an admin to submit multiple question answers for a specific class.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admin/User Question Answer"
-                ],
-                "summary": "Create multiple user question answers",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "Class ID",
-                        "name": "class_id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "List of user question answers",
-                        "name": "body",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/dto.CreateUserQuestionAnswerReq"
-                            }
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success response",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid input",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
         "/class": {
             "get": {
                 "description": "Fetch all classes with optional filters like tier, keyword, and category.",
@@ -1559,6 +1557,63 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "Success response",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Allows an admin to submit multiple question answers for a specific class.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "UserQuestionAnswer"
+                ],
+                "summary": "Create multiple user question answers",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Class ID",
+                        "name": "class_id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "List of user question answers",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.CreateUserQuestionAnswerReq"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success response",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
                         "schema": {
                             "type": "object",
                             "additionalProperties": true

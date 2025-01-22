@@ -9,9 +9,9 @@ import (
 func SetUserQuestionAnswerRoutes(api fiber.Router, userQuestionAnswerHttpHandler userQuestionAnswerHandler.UserQuestionAnswerHttpHandlerService) {
 	userQuestionAnswerRoute := api.Group("/user-question-answer")
 	userQuestionAnswerRoute.Get("/:class_id/class", userQuestionAnswerHttpHandler.GetUserQuestionAnswersWithClassId)
+	userQuestionAnswerRoute.Post("/:class_id/class", userQuestionAnswerHttpHandler.CreateMultipleUserQuestionAnswers)
 
 	// ? Admin Routes
-	adminRoute := api.Group("/admin/class-session", middleware.Ident, middleware.PermissionCheck)
-	adminRoute.Post("/:class_id/class", userQuestionAnswerHttpHandler.CreateMultipleUserQuestionAnswers)
+	_ = api.Group("/admin/class-session", middleware.Ident, middleware.PermissionCheck)
 
 }

@@ -11,6 +11,9 @@ func SetAttendanceRoute(api fiber.Router, attendanceHttpHandler attendanceHandle
 
 	// ? Admin Routes
 	adminRoute := api.Group("/admin/attendance", middleware.Ident, middleware.PermissionCheck)
-	adminRoute.Post("/", attendanceHttpHandler.CreateAttendance)
 
+	// Single attendance creation
+	adminRoute.Post("/", attendanceHttpHandler.CreateAttendance)
+	// Multiple attendances creation
+	adminRoute.Post("/batch", attendanceHttpHandler.CreateAttendances)
 }

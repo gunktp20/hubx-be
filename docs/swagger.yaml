@@ -734,6 +734,44 @@ paths:
       summary: Create a new attendance record
       tags:
       - Admin/Attendance
+  /admin/attendances:
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to create multiple attendance records for a specific
+        class session in a single request.
+      parameters:
+      - description: Create Attendances Request Body
+        in: body
+        name: body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/dto.CreateAttendanceReq'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Operation successful
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create multiple attendance records
+      tags:
+      - Admin/Attendance
   /admin/choice:
     post:
       consumes:
@@ -1319,47 +1357,6 @@ paths:
       summary: Create a new sub-question choice
       tags:
       - Admin/Sub Question Choice
-  /admin/user-question-answer/{class_id}/class:
-    post:
-      consumes:
-      - application/json
-      description: Allows an admin to submit multiple question answers for a specific
-        class.
-      parameters:
-      - description: Class ID
-        in: path
-        name: class_id
-        required: true
-        type: string
-      - description: List of user question answers
-        in: body
-        name: body
-        required: true
-        schema:
-          items:
-            $ref: '#/definitions/dto.CreateUserQuestionAnswerReq'
-          type: array
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Success response
-          schema:
-            additionalProperties: true
-            type: object
-        "400":
-          description: Invalid input
-          schema:
-            additionalProperties: true
-            type: object
-        "500":
-          description: Internal Server Error
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Create multiple user question answers
-      tags:
-      - Admin/User Question Answer
   /class:
     get:
       consumes:
@@ -1740,6 +1737,46 @@ paths:
             additionalProperties: true
             type: object
       summary: Retrieve user question answers by class ID
+      tags:
+      - UserQuestionAnswer
+    post:
+      consumes:
+      - application/json
+      description: Allows an admin to submit multiple question answers for a specific
+        class.
+      parameters:
+      - description: Class ID
+        in: path
+        name: class_id
+        required: true
+        type: string
+      - description: List of user question answers
+        in: body
+        name: body
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/dto.CreateUserQuestionAnswerReq'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success response
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create multiple user question answers
       tags:
       - UserQuestionAnswer
 securityDefinitions:

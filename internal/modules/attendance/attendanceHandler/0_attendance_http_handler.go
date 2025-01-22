@@ -16,6 +16,7 @@ import (
 type (
 	AttendanceHttpHandlerService interface {
 		CreateAttendance(c *fiber.Ctx) error
+		CreateAttendances(c *fiber.Ctx) error
 	}
 
 	attendanceHttpHandler struct {
@@ -79,4 +80,40 @@ func (h *attendanceHttpHandler) GetAttendancesByClassID(c *fiber.Ctx) error {
 		"limit":      limit,
 		"totalPages": int(math.Ceil(float64(total) / float64(limit))),
 	})
+}
+
+// CreateAttendances creates multiple attendance records for a class session.
+// @Summary Create multiple attendance records
+// @Description Allows an admin to create multiple attendance records for a specific class session in a single request.
+// @Tags Admin/Attendance
+// @Accept json
+// @Produce json
+// @Param body body []attendanceDto.CreateAttendanceReq true "Create Attendances Request Body"
+// @Success 200 {object} map[string]interface{} "Operation successful"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
+// @Router /admin/attendances [post]
+func (h *attendanceHttpHandler) CreateAttendances(c *fiber.Ctx) error {
+	var body []attendanceDto.CreateAttendanceReq
+
+	// ? Merge fiber http body with dto struct
+	if err := c.BodyParser(&body); err != nil {
+		return response.ErrResponse(c, http.StatusBadRequest, "The input data is invalid", nil)
+	}
+
+	// ? Validate each item in body
+	for _, item := range body {
+		if err := validator.New().Struct(&item); err != nil {
+			validationErrors := utils.TranslateValidationError(err.(validator.ValidationErrors))
+			return response.ErrResponse(c, http.StatusBadRequest, "The input data is invalid", &validationErrors)
+		}
+	}
+
+	res, err := h.attendanceUsecase.CreateAttendances(body)
+	if err != nil {
+		return response.ErrResponse(c, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	return response.SuccessResponse(c, http.StatusOK, res)
 }
