@@ -41,6 +41,7 @@ func NewClassSessionHttpHandler(usecase classSessionUsecase.ClassSessionUsecaseS
 // @Success 200 {object} classSessionDto.CreateClassSessionRes "Class session created successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /admin/class-session [post]
 func (h *classSessionHttpHandler) CreateClassSession(c *fiber.Ctx) error {
 
@@ -105,6 +106,7 @@ func (h *classSessionHttpHandler) GetAllClassSessions(c *fiber.Ctx) error {
 // @Success 200 {object} map[string]interface{} "Max capacity updated successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /admin/class-session/{class_session_id}/max-capacity [put]
 func (h *classSessionHttpHandler) SetMaxCapacity(c *fiber.Ctx) error {
 
@@ -140,6 +142,7 @@ func (h *classSessionHttpHandler) SetMaxCapacity(c *fiber.Ctx) error {
 // @Success 200 {object} map[string]interface{} "Location updated successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /admin/class-session/{class_session_id}/location [put]
 func (h *classSessionHttpHandler) UpdateClassSessionLocation(c *fiber.Ctx) error {
 	classSessionID := c.Params("class_session_id")
@@ -177,6 +180,7 @@ func (h *classSessionHttpHandler) UpdateClassSessionLocation(c *fiber.Ctx) error
 // @Param class_session_id path string true "Class session ID"
 // @Success 200 {object} map[string]interface{} "Class session deleted successfully"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /admin/class-session/{class_session_id} [delete]
 func (h *classSessionHttpHandler) DeleteClassSessionByID(c *fiber.Ctx) error {
 	classSessionID := c.Params("class_session_id")

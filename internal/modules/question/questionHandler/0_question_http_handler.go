@@ -37,6 +37,7 @@ func NewQuestionHttpHandler(usecase questionUsecase.QuestionUsecaseService) Ques
 // @Success 200 {object} questionDto.CreateQuestionRes "Question created successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /admin/question [post]
 func (h *questionHttpHandler) CreateQuestion(c *fiber.Ctx) error {
 

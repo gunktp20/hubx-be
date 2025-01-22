@@ -34,6 +34,7 @@ func NewSubQuestionChoiceHttpHandler(usecase subQuestionChoiceUsecase.SubQuestio
 // @Success 200 {object} subQuestionChoiceDto.CreateSubQuestionChoicesRes "Sub-question choice created successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /admin/sub-question-choice [post]
 func (h *subQuestionChoiceHttpHandler) CreateSubQuestionChoice(c *fiber.Ctx) error {
 

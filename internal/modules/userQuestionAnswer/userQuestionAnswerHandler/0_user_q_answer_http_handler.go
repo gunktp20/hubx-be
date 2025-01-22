@@ -41,6 +41,7 @@ func NewUserQuestionAnswerHttpHandler(usecase userQuestionAnswerUsecase.UserQues
 // @Param limit query int false "Number of items per page (default: 10)"
 // @Success 200 {object} map[string]interface{} "Success response"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /user-question-answer/{class_id}/class [get]
 func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())
@@ -72,6 +73,7 @@ func (h *userQuestionAnswerHttpHandler) GetUserQuestionAnswersWithClassId(c *fib
 // @Success 200 {object} map[string]interface{} "Success response"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /user-question-answer/{class_id}/class [post]
 func (h *userQuestionAnswerHttpHandler) CreateMultipleUserQuestionAnswers(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())

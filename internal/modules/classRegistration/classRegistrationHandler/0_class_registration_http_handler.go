@@ -42,6 +42,7 @@ func NewClassRegistrationHttpHandler(usecase classRegistrationUsecase.ClassRegis
 // @Success 200 {object} classRegistrationDto.CreateClassRegistrationRes "Registration created successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /class-registration [post]
 func (h *classRegistrationHttpHandler) CreateClassRegistration(c *fiber.Ctx) error {
 
@@ -76,6 +77,7 @@ func (h *classRegistrationHttpHandler) CreateClassRegistration(c *fiber.Ctx) err
 // @Param limit query int false "Number of items per page"
 // @Success 200 {object} map[string]interface{} "List of user registrations"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /class-registration [get]
 func (h *classRegistrationHttpHandler) GetUserRegistrations(c *fiber.Ctx) error {
 	_, _, userEmail := getContextAuth(c.UserContext())
@@ -106,6 +108,7 @@ func (h *classRegistrationHttpHandler) GetUserRegistrations(c *fiber.Ctx) error 
 // @Param class_session_id path string true "Class session ID"
 // @Success 200 {object} map[string]interface{} "Registration cancelled successfully"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /class-registration/{class_session_id}/cancel [delete]
 func (h *classRegistrationHttpHandler) CancelClassRegistration(c *fiber.Ctx) error {
 
@@ -129,6 +132,7 @@ func (h *classRegistrationHttpHandler) CancelClassRegistration(c *fiber.Ctx) err
 // @Param body body classRegistrationDto.ResetCancelledQuotaReq true "Reset Cancelled Quota Request Body"
 // @Success 200 {object} map[string]interface{} "Cancellation quota reset successfully"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /admin/class-registration/reset-cancel-quota [post]
 func (h *classRegistrationHttpHandler) ResetCancelledQuota(c *fiber.Ctx) error {
 
@@ -165,6 +169,7 @@ func (h *classRegistrationHttpHandler) ResetCancelledQuota(c *fiber.Ctx) error {
 // @Success 200 {object} map[string]interface{} "Registration deleted successfully"
 // @Failure 404 {object} map[string]interface{} "Registration not found"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /admin/class-registration/{class_session_id}/{email} [delete]
 func (h *classRegistrationHttpHandler) DeleteUserClassRegistrationBySession(c *fiber.Ctx) error {
 	userEmail := c.Query("user_email")
