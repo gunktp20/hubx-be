@@ -309,7 +309,6 @@ func (h *classHttpHandler) UpdateClassCoverImage(c *fiber.Ctx) error {
 // @Security BearerAuth
 // @Router /admin/class/{class_id} [delete]
 func (h *classHttpHandler) DeleteClass(c *fiber.Ctx) error {
-
 	classID := c.Params("class_id")
 	if classID == "" {
 		return response.ErrResponse(c, http.StatusBadRequest, "class ID is required", nil)

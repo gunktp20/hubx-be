@@ -11,7 +11,7 @@ func SetClassRegistrationRoutes(api fiber.Router, classRegistrationHttpHandler c
 
 	classRegistrationRoute.Get("/", classRegistrationHttpHandler.GetUserRegistrations)
 	classRegistrationRoute.Post("/", classRegistrationHttpHandler.CreateClassRegistration)
-	classRegistrationRoute.Delete("/:class_session_id/cancel", classRegistrationHttpHandler.CancelClassRegistration)
+	classRegistrationRoute.Delete("/:class_id/cancel", classRegistrationHttpHandler.CancelClassRegistration)
 
 	// ? Admin Routes Group
 	adminRoute := api.Group("/admin/class-registration", middleware.Ident, middleware.PermissionCheck)
