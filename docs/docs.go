@@ -396,6 +396,11 @@ const docTemplate = `{
         },
         "/admin/class-registration/reset-cancel-quota": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to reset a user's cancellation quota for a class.",
                 "consumes": [
                     "application/json"
@@ -438,6 +443,11 @@ const docTemplate = `{
         },
         "/admin/class-registration/{class_session_id}/{email}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to delete a user's registration for a specific class session.",
                 "consumes": [
                     "application/json"
@@ -492,6 +502,11 @@ const docTemplate = `{
         },
         "/admin/class-session": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to create a new class session for a class.",
                 "consumes": [
                     "application/json"
@@ -540,6 +555,11 @@ const docTemplate = `{
         },
         "/admin/class-session/{class_session_id}": {
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to delete a specific class session by ID.",
                 "consumes": [
                     "application/json"
@@ -580,6 +600,11 @@ const docTemplate = `{
         },
         "/admin/class-session/{class_session_id}/location": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to update the location for a class session.",
                 "consumes": [
                     "application/json"
@@ -636,6 +661,11 @@ const docTemplate = `{
         },
         "/admin/class-session/{class_session_id}/max-capacity": {
             "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to update the maximum capacity for a class session.",
                 "consumes": [
                     "application/json"
@@ -862,6 +892,11 @@ const docTemplate = `{
         },
         "/admin/question": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to create a question for a class.",
                 "consumes": [
                     "application/json"
@@ -910,6 +945,11 @@ const docTemplate = `{
         },
         "/admin/sub-question": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to create a sub-question for a specific choice.",
                 "consumes": [
                     "application/json"
@@ -958,6 +998,11 @@ const docTemplate = `{
         },
         "/admin/sub-question-choice": {
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to create a choice for a specific sub-question.",
                 "consumes": [
                     "application/json"
@@ -1131,6 +1176,11 @@ const docTemplate = `{
         },
         "/class-registration": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Fetch paginated user registrations.",
                 "consumes": [
                     "application/json"
@@ -1174,6 +1224,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows a user to register for a class session.",
                 "consumes": [
                     "application/json"
@@ -1222,6 +1277,11 @@ const docTemplate = `{
         },
         "/class-registration/{class_session_id}/cancel": {
             "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows a user to cancel their class session registration.",
                 "consumes": [
                     "application/json"
@@ -1522,6 +1582,11 @@ const docTemplate = `{
         },
         "/user-question-answer/{class_id}/class": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Fetches a paginated list of user question answers for a specific class.",
                 "consumes": [
                     "application/json"
@@ -1572,6 +1637,11 @@ const docTemplate = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Allows an admin to submit multiple question answers for a specific class.",
                 "consumes": [
                     "application/json"

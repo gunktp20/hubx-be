@@ -983,6 +983,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Delete a user's class registration
       tags:
       - Admin/ClassRegistration
@@ -1011,6 +1013,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Reset user's cancellation quota
       tags:
       - Admin/ClassRegistration
@@ -1043,6 +1047,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Create a new class session
       tags:
       - Admin/ClassSession
@@ -1070,6 +1076,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Delete a class session
       tags:
       - Admin/ClassSession
@@ -1108,6 +1116,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Update location for a class session
       tags:
       - Admin/ClassSession
@@ -1146,6 +1156,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Update max capacity for a class session
       tags:
       - Admin/ClassSession
@@ -1290,6 +1302,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Create a new question
       tags:
       - Admin/Question
@@ -1322,6 +1336,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Create a new sub-question
       tags:
       - Admin/SubQuestion
@@ -1354,6 +1370,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Create a new sub-question choice
       tags:
       - Admin/SubQuestionChoice
@@ -1467,6 +1485,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Get user registrations
       tags:
       - ClassRegistration
@@ -1498,6 +1518,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Create a class registration
       tags:
       - ClassRegistration
@@ -1525,6 +1547,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Cancel a class registration
       tags:
       - ClassRegistration
@@ -1736,6 +1760,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Retrieve user question answers by class ID
       tags:
       - UserQuestionAnswer
@@ -1776,6 +1802,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Create multiple user question answers
       tags:
       - UserQuestionAnswer
