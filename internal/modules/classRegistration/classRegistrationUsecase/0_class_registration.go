@@ -145,25 +145,27 @@ func (u *classRegistrationUsecase) GetUserRegistrations(email string, page int, 
 	return userClassRegistration, total, nil
 }
 
-func (u *classRegistrationUsecase) CancelClassRegistration(email, classSessionID string) error {
-	// ดึงข้อมูล ClassSession ตาม classSessionID
-	classSession, err := u.classSessionRepo.GetClassSessionById(classSessionID)
+func (u *classRegistrationUsecase) CancelClassRegistration(email, classID string) error {
+	// ? Fetch the user's registration for the given classID, including the associated ClassSession
+	registration, err := u.classRegistrationRepo.GetUserClassRegistrationByClassIDAndEmail(classID, email)
 	if err != nil {
-		return errors.New("failed to fetch class session details")
+		// ? Return an error if no registration is found or another issue occurs
+		return fmt.Errorf("failed to fetch registration details: %v", err)
 	}
 
-	// คำนวณจำนวนวันที่เหลือก่อนเริ่มคลาส
-	daysUntilClass := int(time.Until(classSession.Date).Hours() / 24)
+	// ? Calculate the number of days remaining until the class starts
+	daysUntilClass := int(time.Until(registration.ClassSession.Date).Hours() / 24)
 
-	// ตรวจสอบว่าสามารถยกเลิกได้ตามนโยบายหรือไม่
+	// ? Check if cancellation is allowed based on business logic
 	if daysUntilClass < u.conf.BusinessLogic.DaysBeforeClassStartForCancellation {
 		return fmt.Errorf("cancellation is not allowed within %d days before the class start date", u.conf.BusinessLogic.DaysBeforeClassStartForCancellation)
 	}
 
-	// ดำเนินการยกเลิกการลงทะเบียน
-	err = u.classRegistrationRepo.CancelClassRegistration(email, classSession.ClassID)
+	// ? Perform the cancellation by updating the registration status
+	err = u.classRegistrationRepo.CancelClassRegistration(email, classID)
 	if err != nil {
-		return err
+		// ? Return an error if the cancellation fails
+		return fmt.Errorf("failed to cancel class registration: %v", err)
 	}
 
 	return nil

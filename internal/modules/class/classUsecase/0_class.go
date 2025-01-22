@@ -18,7 +18,7 @@ type (
 	ClassUsecaseService interface {
 		CreateClass(createClassReq *classDto.CreateClassReq, fileBytes []byte, fileHeader *multipart.FileHeader) (*classDto.CreateClassRes, error)
 		// CreateClass(createClassReq *classDto.CreateClassReq, fileBytes []byte) (*classDto.CreateClassRes, error)
-		GetAllClasses(class_tier, keyword string, class_level *int, class_category string, page int, limit int) (*[]models.Class, int64, error)
+		GetAllClasses(class_tier, keyword string, class_level *int, class_category, userEmail string, page, limit int) (*[]classDto.ClassRes, int64, error)
 		GetClassById(classId string) (*models.Class, error)
 		ToggleClassEnableQuestion(classID string) (bool, error)
 		UpdateClassDetails(classID string, title *string, description *string, classCategoryName *string, classTier *string, classLevel *int) error
@@ -77,23 +77,21 @@ func (u *classUsecase) CreateClass(createClassReq *classDto.CreateClassReq, file
 	return u.classRepo.CreateClass(createClassReq, fileName+fileExtension)
 }
 
-func (u *classUsecase) GetAllClasses(class_tier, keyword string, class_level *int, class_category string, page int, limit int) (*[]models.Class, int64, error) {
-	// เรียก Repo พร้อมส่งพารามิเตอร์ที่รองรับ
-	classes, total, err := u.classRepo.GetAllClasses(class_tier, keyword, class_level, class_category, page, limit)
+func (u *classUsecase) GetAllClasses(class_tier, keyword string, class_level *int, class_category, userEmail string, page, limit int) (*[]classDto.ClassRes, int64, error) {
+	// เรียก Repository โดยเพิ่ม userEmail
+	classes, total, err := u.classRepo.GetAllClasses(class_tier, keyword, class_level, class_category, userEmail, page, limit)
 	if err != nil {
 		return nil, 0, err
 	}
 
-	// ? Loop through each class and update the CoverImage with a signed URL
+	// อัปเดต CoverImage ให้เป็น Signed URL
 	for i, class := range *classes {
-		// ? Call GetSignedURL to retrieve a temporary signed URL
 		signedUrl, err := u.gcsClient.Download(class.CoverImage)
 		if err != nil {
-			// ? Log the error and skip to the next iteration
+			// Log และข้ามไปยัง iteration ถัดไป
 			fmt.Printf("Failed to get signed URL for CoverImage: %v\n", err)
 			continue
 		}
-		// ? Update the CoverImage of the class with the signed URL
 		(*classes)[i].CoverImage = signedUrl
 	}
 

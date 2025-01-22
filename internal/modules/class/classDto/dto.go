@@ -65,4 +65,22 @@ type (
 		ClassTier         *string `json:"class_tier"`
 		ClassLevel        *int    `json:"class_level"`
 	}
+
+	ClassRes struct {
+		ID             string                `json:"id"`
+		Title          string                `json:"title"`
+		Description    string                `json:"description"`
+		CoverImage     string                `json:"cover_image"`
+		ClassTier      models.ClassTier      `json:"class_tier"`
+		ClassLevel     int                   `json:"class_level"`
+		IsActive       bool                  `json:"is_active"`
+		IsRemove       bool                  `json:"is_remove"`
+		EnableQuestion bool                  `json:"enable_question"`
+		Order          int                   `json:"order"`
+		CreatedAt      time.Time             `json:"created_at"`
+		UpdatedAt      time.Time             `json:"updated_at"`
+		ClassCategory  models.ClassCategory  `json:"class_category"`
+		ClassSessions  []models.ClassSession `json:"class_sessions"`
+		IsRegistered   bool                  `json:"is_registered"` // Registration status
+	}
 )

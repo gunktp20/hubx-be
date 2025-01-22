@@ -21,6 +21,7 @@ type (
 		GetUserRegistrationsByClassSessionID(classSessionID string, page int, limit int) (*[]classRegistrationDto.GetUserRegistrationsRes, int64, error)
 		HasUserRegisteredByClassSessionID(email string, classSessionID string) (bool, error)
 		DeleteUserClassRegistrationBySession(userEmail, classSessionID string) error
+		GetUserClassRegistrationByClassIDAndEmail(classID, userEmail string) (*models.UserClassRegistration, error)
 	}
 )
 
@@ -265,4 +266,23 @@ func (r *classRegistrationGormRepository) DeleteUserClassRegistrationBySession(u
 	}
 
 	return nil
+}
+
+func (r *classRegistrationGormRepository) GetUserClassRegistrationByClassIDAndEmail(classID, userEmail string) (*models.UserClassRegistration, error) {
+	var registration models.UserClassRegistration
+
+	// Query to find the registration and preload the associated ClassSession
+	result := r.db.Preload("ClassSession"). // Preload ClassSession for access to the date
+						Where("class_id = ? AND user_email = ? AND reg_status = ?", classID, userEmail, models.Registered).
+						First(&registration)
+
+	// Handle errors
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return nil, errors.New("registration not found")
+		}
+		return nil, result.Error
+	}
+
+	return &registration, nil
 }

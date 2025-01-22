@@ -9,7 +9,7 @@ import (
 func SetClassRoutes(api fiber.Router, classHttpHandler classHandler.ClassHttpHandlerService) {
 	classRoute := api.Group("/class")
 
-	classRoute.Get("/", classHttpHandler.GetAllClasses)
+	classRoute.Get("/", middleware.Ident, classHttpHandler.GetAllClasses)
 	classRoute.Get("/:class_id", classHttpHandler.GetClassById)
 
 	// ? Admin Routes

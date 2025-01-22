@@ -434,6 +434,10 @@ definitions:
         type: string
       updated_at:
         type: string
+      user_class_registrations:
+        items:
+          $ref: '#/definitions/models.UserClassRegistration'
+        type: array
       user_question_answers:
         items:
           $ref: '#/definitions/models.UserQuestionAnswer'
@@ -620,6 +624,35 @@ definitions:
         items:
           $ref: '#/definitions/models.UserSubQuestionAnswer'
         type: array
+    type: object
+  models.UserClassRegistration:
+    properties:
+      class:
+        $ref: '#/definitions/models.Class'
+      class_id:
+        description: User            User         `gorm:"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"
+          json:"user"`
+        type: string
+      class_session:
+        $ref: '#/definitions/models.ClassSession'
+      class_session_id:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: string
+      is_banned:
+        type: boolean
+      reg_status:
+        $ref: '#/definitions/models.RegStatus'
+      registered_at:
+        type: string
+      unattended_quota:
+        type: integer
+      updatedAt:
+        type: string
+      user_email:
+        type: string
     type: object
   models.UserQuestionAnswer:
     properties:
@@ -1419,6 +1452,8 @@ paths:
           schema:
             additionalProperties: true
             type: object
+      security:
+      - BearerAuth: []
       summary: Get all classes
       tags:
       - Class
@@ -1523,15 +1558,15 @@ paths:
       summary: Create a class registration
       tags:
       - ClassRegistration
-  /class-registration/{class_session_id}/cancel:
+  /class-registration/{class_id}/cancel:
     delete:
       consumes:
       - application/json
       description: Allows a user to cancel their class session registration.
       parameters:
-      - description: Class session ID
+      - description: Class ID
         in: path
-        name: class_session_id
+        name: class_id
         required: true
         type: string
       produces:

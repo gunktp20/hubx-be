@@ -1045,6 +1045,11 @@
         },
         "/class": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Fetch all classes with optional filters like tier, keyword, and category.",
                 "consumes": [
                     "application/json"
@@ -1269,7 +1274,7 @@
                 }
             }
         },
-        "/class-registration/{class_session_id}/cancel": {
+        "/class-registration/{class_id}/cancel": {
             "delete": {
                 "security": [
                     {
@@ -1290,8 +1295,8 @@
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "Class session ID",
-                        "name": "class_session_id",
+                        "description": "Class ID",
+                        "name": "class_id",
                         "in": "path",
                         "required": true
                     }
@@ -2337,6 +2342,12 @@
                 "updated_at": {
                     "type": "string"
                 },
+                "user_class_registrations": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserClassRegistration"
+                    }
+                },
                 "user_question_answers": {
                     "type": "array",
                     "items": {
@@ -2610,6 +2621,48 @@
                     "items": {
                         "$ref": "#/definitions/models.UserSubQuestionAnswer"
                     }
+                }
+            }
+        },
+        "models.UserClassRegistration": {
+            "type": "object",
+            "properties": {
+                "class": {
+                    "$ref": "#/definitions/models.Class"
+                },
+                "class_id": {
+                    "description": "User            User         `gorm:\"foreignKey:UserEmail;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;\" json:\"user\"`",
+                    "type": "string"
+                },
+                "class_session": {
+                    "$ref": "#/definitions/models.ClassSession"
+                },
+                "class_session_id": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_banned": {
+                    "type": "boolean"
+                },
+                "reg_status": {
+                    "$ref": "#/definitions/models.RegStatus"
+                },
+                "registered_at": {
+                    "type": "string"
+                },
+                "unattended_quota": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "user_email": {
+                    "type": "string"
                 }
             }
         },

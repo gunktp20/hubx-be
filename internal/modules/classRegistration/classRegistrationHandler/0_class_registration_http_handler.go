@@ -105,22 +105,25 @@ func (h *classRegistrationHttpHandler) GetUserRegistrations(c *fiber.Ctx) error 
 // @Tags ClassRegistration
 // @Accept json
 // @Produce json
-// @Param class_session_id path string true "Class session ID"
+// @Param class_id path string true "Class ID"
 // @Success 200 {object} map[string]interface{} "Registration cancelled successfully"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
 // @Security BearerAuth
-// @Router /class-registration/{class_session_id}/cancel [delete]
+// @Router /class-registration/{class_id}/cancel [delete]
 func (h *classRegistrationHttpHandler) CancelClassRegistration(c *fiber.Ctx) error {
-
 	_, _, userEmail := getContextAuth(c.UserContext())
 
-	err := h.classRegistrationUsecase.CancelClassRegistration(userEmail, c.Params("class_session_id"))
+	classID := c.Params("class_id")
+	if classID == "" {
+		return response.ErrResponse(c, http.StatusBadRequest, "class_id is required", nil)
+	}
+	err := h.classRegistrationUsecase.CancelClassRegistration(userEmail, classID)
 	if err != nil {
 		return response.ErrResponse(c, http.StatusInternalServerError, err.Error(), nil)
 	}
 
 	return response.SuccessResponse(c, http.StatusOK, &fiber.Map{
-		"message": "Class session registration cancelled successfully",
+		"message": "Class registration cancelled successfully",
 	})
 }
 

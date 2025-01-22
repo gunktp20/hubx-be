@@ -126,8 +126,11 @@ func (h *classHttpHandler) CreateClass(c *fiber.Ctx) error {
 // @Param class_category query string false "Filter by class category"
 // @Success 200 {object} map[string]interface{} "Operation successful"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
+// @Security BearerAuth
 // @Router /class [get]
 func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
+	_, _, userEmail := getContextAuth(c.UserContext())
+
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 	limit, _ := strconv.Atoi(c.Query("limit", "10"))
 
@@ -145,6 +148,7 @@ func (h *classHttpHandler) GetAllClasses(c *fiber.Ctx) error {
 		c.Query("keyword"),
 		classLevel,
 		c.Query("class_category"),
+		userEmail,
 		page,
 		limit,
 	)

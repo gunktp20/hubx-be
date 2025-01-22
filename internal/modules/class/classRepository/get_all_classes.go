@@ -1,11 +1,12 @@
 package repository
 
 import (
+	classDto "github.com/gunktp20/digital-hubx-be/internal/modules/class/classDto"
 	"github.com/gunktp20/digital-hubx-be/pkg/models"
 	"gorm.io/gorm"
 )
 
-func (r *classGormRepository) GetAllClasses(class_tier, keyword string, class_level *int, class_category string, page int, limit int) (*[]models.Class, int64, error) {
+func (r *classGormRepository) GetAllClasses(class_tier, keyword string, class_level *int, class_category, userEmail string, page, limit int) (*[]classDto.ClassRes, int64, error) {
 	var classes []models.Class
 	var total int64
 
@@ -52,8 +53,43 @@ func (r *classGormRepository) GetAllClasses(class_tier, keyword string, class_le
 		Find(&classes)
 
 	if result.Error != nil {
-		return &[]models.Class{}, 0, result.Error
+		return &[]classDto.ClassRes{}, 0, result.Error
 	}
 
-	return &classes, total, nil
+	// Map Classes to DTOs
+	var classDTOs []classDto.ClassRes
+	for _, class := range classes {
+		isRegistered := false
+
+		// Check registration if userEmail is provided
+		if userEmail != "" {
+			var count int64
+			r.db.Model(&models.UserClassRegistration{}).
+				Where("user_email = ? AND class_id = ?", userEmail, class.ID).
+				Count(&count)
+
+			isRegistered = count > 0
+		}
+
+		// Map class to DTO
+		classDTOs = append(classDTOs, classDto.ClassRes{
+			ID:             class.ID,
+			Title:          class.Title,
+			Description:    class.Description,
+			CoverImage:     class.CoverImage,
+			ClassTier:      class.ClassTier,
+			ClassLevel:     class.ClassLevel,
+			IsActive:       class.IsActive,
+			IsRemove:       class.IsRemove,
+			EnableQuestion: class.EnableQuestion,
+			Order:          class.Order,
+			CreatedAt:      class.CreatedAt,
+			UpdatedAt:      class.UpdatedAt,
+			ClassCategory:  class.ClassCategory,
+			ClassSessions:  class.ClassSessions,
+			IsRegistered:   isRegistered, // Include registration status
+		})
+	}
+
+	return &classDTOs, total, nil
 }
