@@ -34,7 +34,7 @@ func NewClassSessionHttpHandler(usecase classSessionUsecase.ClassSessionUsecaseS
 
 // @Summary Create a new class session
 // @Description Allows an admin to create a new class session for a class.
-// @Tags Admin/Class Session
+// @Tags Admin/ClassSession
 // @Accept json
 // @Produce json
 // @Param body body classSessionDto.CreateClassSessionReq true "Create Class Session Request Body"
@@ -97,7 +97,7 @@ func (h *classSessionHttpHandler) GetAllClassSessions(c *fiber.Ctx) error {
 
 // @Summary Update max capacity for a class session
 // @Description Allows an admin to update the maximum capacity for a class session.
-// @Tags Admin/Class Session
+// @Tags Admin/ClassSession
 // @Accept json
 // @Produce json
 // @Param class_session_id path string true "Class session ID"
@@ -132,7 +132,7 @@ func (h *classSessionHttpHandler) SetMaxCapacity(c *fiber.Ctx) error {
 
 // @Summary Update location for a class session
 // @Description Allows an admin to update the location for a class session.
-// @Tags Admin/Class Session
+// @Tags Admin/ClassSession
 // @Accept json
 // @Produce json
 // @Param class_session_id path string true "Class session ID"
@@ -171,7 +171,7 @@ func (h *classSessionHttpHandler) UpdateClassSessionLocation(c *fiber.Ctx) error
 
 // @Summary Delete a class session
 // @Description Allows an admin to delete a specific class session by ID.
-// @Tags Admin/Class Session
+// @Tags Admin/ClassSession
 // @Accept json
 // @Produce json
 // @Param class_session_id path string true "Class session ID"

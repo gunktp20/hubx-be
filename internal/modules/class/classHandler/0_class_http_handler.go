@@ -185,7 +185,7 @@ func (h *classHttpHandler) GetClassById(c *fiber.Ctx) error {
 // ToggleClassEnableQuestion toggles the question enablement status of a class.
 // @Summary Toggle EnableQuestion status
 // @Description Enables or disables question functionality for a specific class.
-// @Tags Class
+// @Tags Admin/Class
 // @Accept json
 // @Produce json
 // @Param class_id path string true "Class ID"
@@ -250,7 +250,7 @@ func (h *classHttpHandler) UpdateClassDetails(c *fiber.Ctx) error {
 // UpdateClassCoverImage updates the cover image of a class.
 // @Summary Update class cover image
 // @Description Allows an admin to update the cover image of a class.
-// @Tags Class
+// @Tags Admin/Class
 // @Accept multipart/form-data
 // @Produce json
 // @Param class_id path string true "Class ID"

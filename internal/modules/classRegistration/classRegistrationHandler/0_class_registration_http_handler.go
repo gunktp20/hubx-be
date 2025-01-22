@@ -35,10 +35,10 @@ func NewClassRegistrationHttpHandler(usecase classRegistrationUsecase.ClassRegis
 
 // @Summary Create a class registration
 // @Description Allows a user to register for a class session.
-// @Tags Class Registration
+// @Tags ClassRegistration
 // @Accept json
 // @Produce json
-// @Param body body classRegistrationDto.CreateClassRegistrationReq true "Create Class Registration Request Body"
+// @Param body body classRegistrationDto.CreateClassRegistrationReq true "Create ClassRegistration Request Body"
 // @Success 200 {object} classRegistrationDto.CreateClassRegistrationRes "Registration created successfully"
 // @Failure 400 {object} map[string]interface{} "Invalid input"
 // @Failure 500 {object} map[string]interface{} "Internal Server Error"
@@ -69,7 +69,7 @@ func (h *classRegistrationHttpHandler) CreateClassRegistration(c *fiber.Ctx) err
 
 // @Summary Get user registrations
 // @Description Fetch paginated user registrations.
-// @Tags Class Registration
+// @Tags ClassRegistration
 // @Accept json
 // @Produce json
 // @Param page query int false "Page number"
@@ -100,7 +100,7 @@ func (h *classRegistrationHttpHandler) GetUserRegistrations(c *fiber.Ctx) error 
 
 // @Summary Cancel a class registration
 // @Description Allows a user to cancel their class session registration.
-// @Tags Class Registration
+// @Tags ClassRegistration
 // @Accept json
 // @Produce json
 // @Param class_session_id path string true "Class session ID"
@@ -123,7 +123,7 @@ func (h *classRegistrationHttpHandler) CancelClassRegistration(c *fiber.Ctx) err
 
 // @Summary Reset user's cancellation quota
 // @Description Allows an admin to reset a user's cancellation quota for a class.
-// @Tags Admin/Class Registration
+// @Tags Admin/ClassRegistration
 // @Accept json
 // @Produce json
 // @Param body body classRegistrationDto.ResetCancelledQuotaReq true "Reset Cancelled Quota Request Body"
@@ -157,7 +157,7 @@ func (h *classRegistrationHttpHandler) ResetCancelledQuota(c *fiber.Ctx) error {
 
 // @Summary Delete a user's class registration
 // @Description Allows an admin to delete a user's registration for a specific class session.
-// @Tags Admin/Class Registration
+// @Tags Admin/ClassRegistration
 // @Accept json
 // @Produce json
 // @Param class_session_id path string true "Class session ID"

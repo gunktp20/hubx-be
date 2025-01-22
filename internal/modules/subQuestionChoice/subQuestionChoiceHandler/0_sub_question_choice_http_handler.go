@@ -27,7 +27,7 @@ func NewSubQuestionChoiceHttpHandler(usecase subQuestionChoiceUsecase.SubQuestio
 
 // @Summary Create a new sub-question choice
 // @Description Allows an admin to create a choice for a specific sub-question.
-// @Tags Admin/Sub Question Choice
+// @Tags Admin/SubQuestionChoice
 // @Accept json
 // @Produce json
 // @Param body body subQuestionChoiceDto.CreateSubQuestionChoicesReq true "Create SubQuestion Choice Request Body"

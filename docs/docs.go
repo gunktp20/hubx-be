@@ -340,7 +340,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin/Class Category"
+                    "Admin/ClassCategory"
                 ],
                 "summary": "Update class category name",
                 "parameters": [
@@ -404,7 +404,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin/Class Registration"
+                    "Admin/ClassRegistration"
                 ],
                 "summary": "Reset user's cancellation quota",
                 "parameters": [
@@ -446,7 +446,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin/Class Registration"
+                    "Admin/ClassRegistration"
                 ],
                 "summary": "Delete a user's class registration",
                 "parameters": [
@@ -500,7 +500,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin/Class Session"
+                    "Admin/ClassSession"
                 ],
                 "summary": "Create a new class session",
                 "parameters": [
@@ -548,7 +548,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin/Class Session"
+                    "Admin/ClassSession"
                 ],
                 "summary": "Delete a class session",
                 "parameters": [
@@ -588,7 +588,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin/Class Session"
+                    "Admin/ClassSession"
                 ],
                 "summary": "Update location for a class session",
                 "parameters": [
@@ -644,7 +644,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin/Class Session"
+                    "Admin/ClassSession"
                 ],
                 "summary": "Update max capacity for a class session",
                 "parameters": [
@@ -757,7 +757,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Class"
+                    "Admin/Class"
                 ],
                 "summary": "Update class cover image",
                 "parameters": [
@@ -823,7 +823,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Class"
+                    "Admin/Class"
                 ],
                 "summary": "Toggle EnableQuestion status",
                 "parameters": [
@@ -966,7 +966,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Admin/Sub Question Choice"
+                    "Admin/SubQuestionChoice"
                 ],
                 "summary": "Create a new sub-question choice",
                 "parameters": [
@@ -1139,7 +1139,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Class Registration"
+                    "ClassRegistration"
                 ],
                 "summary": "Get user registrations",
                 "parameters": [
@@ -1182,12 +1182,12 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Class Registration"
+                    "ClassRegistration"
                 ],
                 "summary": "Create a class registration",
                 "parameters": [
                     {
-                        "description": "Create Class Registration Request Body",
+                        "description": "Create ClassRegistration Request Body",
                         "name": "body",
                         "in": "body",
                         "required": true,
@@ -1230,7 +1230,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Class Registration"
+                    "ClassRegistration"
                 ],
                 "summary": "Cancel a class registration",
                 "parameters": [

@@ -947,7 +947,7 @@ paths:
       - BearerAuth: []
       summary: Update class category name
       tags:
-      - Admin/Class Category
+      - Admin/ClassCategory
   /admin/class-registration/{class_session_id}/{email}:
     delete:
       consumes:
@@ -985,7 +985,7 @@ paths:
             type: object
       summary: Delete a user's class registration
       tags:
-      - Admin/Class Registration
+      - Admin/ClassRegistration
   /admin/class-registration/reset-cancel-quota:
     post:
       consumes:
@@ -1013,7 +1013,7 @@ paths:
             type: object
       summary: Reset user's cancellation quota
       tags:
-      - Admin/Class Registration
+      - Admin/ClassRegistration
   /admin/class-session:
     post:
       consumes:
@@ -1045,7 +1045,7 @@ paths:
             type: object
       summary: Create a new class session
       tags:
-      - Admin/Class Session
+      - Admin/ClassSession
   /admin/class-session/{class_session_id}:
     delete:
       consumes:
@@ -1072,7 +1072,7 @@ paths:
             type: object
       summary: Delete a class session
       tags:
-      - Admin/Class Session
+      - Admin/ClassSession
   /admin/class-session/{class_session_id}/location:
     put:
       consumes:
@@ -1110,7 +1110,7 @@ paths:
             type: object
       summary: Update location for a class session
       tags:
-      - Admin/Class Session
+      - Admin/ClassSession
   /admin/class-session/{class_session_id}/max-capacity:
     put:
       consumes:
@@ -1148,7 +1148,7 @@ paths:
             type: object
       summary: Update max capacity for a class session
       tags:
-      - Admin/Class Session
+      - Admin/ClassSession
   /admin/class/{class_id}:
     delete:
       consumes:
@@ -1226,7 +1226,7 @@ paths:
       - BearerAuth: []
       summary: Update class cover image
       tags:
-      - Class
+      - Admin/Class
   /admin/class/{class_id}/toggle-enable-question:
     put:
       consumes:
@@ -1260,7 +1260,7 @@ paths:
       - BearerAuth: []
       summary: Toggle EnableQuestion status
       tags:
-      - Class
+      - Admin/Class
   /admin/question:
     post:
       consumes:
@@ -1356,7 +1356,7 @@ paths:
             type: object
       summary: Create a new sub-question choice
       tags:
-      - Admin/Sub Question Choice
+      - Admin/SubQuestionChoice
   /class:
     get:
       consumes:
@@ -1469,13 +1469,13 @@ paths:
             type: object
       summary: Get user registrations
       tags:
-      - Class Registration
+      - ClassRegistration
     post:
       consumes:
       - application/json
       description: Allows a user to register for a class session.
       parameters:
-      - description: Create Class Registration Request Body
+      - description: Create ClassRegistration Request Body
         in: body
         name: body
         required: true
@@ -1500,7 +1500,7 @@ paths:
             type: object
       summary: Create a class registration
       tags:
-      - Class Registration
+      - ClassRegistration
   /class-registration/{class_session_id}/cancel:
     delete:
       consumes:
@@ -1527,7 +1527,7 @@ paths:
             type: object
       summary: Cancel a class registration
       tags:
-      - Class Registration
+      - ClassRegistration
   /class-session:
     get:
       consumes:

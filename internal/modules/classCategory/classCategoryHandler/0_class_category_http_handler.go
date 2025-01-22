@@ -33,7 +33,7 @@ func NewClassCategoryHttpHandler(usecase classCategoryUsecase.ClassCategoryUseca
 // CreateClassCategory creates a new class category.
 // @Summary Create a new class category
 // @Description Allows an admin to create a new class category.
-// @Tags Admin/Class Category
+// @Tags Admin/ClassCategory
 // @Accept json
 // @Produce json
 // @Param body body map[string]interface{} true "Create Class Category Request Body"
@@ -99,7 +99,7 @@ func (h *classCategoryHttpHandler) GetAllClassCategories(c *fiber.Ctx) error {
 // UpdateCategoryName updates the name of an existing class category.
 // @Summary Update class category name
 // @Description Allows an admin to update the name of a class category.
-// @Tags Admin/Class Category
+// @Tags Admin/ClassCategory
 // @Accept json
 // @Produce json
 // @Param category_id path string true "Category ID"
