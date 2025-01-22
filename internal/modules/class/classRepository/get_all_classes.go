@@ -65,7 +65,7 @@ func (r *classGormRepository) GetAllClasses(class_tier, keyword string, class_le
 		if userEmail != "" {
 			var count int64
 			r.db.Model(&models.UserClassRegistration{}).
-				Where("user_email = ? AND class_id = ?", userEmail, class.ID).
+				Where("user_email = ? AND class_id = ? AND reg_status != ?", userEmail, class.ID, models.Cancelled).
 				Count(&count)
 
 			isRegistered = count > 0
